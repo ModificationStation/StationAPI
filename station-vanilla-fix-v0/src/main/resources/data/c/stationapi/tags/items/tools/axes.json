@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:tools/axes/wooden",
+      "required": false
+    },
+    {
+      "id": "#c:tools/axes/stone",
+      "required": false
+    },
+    {
+      "id": "#c:tools/axes/iron",
+      "required": false
+    },
+    {
+      "id": "#c:tools/axes/gold",
+      "required": false
+    },
+    {
+      "id": "#c:tools/axes/diamond",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "values": [
+    {
+      "id": "#c:foods/fruit",
+      "required": false
+    },
+    {
+      "id": "#c:foods/vegetable",
+      "required": false
+    },
+    {
+      "id": "#c:foods/bread",
+      "required": false
+    },
+    {
+      "id": "#c:foods/cookie",
+      "required": false
+    },
+    {
+      "id": "#c:foods/raw_meat",
+      "required": false
+    },
+    {
+      "id": "#c:foods/raw_fish",
+      "required": false
+    },
+    {
+      "id": "#c:foods/cooked_meat",
+      "required": false
+    },
+    {
+      "id": "#c:foods/cooked_fish",
+      "required": false
+    },
+    {
+      "id": "#c:foods/soup",
+      "required": false
+    },
+    {
+      "id": "#c:foods/golden",
+      "required": false
+    },
+    {
+      "id": "#c:foods/edible_when_placed",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:armors/boots/leather",
+      "required": false
+    },
+    {
+      "id": "#c:armors/boots/chainmail",
+      "required": false
+    },
+    {
+      "id": "#c:armors/boots/iron",
+      "required": false
+    },
+    {
+      "id": "#c:armors/boots/gold",
+      "required": false
+    },
+    {
+      "id": "#c:armors/boots/diamond",
+      "required": false
+    }
+  ]
+}

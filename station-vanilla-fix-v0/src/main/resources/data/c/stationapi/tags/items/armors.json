@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "#c:armors/helmets",
+      "required": false
+    },
+    {
+      "id": "#c:armors/chestplates",
+      "required": false
+    },
+    {
+      "id": "#c:armors/leggings",
+      "required": false
+    },
+    {
+      "id": "#c:armors/boots",
+      "required": false
+    }
+  ]
+}

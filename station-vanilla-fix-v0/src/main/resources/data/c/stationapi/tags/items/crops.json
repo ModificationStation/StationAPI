@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "#c:crops/cactus",
+      "required": false
+    },
+    {
+      "id": "#c:crops/pumpkin",
+      "required": false
+    },
+    {
+      "id": "#c:crops/sugar_cane",
+      "required": false
+    },
+    {
+      "id": "#c:crops/wheat",
+      "required": false
+    }
+  ]
+}

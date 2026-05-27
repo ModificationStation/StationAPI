@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#c:mushrooms/brown",
+      "required": false
+    },
+    {
+      "id": "#c:mushrooms/red",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:armors/chestplates/leather",
+      "required": false
+    },
+    {
+      "id": "#c:armors/chestplates/chainmail",
+      "required": false
+    },
+    {
+      "id": "#c:armors/chestplates/iron",
+      "required": false
+    },
+    {
+      "id": "#c:armors/chestplates/gold",
+      "required": false
+    },
+    {
+      "id": "#c:armors/chestplates/diamond",
+      "required": false
+    }
+  ]
+}
