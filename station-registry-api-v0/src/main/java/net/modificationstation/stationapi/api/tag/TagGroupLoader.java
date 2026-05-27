@@ -14,9 +14,9 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +61,8 @@ public class TagGroupLoader<T> {
                         if (tagFile.replace()) list.clear();
 
                         String string2 = resource.getResourcePackName();
-                        tagFile.entries().forEach(tagEntry -> list.add(new TrackedEntry(tagEntry, string2)));
+                        tagFile.entries().forEach(tagEntry -> list.add(new TrackedEntry(tagEntry, false, string2)));
+                        tagFile.remove().forEach(tagEntry -> list.add(new TrackedEntry(tagEntry, true, string2)));
                     } catch (Throwable var16) {
                         if (reader != null) try {
                             reader.close();
@@ -107,7 +108,7 @@ public class TagGroupLoader<T> {
         List<TrackedEntry> missing = new ArrayList<>();
 
         for (TrackedEntry tag : tags)
-            if (!tag.entry().resolve(valueGetter, matchGroupBuilder::add))
+            if (!tag.entry().resolve(valueGetter, matchGroup -> matchGroupBuilder.add(new TagMatchGroup<>(matchGroup.baseItems(), matchGroup.conditions(), tag.remove()))))
                 missing.add(tag);
 
         return missing.isEmpty()
@@ -167,7 +168,7 @@ public class TagGroupLoader<T> {
         return this.buildGroup(this.loadTags(manager));
     }
 
-    public record TrackedEntry(TagEntry entry, String source) {
+    public record TrackedEntry(TagEntry entry, boolean remove, String source) {
         @Override
         public @NotNull String toString() {
             return this.entry.toString() + " (from " + this.source + ")";

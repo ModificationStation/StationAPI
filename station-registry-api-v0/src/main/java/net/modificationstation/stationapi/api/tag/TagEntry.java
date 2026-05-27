@@ -96,14 +96,14 @@ public class TagEntry {
 
                 if (!this.conditions.isEmpty()) mergedConditions.addAll(this.conditions);
 
-                matchGroupConsumer.accept(new TagMatchGroup<>(refMatchGroup.baseItems(), mergedConditions));
+                matchGroupConsumer.accept(new TagMatchGroup<>(refMatchGroup.baseItems(), mergedConditions, false));
             }
 
         } else {
             T value = getter.direct(this.id);
             if (value == null) return !this.required;
 
-            matchGroupConsumer.accept(new TagMatchGroup<>(List.of(value), this.conditions));
+            matchGroupConsumer.accept(new TagMatchGroup<>(List.of(value), this.conditions, false));
         }
         return true;
     }

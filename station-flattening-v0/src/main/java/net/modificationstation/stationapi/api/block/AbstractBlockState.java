@@ -87,27 +87,42 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
         return this.getBlock().canReplace(this.asBlockState(), context);
     }
 
+    /**
+     * @deprecated Use {@link #isIn(TagKey, Context, Predicate)} instead.
+     * Relying on tag checks without a {@link Context} can lead to broken behavior if the tag contains conditions
+     * that require contextual information (such as the block's world position, metadata, or the actor interacting with it).
+     */
+    @Deprecated
+    public boolean isIn(TagKey<Block> tag, Predicate<AbstractBlockState> predicate) {
+        return isIn(tag) && predicate.test(this);
+    }
+
+    /**
+     * @deprecated Use {@link #isIn(TagKey, Context)} instead.
+     * Relying on tag checks without a {@link Context} can lead to broken behavior if the tag contains conditions
+     * that require contextual information (such as the block's world position, metadata, or the actor interacting with it).
+     */
     @Deprecated
     public boolean isIn(TagKey<Block> tag) {
-        return this.isIn(tag, Context.EMPTY);
+        return isIn(tag, Context.EMPTY);
+    }
+
+    public boolean isIn(TagKey<Block> tag, Context context, Predicate<AbstractBlockState> predicate) {
+        return isIn(tag, context) && predicate.test(this);
     }
 
     public boolean isIn(TagKey<Block> tag, Context context) {
         return getBlock().getRegistryEntry().isIn(tag, context);
     }
 
-    @Deprecated
-    public boolean isIn(TagKey<Block> tag, Predicate<AbstractBlockState> predicate) {
-        return this.isIn(tag, Context.EMPTY, predicate);
-    }
-
-    public boolean isIn(TagKey<Block> tag, Context context, Predicate<AbstractBlockState> predicate) {
-        return this.isIn(tag, context) && predicate.test(this);
-    }
-
+    /**
+     * @deprecated Use {@link #isIn(RegistryEntryList, Context)} instead.
+     * Relying on list checks without a {@link Context} can lead to broken behavior if the underlying entries
+     * have contextual conditions.
+     */
     @Deprecated
     public boolean isIn(RegistryEntryList<Block> blocks) {
-        return this.isIn(blocks, Context.EMPTY);
+        return isIn(blocks, Context.EMPTY);
     }
 
     public boolean isIn(RegistryEntryList<Block> blocks, Context context) {
@@ -115,7 +130,7 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     public Stream<TagKey<Block>> streamTags() {
-        return this.streamTags(Context.ANY);
+        return streamTags(TagEvaluationContext.BYPASSED);
     }
 
     public Stream<TagKey<Block>> streamTags(Context context) {

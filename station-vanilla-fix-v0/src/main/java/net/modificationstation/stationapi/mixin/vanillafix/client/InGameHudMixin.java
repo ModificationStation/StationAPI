@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.block.client;
+package net.modificationstation.stationapi.mixin.vanillafix.client;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;

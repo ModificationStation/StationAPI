@@ -12,8 +12,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "client": [
-    "client.InGameHudMixin"
-  ]
+  }
 }

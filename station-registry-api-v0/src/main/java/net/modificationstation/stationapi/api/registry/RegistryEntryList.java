@@ -4,8 +4,9 @@ import com.mojang.datafixers.util.Either;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.tag.TagMatchGroup;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.api.util.context.Condition;
+import net.modificationstation.stationapi.api.util.context.Context;
+import net.modificationstation.stationapi.api.util.context.TagEvaluationContext;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
@@ -14,12 +15,12 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * A registry entry list is an immutable list of registry entries. This, is either a direct
+ * A registry entry list is an immutable list of registry entries. This is either a direct
  * reference to each item, or a reference to a tag. A <strong>tag</strong> is a way
  * to dynamically define a list of registered values. Anything registered in a registry
  * can be tagged, and each registry holds a list of tags it recognizes.
  * 
- * <p>This can be iterated directly (i.e. {@code for (RegistryEntry<T> entry : entries)}.
+ * <p>This can be iterated directly (i.e. {@code for (RegistryEntry<T> entry : entries)}).
  * Note that this does not implement {@link java.util.Collection}.
  * 
  * @see Registry
@@ -27,12 +28,12 @@ import java.util.stream.Stream;
  */
 public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     /**
-     * This method implicitly uses {@link Context#ANY}, meaning it will stream all registry entries
+     * This method implicitly uses {@link TagEvaluationContext#BYPASSED}, meaning it will stream all registry entries
      * in this list, bypassing all conditional checks.
      * {@return a stream of registry entries in this list}
      */
     default Stream<RegistryEntry<T>> stream() {
-        return stream(Context.ANY);
+        return stream(TagEvaluationContext.BYPASSED);
     }
 
     /**
@@ -48,12 +49,12 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     }
 
     /**
-     * This method implicitly uses {@link Context#ANY}, meaning it will count all registry entries
+     * This method implicitly uses {@link TagEvaluationContext#BYPASSED}, meaning it will count all registry entries
      * in this list, bypassing all conditional checks.
      * {@return the number of entries in this list}
      */
     default int size() {
-        return size(Context.ANY);
+        return size(TagEvaluationContext.BYPASSED);
     }
 
     /**
@@ -69,12 +70,12 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     Either<TagKey<T>, List<RegistryEntry<T>>> getStorage();
 
     /**
-     * This method implicitly uses {@link Context#ANY}, meaning it may return any registry entry
+     * This method implicitly uses {@link TagEvaluationContext#BYPASSED}, meaning it may return any registry entry
      * in this list, bypassing all conditional checks.
      * {@return a random entry of the list, or an empty optional if this list is empty}
      */
     default Optional<RegistryEntry<T>> getRandom(Random var1) {
-        return getRandom(var1, Context.ANY);
+        return getRandom(var1, TagEvaluationContext.BYPASSED);
     }
 
     /**
@@ -83,14 +84,14 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     Optional<RegistryEntry<T>> getRandom(Random var1, Context context);
 
     /**
-     * This method implicitly uses {@link Context#ANY}, meaning it operates on the flattened list of all registry entries
+     * This method implicitly uses {@link TagEvaluationContext#BYPASSED}, meaning it operates on the flattened list of all registry entries
      * in this list, bypassing all conditional checks.
      * {@return the registry entry at {@code index}}
      * 
      * @throws IndexOutOfBoundsException if the index is out of bounds
      */
     default RegistryEntry<T> get(int var1) {
-        return get(var1, Context.ANY);
+        return get(var1, TagEvaluationContext.BYPASSED);
     }
 
     /**
@@ -184,9 +185,9 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
 
         @Override
         public Stream<RegistryEntry<T>> stream(Context context) {
-            if (context.matchesAll()) return this.getEntries().stream();
-
-            return this.matchGroups.stream()
+            return Boolean.TRUE.equals(context.get(TagEvaluationContext.IGNORE_TAG_CONDITIONS))
+                    ? this.getEntries().stream()
+                    : this.matchGroups.stream()
                     .filter(matchGroup -> {
                         for (Condition<?> condition : matchGroup.conditions())
                             if (!condition.test(context)) return false;
@@ -198,8 +199,7 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
 
         @Override
         public int size(Context context) {
-            if (context.matchesAll()) return this.allEntries.size();
-            return (int) this.stream(context).count();
+            return Boolean.TRUE.equals(context.get(TagEvaluationContext.IGNORE_TAG_CONDITIONS)) ? this.allEntries.size() : (int) this.stream(context).count();
         }
 
         @Override
@@ -274,12 +274,12 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
 
         @Override
         public Spliterator<RegistryEntry<T>> spliterator() {
-            return this.stream(Context.ANY).spliterator();
+            return this.stream(TagEvaluationContext.BYPASSED).spliterator();
         }
 
         @Override
         public Iterator<RegistryEntry<T>> iterator() {
-            return this.stream(Context.ANY).iterator();
+            return this.stream(TagEvaluationContext.BYPASSED).iterator();
         }
 
         @Override

@@ -46,6 +46,9 @@
     "modmenu:api": true,
     "station-resource-loader-v0:assets_priority": {
       "lowerThan": "*"
+    },
+    "station-resource-loader-v0:data_priority": {
+      "lowerThan": "*"
     }
   }
 }

@@ -500,7 +500,12 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
                                 "Found direct holder " + entry + " value in tag " + tag
                         );
 
-                    map.get(reference).merge(tag, predicate, Predicate::or);
+                    if (matchGroup.remove())
+                        map.get(reference).computeIfPresent(
+                                tag, (k, oldPred) -> oldPred.and(predicate.negate())
+                        );
+                    else
+                        map.get(reference).merge(tag, predicate, Predicate::or);
                 }
             }
         });

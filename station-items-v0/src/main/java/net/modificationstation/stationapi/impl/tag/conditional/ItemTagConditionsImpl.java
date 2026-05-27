@@ -7,7 +7,6 @@ import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.tag.conditional.ItemTagConditions;
 
 import java.lang.invoke.MethodHandles;
 
@@ -22,13 +21,10 @@ public class ItemTagConditionsImpl {
 
     @EventListener
     private static void registerConditions(ItemRegistryEvent event) {
-        event.registry.registerTagCondition(
+        event.registry.registerItemTagCondition(
                 NAMESPACE.id("item_damage"),
                 Codec.INT.fieldOf("damage"),
-                (damage, ctx) -> {
-                    Integer ctxDamage = ctx.get(ItemTagConditions.ITEM_DAMAGE);
-                    return ctxDamage != null && ctxDamage.equals(damage);
-                }
+                (damage, ctx) -> ctx.hasDamage() && ctx.damage() == damage
         );
     }
 }

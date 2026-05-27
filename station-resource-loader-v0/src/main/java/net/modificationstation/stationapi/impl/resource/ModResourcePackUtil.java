@@ -17,8 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -59,16 +58,62 @@ public final class ModResourcePackUtil {
                 packs.add(pack);
             }
         }
-        packs.sort((pack1, pack2) -> {
-            String id1 = pack1.getFabricModMetadata().getId();
-            String id2 = pack2.getFabricModMetadata().getId();
-            ObjectSet<String> s;
-            return
-                    lowerThan.containsKey(id1) && ((s = lowerThan.get(id1)).contains("*") || s.contains(id2)) ||
-                            higherThan.containsKey(id2) && ((s = higherThan.get(id2)).contains("*") || s.contains(id1)) ? -1 :
-                            higherThan.containsKey(id1) && ((s = higherThan.get(id1)).contains("*") || s.contains(id2)) ||
-                                    lowerThan.containsKey(id2) && ((s = lowerThan.get(id2)).contains("*") || s.contains(id1)) ? 1 : 0;
-        });
+        Map<ModResourcePack, Set<ModResourcePack>> edges = new HashMap<>();
+        Map<ModResourcePack, Integer> inDegree = new HashMap<>();
+        for (ModResourcePack p : packs) {
+            edges.put(p, new HashSet<>());
+            inDegree.put(p, 0);
+        }
+
+        for (ModResourcePack p1 : packs) {
+            String id1 = p1.getFabricModMetadata().getId();
+            for (ModResourcePack p2 : packs) {
+                if (p1 == p2) continue;
+                String id2 = p2.getFabricModMetadata().getId();
+
+                boolean p1BeforeP2 = false;
+                ObjectSet<String> s;
+                if (lowerThan.containsKey(id1) && ((s = lowerThan.get(id1)).contains("*") || s.contains(id2))) {
+                    p1BeforeP2 = true;
+                }
+                if (higherThan.containsKey(id2) && ((s = higherThan.get(id2)).contains("*") || s.contains(id1))) {
+                    p1BeforeP2 = true;
+                }
+
+                if (p1BeforeP2) {
+                    if (edges.get(p1).add(p2)) {
+                        inDegree.put(p2, inDegree.get(p2) + 1);
+                    }
+                }
+            }
+        }
+
+        List<ModResourcePack> sorted = new ArrayList<>();
+        Queue<ModResourcePack> queue = new LinkedList<>();
+        for (ModResourcePack p : packs) {
+            if (inDegree.get(p) == 0) queue.add(p);
+        }
+
+        while (!queue.isEmpty()) {
+            ModResourcePack current = queue.poll();
+            sorted.add(current);
+            for (ModResourcePack neighbor : edges.get(current)) {
+                int deg = inDegree.get(neighbor) - 1;
+                inDegree.put(neighbor, deg);
+                if (deg == 0) {
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        for (ModResourcePack p : packs) {
+            if (inDegree.get(p) > 0) {
+                sorted.add(p);
+            }
+        }
+
+        packs.clear();
+        packs.addAll(sorted);
     }
 
     private static void updatePriorities(Object2ReferenceMap<String, ObjectSet<String>> setToUpdate, String id, CustomValue.CvObject priority, String keyToUpdate) {

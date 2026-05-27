@@ -7,7 +7,6 @@ import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.tag.conditional.BlockTagConditions;
 
 import java.lang.invoke.MethodHandles;
 
@@ -22,13 +21,10 @@ public class BlockTagConditionsImpl {
 
     @EventListener
     private static void registerConditions(BlockRegistryEvent event) {
-        event.registry.registerTagCondition(
+        event.registry.registerBlockTagCondition(
                 NAMESPACE.id("block_metadata"),
                 Codec.INT.fieldOf("metadata"),
-                (metadata, ctx) -> {
-                    Integer ctxMeta = ctx.get(BlockTagConditions.BLOCK_METADATA);
-                    return ctxMeta != null && ctxMeta.equals(metadata);
-                }
+                (metadata, ctx) -> ctx.hasBlockMeta() && ctx.blockMeta() == metadata
         );
     }
 }

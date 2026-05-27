@@ -510,9 +510,44 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
         registerTagCondition(id, MapCodec.unit(Unit.INSTANCE), (data, ctx) -> condition.test(ctx));
     }
 
+    /**
+     * Registers a tag condition with a context projection.
+     *
+     * @param id the condition ID
+     * @param projection the function to project the raw context into a specific view
+     * @param condition the condition to test against the projected view
+     * @param <C> the type of the projected context
+     */
+    default <C extends Context> void registerTagCondition(
+            Identifier id,
+            Function<Context, C> projection,
+            Predicate<C> condition
+    ) {
+        registerTagCondition(id, ctx -> condition.test(projection.apply(ctx)));
+    }
+
     <DATA> void registerTagCondition(
             Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, Context> condition
     );
+
+    /**
+     * Registers a data-backed tag condition with a view context projection.
+     *
+     * @param id the condition ID
+     * @param codec the codec for the condition data
+     * @param projection the function to project the raw context into a specific view
+     * @param condition the condition to test against the data and projected view
+     * @param <DATA> the type of the condition data
+     * @param <C> the type of the projected context
+     */
+    default <DATA, C extends Context> void registerTagCondition(
+            Identifier id,
+            MapCodec<DATA> codec,
+            Function<Context, C> projection,
+            BiPredicate<DATA, C> condition
+    ) {
+        registerTagCondition(id, codec, (data, ctx) -> condition.test(data, projection.apply(ctx)));
+    }
 
     Codec<Condition<?>> getTagConditionCodec();
 }

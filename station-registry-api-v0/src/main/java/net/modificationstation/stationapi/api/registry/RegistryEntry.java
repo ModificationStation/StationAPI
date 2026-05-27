@@ -4,9 +4,12 @@ import com.mojang.datafixers.util.Either;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.context.Context;
+import net.modificationstation.stationapi.api.util.context.TagEvaluationContext;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -33,14 +36,8 @@ public interface RegistryEntry<T> {
 
     boolean isIn(TagKey<T> tag, Context context);
 
-    /**
-     * @deprecated Use {@link #streamTags(Context)} instead.
-     * <p>This method implicitly uses {@link Context#ANY}, meaning it will yield all tag keys
-     * this entry belongs to, bypassing all conditional checks.
-     */
-    @Deprecated
     default Stream<TagKey<T>> streamTags() {
-        return streamTags(Context.ANY);
+        return streamTags(TagEvaluationContext.BYPASSED);
     }
 
     Stream<TagKey<T>> streamTags(Context context);
@@ -143,9 +140,10 @@ public interface RegistryEntry<T> {
 
         @Override
         public boolean isIn(TagKey<ENTRY> tag, Context context) {
-            if (context.matchesAll()) return tags.containsKey(tag);
+            if (!tags.containsKey(tag)) return false;
+            if (Boolean.TRUE.equals(context.get(TagEvaluationContext.IGNORE_TAG_CONDITIONS))) return true;
             Predicate<Context> predicate = tags.get(tag);
-            return predicate != null && predicate.test(context);
+            return predicate == null || predicate.test(context);
         }
 
         @Override
@@ -183,9 +181,10 @@ public interface RegistryEntry<T> {
 
         @Override
         public Stream<TagKey<ENTRY>> streamTags(Context context) {
-            if (context.matchesAll()) return this.tags.keySet().stream();
-            return this.tags.entrySet().stream()
-                    .filter(entry -> entry.getValue().test(context))
+            return Boolean.TRUE.equals(context.get(TagEvaluationContext.IGNORE_TAG_CONDITIONS))
+                    ? this.tags.keySet().stream()
+                    : this.tags.entrySet().stream()
+                    .filter(entry -> entry.getValue() == null || entry.getValue().test(context))
                     .map(Map.Entry::getKey);
         }
 

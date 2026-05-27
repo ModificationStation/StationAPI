@@ -18,6 +18,11 @@ public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockSt
         return Util.assertImpl();
     }
 
+    /**
+     * Since an {@link ItemStack} is itself an item's context,
+     * there's no need to provide the context manually here,
+     * it gets prepended internally
+     */
     default boolean isIn(TagKey<Item> tag) {
         return isIn(tag, Context.EMPTY);
     }
@@ -27,7 +32,7 @@ public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockSt
     }
 
     default Stream<TagKey<Item>> streamTags() {
-        return streamTags(Context.ANY);
+        return streamTags(TagEvaluationContext.BYPASSED);
     }
 
     default Stream<TagKey<Item>> streamTags(Context context) {

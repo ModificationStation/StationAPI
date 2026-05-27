@@ -54,6 +54,9 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter, Sta
     @Unique
     private NbtCompound stationapi_stationNbt = new NbtCompound();
 
+    @Unique
+    private final ItemContext stationapi_itemContext = ItemContext.of((ItemStack) (Object) this);
+
     @Inject(
             method = "split",
             at = @At("RETURN")
@@ -177,12 +180,12 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter, Sta
     @Override
     @Unique
     public boolean isIn(TagKey<Item> tag, Context context) {
-        return getRegistryEntry().isIn(tag, ItemContext.of((ItemStack) (Object) this).with(context));
+        return getRegistryEntry().isIn(tag, stationapi_itemContext.with(context));
     }
 
     @Override
     @Unique
     public Stream<TagKey<Item>> streamTags(Context context) {
-        return getRegistryEntry().streamTags(ItemContext.of((ItemStack) (Object) this).with(context));
+        return getRegistryEntry().streamTags(stationapi_itemContext.with(context));
     }
 }

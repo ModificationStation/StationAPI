@@ -7,7 +7,8 @@ import java.util.Collection;
 
 public record TagMatchGroup<T>(
         Collection<T> baseItems,
-        Collection<Condition<?>> conditions
+        Collection<Condition<?>> conditions,
+        boolean remove
 ) {
     public boolean test(T item, Context ctx) {
         if (!baseItems.contains(item)) return false;
