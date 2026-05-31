@@ -11,7 +11,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
@@ -319,7 +318,7 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public boolean setBlock(int x, int y, int z, int blockId, int meta) {
-        return setBlockStateWithMetadata(x, y, z, Block.BLOCKS[blockId].getDefaultState(), meta) != null;
+        return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState(), meta) != null;
     }
 
     @Override
@@ -361,7 +360,7 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
-    public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState state, int meta) {
+    public BlockState setBlockState(int x, int y, int z, BlockState state, int meta) {
         int worldX = this.x << 4 | x;
         int worldZ = this.z << 4 | z;
         BlockSetEvent event =

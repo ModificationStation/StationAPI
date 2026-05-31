@@ -10,6 +10,6 @@ public class EntityRendererListener {
 
     @EventListener
     public void registerEntityRenderers(EntityRendererRegisterEvent event) {
-        event.renderers.put(PoorGuy.class, new UndeadEntityRenderer(new BipedEntityModel(), 0.5f));
+        event.register(PoorGuy.class, new UndeadEntityRenderer(new BipedEntityModel(), 0.5f));
     }
 }

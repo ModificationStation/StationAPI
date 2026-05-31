@@ -42,7 +42,7 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
             )
     )
     private boolean stationapi_setPushedBlockState(World world, int x, int y, int z, int blockId, int blockMeta) {
-        return world.setBlockStateWithMetadataWithNotify(x, y, z, stationapi_pushedBlockState, blockMeta) != null;
+        return world.setBlockState(x, y, z, stationapi_pushedBlockState, blockMeta) != null;
     }
 
     @Redirect(

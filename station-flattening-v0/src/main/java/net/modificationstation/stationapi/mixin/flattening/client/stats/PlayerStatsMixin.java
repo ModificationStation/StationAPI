@@ -10,6 +10,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.stat.PlayerStats;
 import net.minecraft.stat.Stat;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.registry.StatRegistry;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.stat.ModdedStatsSerializingIterator;
@@ -33,6 +34,19 @@ class PlayerStatsMixin {
             String data, CallbackInfoReturnable<Map<Stat, Integer>> cir,
             @Local(index = 1) HashMap<Stat, Integer> statCounts, @Local(index = 4) JsonRootNode statsRoot
     ) {
+        //noinspection unchecked
+        if (
+                ((Map<JsonStringNode, JsonNode>) statsRoot.getFields()).keySet()
+                        .stream()
+                        .map(JsonStringNode::getText)
+                        .noneMatch(ModdedStatsSerializingIterator.STATIONAPI_STATS_CHANGE_KEY::equals)
+        ) {
+            StationAPI.LOGGER.warn(
+                    "Could not find StationAPI stats field. " +
+                            "This is fine if it's the first time StationAPI is run on this instance of Minecraft"
+            );
+            return;
+        }
         //noinspection unchecked
         for (final JsonNode node : (List<JsonNode>) statsRoot.getArrayNode(ModdedStatsSerializingIterator.STATIONAPI_STATS_CHANGE_KEY)) {
             @SuppressWarnings("unchecked") final Map<JsonStringNode, JsonNode> statCountNodes = node.getFields();

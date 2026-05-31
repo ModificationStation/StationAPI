@@ -19,7 +19,7 @@ public interface StationFlatteningWorld extends BlockStateView, HeightLimitView 
         return Util.assertImpl();
     }
 
-    default BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState blockState, int meta) {
+    default BlockState setBlockStateWithoutNotifyingNeighbors(int x, int y, int z, BlockState blockState, int meta) {
         return Util.assertImpl();
     }
 
@@ -31,7 +31,7 @@ public interface StationFlatteningWorld extends BlockStateView, HeightLimitView 
         return setBlockState(pos.x, pos.y, pos.z, blockState);
     }
 
-    default BlockState setBlockStateWithMetadataWithNotify(int x, int y, int z, BlockState blockState, int meta) {
+    default BlockState setBlockState(int x, int y, int z, BlockState blockState, int meta) {
         return Util.assertImpl();
     }
 

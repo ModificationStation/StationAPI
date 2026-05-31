@@ -51,14 +51,14 @@ abstract class WorldMixin implements StationFlatteningWorld {
 
     @Override
     @Unique
-    public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState blockState, int meta) {
-        return getChunkFromPos(x, z).setBlockStateWithMetadata(x & 0xF, y, z & 0xF, blockState, meta);
+    public BlockState setBlockStateWithoutNotifyingNeighbors(int x, int y, int z, BlockState blockState, int meta) {
+        return getChunkFromPos(x, z).setBlockState(x & 0xF, y, z & 0xF, blockState, meta);
     }
 
     @Override
     @Unique
-    public BlockState setBlockStateWithMetadataWithNotify(int x, int y, int z, BlockState blockState, int meta) {
-        BlockState oldBlockState = setBlockStateWithMetadata(x, y, z, blockState, meta);
+    public BlockState setBlockState(int x, int y, int z, BlockState blockState, int meta) {
+        BlockState oldBlockState = setBlockStateWithoutNotifyingNeighbors(x, y, z, blockState, meta);
         if (oldBlockState != null) {
             blockUpdate(x, y, z, blockState.getBlock().id);
             return oldBlockState;

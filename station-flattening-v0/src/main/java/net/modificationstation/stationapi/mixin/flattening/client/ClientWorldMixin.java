@@ -87,7 +87,7 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
             )
     )
     private boolean stationapi_useBlockState(World instance, int x, int y, int z, int blockId, int metadata) {
-        boolean result = super.setBlockStateWithMetadata(x, y, z, Block.STATE_IDS.get(((ClientBlockChange) stationapi_clientBlockChange).stateId), metadata) != null;
+        boolean result = super.setBlockStateWithoutNotifyingNeighbors(x, y, z, Block.STATE_IDS.get(((ClientBlockChange) stationapi_clientBlockChange).stateId), metadata) != null;
         stationapi_clientBlockChange = null;
         return result;
     }
