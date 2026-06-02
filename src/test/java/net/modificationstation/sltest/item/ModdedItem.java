@@ -3,7 +3,7 @@ package net.modificationstation.sltest.item;
 import lombok.Value;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.HitResultType;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.client.item.CustomTooltipProvider;
@@ -38,7 +38,7 @@ public class ModdedItem extends TemplateItem implements CustomReachProvider, Cus
     public int hmmSho;
 
     @Override
-    public double getReach(ItemStack stack, PlayerEntity player, HitResultType type, double currentReach) {
+    public double getReach(ItemStack stack, PlayerEntity player, HitResult.HitResultType type, double currentReach) {
         return switch (type) {
             case BLOCK -> 50;
             case ENTITY -> 10;

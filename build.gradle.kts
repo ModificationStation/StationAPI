@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.9-SNAPSHOT"
-    id("babric-loom-extension") version "1.9.2"
+    id("net.fabricmc.fabric-loom-remap") version "1.15.+"
+    id("ploceus") version "1.15-SNAPSHOT"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -15,21 +15,41 @@ inline fun <reified C> Project.configure(name: String, configuration: C.() -> Un
 }
 
 allprojects {
-    apply(plugin = "maven-publish")
-    apply(plugin = "fabric-loom")
-    apply(plugin = "babric-loom-extension")
+    if (project != rootProject) {
+        apply(plugin = "maven-publish")
+        apply(plugin = "net.fabricmc.fabric-loom-remap")
+        apply(plugin = "ploceus")
+    }
 
-    java.sourceCompatibility = JavaVersion.VERSION_17
-    java.targetCompatibility = JavaVersion.VERSION_17
+    pluginManager.withPlugin("ploceus") {
+        val ploceus = extensions.getByName<net.ornithemc.ploceus.api.PloceusGradleExtensionApi>("ploceus")
+        ploceus.setIntermediaryGeneration(2)
+
+        dependencies {
+            "minecraft"("com.mojang:minecraft:${project.properties["minecraft_version"]}")
+            "mappings"(ploceus.mappings("net.glasslauncher:biny-ornithe:b1.7.3+build.${project.properties["biny_mappings"]}:mergedv2"))
+            "clientExceptions"(ploceus.raven(project.properties["client_raven_build"].toString(), "client"))
+            "serverExceptions"(ploceus.raven(project.properties["server_raven_build"].toString(), "server"))
+            "clientSignatures"(ploceus.sparrow(project.properties["client_sparrow_build"].toString(), "client"))
+            "serverSignatures"(ploceus.sparrow(project.properties["server_sparrow_build"].toString(), "server"))
+            "clientNests"(ploceus.nests(project.properties["client_nests_build"].toString(), "client"))
+            "serverNests"(ploceus.nests(project.properties["server_nests_build"].toString(), "server"))
+            "modImplementation"("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
+        }
+    }
+
+    java.sourceCompatibility = JavaVersion.VERSION_21
+    java.targetCompatibility = JavaVersion.VERSION_21
 
     repositories {
         maven(url = "https://maven.minecraftforge.net/")
-        maven(url = "https://maven.glass-launcher.net/babric")
-        maven(url = "https://maven.glass-launcher.net/snapshots")
         maven(url = "https://maven.glass-launcher.net/releases")
+        maven(url = "https://maven.glass-launcher.net/snapshots")
+        maven(url = "https://mvn.devos.one/releases")
+        maven(url = "https://maven.wispforest.io")
         maven(url = "https://jitpack.io/")
 
-        maven("https://libraries.minecraft.net") {
+        maven(url = "https://libraries.minecraft.net") {
             name = "Mojang"
             content {
                 includeModule("com.mojang", "datafixerupper") // https://github.com/Mojang/DataFixerUpper
@@ -55,7 +75,10 @@ allprojects {
         all {
             exclude(group = "org.ow2.asm", module = "asm-debug-all")
             exclude(group = "org.ow2.asm", module = "asm-all")
-            exclude(group = "babric")
+            // Force correct Guava version to avoid conflicts
+            resolutionStrategy {
+                force("com.google.guava:guava:33.5.0-jre")
+            }
         }
     }
 
@@ -63,23 +86,22 @@ allprojects {
         implementation("org.slf4j:slf4j-api:1.8.0-beta4")
         implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2")
 
-        implementation("org.apache.logging.log4j:log4j-core:2.17.2")
-        implementation("com.google.guava:guava:33.2.1-jre")
+        implementation("org.apache.logging.log4j:log4j-core:2.17.2"){
+            exclude(group = "com.google.guava", module = "guava")
+        }
+        implementation("net.ornithemc:logger-config:1.0.0") {
+            exclude(group = "com.google.guava", module = "guava")
+        }
+        implementation("com.google.guava:guava:33.5.0-jre")
         implementation("com.google.code.gson:gson:2.9.0")
 
         //to change the versions see the gradle.properties file
-        minecraft("com.mojang:minecraft:${project.properties["minecraft_version"]}")
+        //minecraft and mappings are added in the ploceus withPlugin block above
 
-        mappings("net.glasslauncher:biny:${project.properties["yarn_mappings"]}:v2")
-
-        modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
-
-        "transitiveImplementation"(implementation("org.apache.commons:commons-lang3:3.12.0") as Dependency)
+        "transitiveImplementation"(implementation("org.apache.commons:commons-lang3:3.17.0") as Dependency)
         "transitiveImplementation"(implementation("commons-io:commons-io:2.11.0") as Dependency)
         "transitiveImplementation"(implementation("net.jodah:typetools:${project.properties["typetools_version"]}") as Dependency)
         "transitiveImplementation"(implementation("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}") as Dependency)
-        "transitiveImplementation"(implementation("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}") as Dependency)
-        "transitiveImplementation"(implementation("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}") as Dependency)
         "transitiveImplementation"(implementation("com.mojang:datafixerupper:${project.properties["dfu_version"]}") as Dependency)
         "transitiveImplementation"(implementation("maven.modrinth:spasm:${project.properties["spasm_version"]}") as Dependency)
         "transitiveImplementation"(implementation("me.carleslc:Simple-Yaml:1.8.4") as Dependency)
@@ -89,23 +111,24 @@ allprojects {
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
-        compileOnly("org.projectlombok:lombok:1.18.30")
-        annotationProcessor("org.projectlombok:lombok:1.18.30")
-        testCompileOnly("org.projectlombok:lombok:1.18.30")
-        testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+        compileOnly("org.projectlombok:lombok:1.18.42")
+        annotationProcessor("org.projectlombok:lombok:1.18.42")
+        testCompileOnly("org.projectlombok:lombok:1.18.42")
+        testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         implementation("org.jetbrains:annotations:23.0.0")
 
-        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}")
-        modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
-            isTransitive = false
-        }
+//        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}")
+//        modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
+//            isTransitive = false
+//        }
 
         annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
 
         // Optional bugfix mod for testing qol. Remove the // to enable.
         //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
+
     }
 
     sourceSets {
@@ -138,7 +161,7 @@ allprojects {
 
     // Include license inside of the mod jar
     configure<Jar>("jar") {
-        from(rootProject.file("LICENSE")) {
+        from("LICENSE") {
             rename { "${it}_${project.properties["archivesBaseName"]}" }
         }
     }
@@ -259,10 +282,11 @@ subprojects {
 dependencies {
     include("net.jodah:typetools:${project.properties["typetools_version"]}")
     include("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
-    include("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
-    include("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
     include("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
     include("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+    include("com.google.guava:guava:33.5.0-jre")
+    include("com.google.guava:failureaccess:1.0.3")
+    include("org.apache.commons:commons-lang3:3.17.0")
 }
 
 // Makes java shut up
@@ -270,6 +294,11 @@ configure<JavaCompile>("compileTestJava") {
     options.compilerArgs.add("-XDignore.symbol.file")
     options.isFork = true
     options.forkOptions.executable = System.getProperty("java.home") + "/bin/javac" + (if (System.getProperty("os.name").startsWith("Windows")) ".exe" else "")
+}
+
+// Don't fail test task when no tests are discovered (these are mod test classes, not unit tests)
+tasks.withType<Test> {
+    failOnNoDiscoveredTests = false
 }
 
 publishing {

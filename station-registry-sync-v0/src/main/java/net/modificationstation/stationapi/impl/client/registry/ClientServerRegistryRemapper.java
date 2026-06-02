@@ -12,6 +12,7 @@ import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.legacy.WorldLegacyRegistry;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
@@ -31,7 +32,11 @@ public class ClientServerRegistryRemapper {
 
     private static void remapRegistries(PlayerEntity player, MessagePacket message) {
         LOGGER.info("Received level registries from server. Remapping...");
-        WorldLegacyRegistry.loadAll(NbtIo.readCompressed(new ByteArrayInputStream(message.bytes)));
+        try {
+            WorldLegacyRegistry.loadAll(NbtIo.readCompressed(new ByteArrayInputStream(message.bytes)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         LOGGER.info("Successfully synchronized registries with the server.");
     }
 }

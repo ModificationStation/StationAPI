@@ -28,7 +28,7 @@ public class FlattenedWorldChunkLoader implements ChunkStorage {
     }
 
     @Override
-    public Chunk loadChunk(World arg, int i, int j) {
+    public Chunk loadChunk(World arg, int i, int j) throws IOException {
         DataInputStream dataInputStream = RegionIo.getChunkInputStream(dimFolder, i, j);
         if (dataInputStream == null)
             return null;
@@ -54,7 +54,7 @@ public class FlattenedWorldChunkLoader implements ChunkStorage {
     }
 
     @Override
-    public void saveChunk(World world, Chunk oldChunk) {
+    public void saveChunk(World world, Chunk oldChunk) throws IOException {
         if (!(oldChunk instanceof FlattenedChunk chunk)) throw new IllegalStateException(getClass().getSimpleName() + " can't save chunk of type \"" + oldChunk.getClass().getName() + "\"!");
         world.checkSessionLock();
         DataOutputStream dataOutputStream = RegionIo.getChunkOutputStream(dimFolder, chunk.x, chunk.z);

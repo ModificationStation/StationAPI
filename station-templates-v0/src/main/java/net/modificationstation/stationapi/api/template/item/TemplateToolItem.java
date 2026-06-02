@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ToolItem;
-import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateToolItem extends ToolItem implements ItemTemplate {

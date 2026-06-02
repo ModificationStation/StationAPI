@@ -31,7 +31,7 @@ class NetherWorldSourceMixin {
         cancellable = true
     )
     private void stationapi_cancelFeatureGeneration(ChunkSource source, int cx, int cz, CallbackInfo info) {
-        Biome biome = this.world.method_1781().getBiome(cx + 16, cz + 16);
+        Biome biome = this.world.getBiomeSource().getBiome(cx + 16, cz + 16);
         if (biome.isNoDimensionFeatures()) {
             SandBlock.fallInstantly = false;
             info.cancel();

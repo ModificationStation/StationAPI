@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.client.resource.metadata;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,7 +9,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadataReader;
 import net.modificationstation.stationapi.api.util.JsonHelper;
-import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ implements ResourceMetadataReader<AnimationResourceMetadata> {
         List<AnimationFrameResourceMetadata> list = new ArrayList<>();
         int i = JsonHelper.getInt(jsonObject, "frametime", 1);
         if (i != 1) {
-            Validate.inclusiveBetween(1L, Integer.MAX_VALUE, i, "Invalid default frame time");
+            Preconditions.checkArgument(i >= 1, "Invalid default frame time");
         }
         if (jsonObject.has("frames")) {
             try {
@@ -40,10 +40,10 @@ implements ResourceMetadataReader<AnimationResourceMetadata> {
         int k = JsonHelper.getInt(jsonObject, "width", -1);
         int l = JsonHelper.getInt(jsonObject, "height", -1);
         if (k != -1) {
-            Validate.inclusiveBetween(1L, Integer.MAX_VALUE, k, "Invalid width");
+            Preconditions.checkArgument(k >= 1, "Invalid width");
         }
         if (l != -1) {
-            Validate.inclusiveBetween(1L, Integer.MAX_VALUE, l, "Invalid height");
+            Preconditions.checkArgument(l >= 1, "Invalid height");
         }
         boolean bl = JsonHelper.getBoolean(jsonObject, "interpolate", false);
         return new AnimationResourceMetadata(list, k, l, i, bl);
@@ -57,10 +57,10 @@ implements ResourceMetadataReader<AnimationResourceMetadata> {
             JsonObject jsonObject = JsonHelper.asObject(json, "frames[" + frame + "]");
             int i = JsonHelper.getInt(jsonObject, "time", -1);
             if (jsonObject.has("time")) {
-                Validate.inclusiveBetween(1L, Integer.MAX_VALUE, i, "Invalid frame time");
+                Preconditions.checkArgument(i >= 1, "Invalid frame time");
             }
             int j = JsonHelper.getInt(jsonObject, "index");
-            Validate.inclusiveBetween(0L, Integer.MAX_VALUE, j, "Invalid frame index");
+            Preconditions.checkArgument(j >= 0, "Invalid frame index");
             return new AnimationFrameResourceMetadata(j, i);
         }
         return null;

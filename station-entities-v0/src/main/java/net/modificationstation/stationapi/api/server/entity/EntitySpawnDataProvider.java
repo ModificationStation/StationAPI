@@ -11,6 +11,7 @@ import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 public interface EntitySpawnDataProvider extends StationSpawnDataProvider {
 
@@ -32,7 +33,11 @@ public interface EntitySpawnDataProvider extends StationSpawnDataProvider {
         }
         if (syncTrackerAtSpawn()) {
             var stream = new ByteArrayOutputStream();
-            entity.getDataTracker().writeAllEntries(new DataOutputStream(stream));
+            try {
+                entity.getDataTracker().writeAllEntries(new DataOutputStream(stream));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             message.bytes = stream.toByteArray();
         }
         writeToMessage(message);

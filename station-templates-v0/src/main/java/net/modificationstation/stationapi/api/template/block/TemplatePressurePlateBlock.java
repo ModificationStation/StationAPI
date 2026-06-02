@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.PressurePlateActivationRule;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.util.Identifier;

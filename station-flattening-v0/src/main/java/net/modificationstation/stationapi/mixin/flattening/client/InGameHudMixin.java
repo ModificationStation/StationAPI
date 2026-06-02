@@ -9,7 +9,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -39,7 +38,7 @@ abstract class InGameHudMixin extends DrawContext {
     private void stationapi_renderHud(float bl, boolean i, int j, int par4, CallbackInfo ci, ScreenScaler scaler, int var6, int var7, TextRenderer var8) {
         HitResult hit = minecraft.crosshairTarget;
         int offset = 22;
-        if (hit != null && hit.type == HitResultType.BLOCK) {
+        if (hit != null && hit.type == HitResult.HitResultType.BLOCK) {
             BlockState state = minecraft.world.getBlockState(hit.blockX, hit.blockY, hit.blockZ);
 
             String text = "Block: " + state.getBlock().getTranslatedName();

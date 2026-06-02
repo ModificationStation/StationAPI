@@ -8,6 +8,7 @@ import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
@@ -30,7 +31,11 @@ public interface MobSpawnDataProvider extends StationSpawnDataProvider {
                 (byte)((int)(mob.pitch * 256.0F / 360.0F))
         };
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        mob.getDataTracker().writeAllEntries(new DataOutputStream(outputStream));
+        try {
+            mob.getDataTracker().writeAllEntries(new DataOutputStream(outputStream));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         byte[] data = outputStream.toByteArray();
         message.bytes = Bytes.concat(rotations, data);
         writeToMessage(message);

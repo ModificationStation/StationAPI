@@ -64,7 +64,7 @@ class OverworldWorldSourceMixin {
             )
     )
     private void stationapi_changeHeight(int cx, int cz, byte[] args, Biome[] biomes, double[] par5, CallbackInfo info) {
-        BiomeSource biomeSource = world.method_1781();
+        BiomeSource biomeSource = world.getBiomeSource();
         biomeSource.temperatureMap = biomeSource.downfallMap = biomeSource.weirdnessMap = null;
         biomeSource.biomes = null;
         WorldGeneratorImpl.updateNoise(world, cx, cz, this.heightMap);

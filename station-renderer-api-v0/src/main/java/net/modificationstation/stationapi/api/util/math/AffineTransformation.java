@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.util.math;
 
 import com.mojang.datafixers.util.Pair;
 import net.modificationstation.stationapi.api.util.Util;
-import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -67,11 +66,11 @@ public final class AffineTransformation {
     private void init() {
         if (!this.initialized) {
             Pair<Matrix3f, Vec3f> pair = getLinearTransformationAndTranslationFromAffine(this.matrix);
-            Triple<Quaternion, Vec3f, Quaternion> triple = pair.getFirst().decomposeLinearTransformation();
+            Matrix3f.LinearTransformationDecomposition decomposition = pair.getFirst().decomposeLinearTransformation();
             this.translation = pair.getSecond();
-            this.rotation2 = triple.getLeft();
-            this.scale = triple.getMiddle();
-            this.rotation1 = triple.getRight();
+            this.rotation2 = decomposition.rotationBefore();
+            this.scale = decomposition.scale();
+            this.rotation1 = decomposition.rotationAfter();
             this.initialized = true;
         }
 

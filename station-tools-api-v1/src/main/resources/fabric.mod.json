@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "station-tools-api-v1",
   "version": "${version}",
-
   "name": "Station Tools API (v1)",
   "description": "Makes tools actually work properly. Also, custom shears!",
   "authors": [
@@ -13,10 +12,8 @@
     "sources": "https://github.com/ModificationStation/StationAPI",
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
-
   "license": "MIT",
   "icon": "assets/station-tools-api-v1/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
@@ -26,28 +23,26 @@
   "mixins": [
     "station-tools-api-v1.mixins.json"
   ],
-
   "depends": {
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
-
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
-      "net/minecraft/class_126": [
+      "net/minecraft/unmapped/C_17309128": [
         "net/modificationstation/stationapi/api/item/tool/StationShearsItem"
       ],
-      "net/minecraft/class_249": [
+      "net/minecraft/unmapped/C_50960081": [
         "net/modificationstation/stationapi/api/item/tool/StationHoeItem"
       ],
-      "net/minecraft/class_352": [
+      "net/minecraft/unmapped/C_64104387": [
         "net/modificationstation/stationapi/api/item/tool/StationSwordItem"
       ],
-      "net/minecraft/class_428": [
+      "net/minecraft/unmapped/C_74597326": [
         "net/modificationstation/stationapi/api/item/tool/StationToolMaterial"
       ],
-      "net/minecraft/class_632": [
+      "net/minecraft/unmapped/C_53672520": [
         "net/modificationstation/stationapi/api/item/tool/StationToolItem"
       ]
     }

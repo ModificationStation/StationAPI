@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.util.collection;
 
-import org.apache.commons.lang3.Validate;
+import com.google.common.base.Preconditions;
 
 import java.util.Arrays;
 import java.util.function.IntConsumer;
@@ -18,20 +18,20 @@ public class EmptyPaletteStorage implements PaletteStorage {
 
     @Override
     public int swap(int index, int value) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
-        Validate.inclusiveBetween(0L, 0L, value);
+        Preconditions.checkArgument(index >= 0 && index < this.size);
+        Preconditions.checkArgument(value == 0);
         return 0;
     }
 
     @Override
     public void set(int index, int value) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
-        Validate.inclusiveBetween(0L, 0L, value);
+        Preconditions.checkArgument(index >= 0 && index < this.size);
+        Preconditions.checkArgument(value == 0);
     }
 
     @Override
     public int get(int index) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
+        Preconditions.checkArgument(index >= 0 && index < this.size);
         return 0;
     }
 

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.item.tool;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 
@@ -18,7 +18,7 @@ public interface StationShearsItem extends StationTool {
     }
 
     @Override
-    default ToolMaterial getMaterial(ItemStack stack) {
+    default Item.ToolMaterial getMaterial(ItemStack stack) {
         return Util.assertImpl();
     }
 }

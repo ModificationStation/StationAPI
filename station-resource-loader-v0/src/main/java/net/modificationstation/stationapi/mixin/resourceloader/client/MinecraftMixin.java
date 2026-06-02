@@ -52,7 +52,7 @@ class MinecraftMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private void stationapi_textureManagerInit(CallbackInfo ci) throws LWJGLException {
+    private void stationapi_textureManagerInit(CallbackInfo ci) throws Exception {
         ReloadScreenManager.openEarly();
         StationAPI.EVENT_BUS.post(
                 AssetsResourceReloaderRegisterEvent.builder()
@@ -111,6 +111,14 @@ class MinecraftMixin {
     )
     private void stationapi_applyReloadsAndWait(CallbackInfo ci) {
         ReloadScreenManagerImpl.isMinecraftDone = true;
+
+        // Single-threaded mode (starac/LWJGL3): run render loop that processes tasks
+        if (ReloadScreenManager.isUsingEarlyRenderLoop()) {
+            ReloadScreenManager.runEarlyRenderLoop();
+            return;
+        }
+
+        // Threaded mode (LWJGL2): process tasks and wait for render thread
         while (!ReloadScreenManager.isReloadComplete()) {
             val command = ReloadScreenApplicationExecutor.INSTANCE.poll();
             if (command != null) command.run();

@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(BlockSoundGroup.class)
+@Mixin(Block.BlockSoundGroup.class)
 class BlockSoundGroupMixin {
     @Shadow @Final public String soundName;
 
@@ -23,7 +23,7 @@ class BlockSoundGroupMixin {
             },
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/sound/BlockSoundGroup;soundName:Ljava/lang/String;",
+                    target = "Lnet/minecraft/block/Block$BlockSoundGroup;soundName:Ljava/lang/String;",
                     opcode = Opcodes.GETFIELD
             )
     )

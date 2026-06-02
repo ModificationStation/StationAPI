@@ -12,7 +12,7 @@ transitive-accessible	method	net/minecraft/nbt/NbtList	read	(Ljava/io/DataInput;
 transitive-accessible	method	net/minecraft/block/Block	<init>	(ILnet/minecraft/block/material/Material;)V
 transitive-accessible	method	net/minecraft/block/Block	ignoreMetaUpdates	()Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	<init>	(IILnet/minecraft/block/material/Material;)V
-transitive-accessible	method	net/minecraft/block/Block	setSoundGroup	(Lnet/minecraft/sound/BlockSoundGroup;)Lnet/minecraft/block/Block;
+transitive-accessible	method	net/minecraft/block/Block	setSoundGroup	(Lnet/minecraft/block/Block$BlockSoundGroup;)Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	setOpacity	(I)Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	setLuminance	(F)Lnet/minecraft/block/Block;
 transitive-accessible	method	net/minecraft/block/Block	setResistance	(F)Lnet/minecraft/block/Block;
@@ -45,7 +45,7 @@ transitive-accessible	method	net/minecraft/block/LogBlock	<init>	(I)V
 transitive-accessible	method	net/minecraft/block/SpawnerBlock	<init>	(II)V
 transitive-accessible	method	net/minecraft/block/MushroomPlantBlock	<init>	(II)V
 transitive-accessible	method	net/minecraft/block/PlantBlock	<init>	(II)V
-transitive-accessible	method	net/minecraft/block/PressurePlateBlock	<init>	(IILnet/minecraft/block/PressurePlateActivationRule;Lnet/minecraft/block/material/Material;)V
+transitive-accessible	method	net/minecraft/block/PressurePlateBlock	<init>	(IILnet/minecraft/block/PressurePlateBlock$PressurePlateActivationRule;Lnet/minecraft/block/material/Material;)V
 transitive-accessible	method	net/minecraft/block/PumpkinBlock	<init>	(IIZ)V
 transitive-accessible	method	net/minecraft/block/RailBlock	<init>	(IIZ)V
 transitive-accessible	method	net/minecraft/block/RepeaterBlock	<init>	(IZ)V
@@ -68,9 +68,9 @@ transitive-accessible	method	net/minecraft/block/WorkbenchBlock	<init>	(I)V
 transitive-accessible	method	net/minecraft/item/Item	<init>	(I)V
 transitive-accessible	method	net/minecraft/item/Item	setHasSubtypes	(Z)Lnet/minecraft/item/Item;
 transitive-accessible	method	net/minecraft/item/Item	setMaxDamage	(I)Lnet/minecraft/item/Item;
-transitive-accessible	method	net/minecraft/item/AxeItem	<init>	(ILnet/minecraft/item/ToolMaterial;)V
-transitive-accessible	method	net/minecraft/item/PickaxeItem	<init>	(ILnet/minecraft/item/ToolMaterial;)V
-transitive-accessible	method	net/minecraft/item/ToolItem	<init>	(IILnet/minecraft/item/ToolMaterial;[Lnet/minecraft/block/Block;)V
+transitive-accessible	method	net/minecraft/item/AxeItem	<init>	(ILnet/minecraft/item/Item$ToolMaterial;)V
+transitive-accessible	method	net/minecraft/item/PickaxeItem	<init>	(ILnet/minecraft/item/Item$ToolMaterial;)V
+transitive-accessible	method	net/minecraft/item/ToolItem	<init>	(IILnet/minecraft/item/Item$ToolMaterial;[Lnet/minecraft/block/Block;)V
 transitive-accessible	method	net/minecraft/item/MapItem	<init>	(I)V
 transitive-accessible	method	net/minecraft/item/NetworkSyncedItem	<init>	(I)V
 transitive-accessible	method	net/minecraft/item/MusicDiscItem	<init>	(ILjava/lang/String;)V

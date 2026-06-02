@@ -8,7 +8,7 @@ public class FogRendererImpl {
     private static final float[] FOG_COLOR = new float[3];
 
     public static void setupFog(Minecraft minecraft, float delta) {
-        BiomeSource biomeSource = minecraft.world.method_1781();
+        BiomeSource biomeSource = minecraft.world.getBiomeSource();
         double x = minecraft.camera.x;
         double z = minecraft.camera.z;
         int color = BiomeColorsImpl.FOG_INTERPOLATOR.getColor(biomeSource, x, z);

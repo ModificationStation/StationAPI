@@ -14,6 +14,7 @@ import net.modificationstation.stationapi.api.registry.legacy.WorldLegacyRegistr
 import net.modificationstation.stationapi.api.server.event.network.PlayerPacketHandlerSetEvent;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
@@ -34,7 +35,11 @@ public class ServerRegistrySender {
             NbtCompound registries = new NbtCompound();
             WorldLegacyRegistry.saveAll(registries);
             ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-            NbtIo.writeCompressed(registries, byteOutputStream);
+            try {
+                NbtIo.writeCompressed(registries, byteOutputStream);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             MessagePacket message = new MessagePacket(of(NAMESPACE, "server_registry_sync"));
             message.bytes = byteOutputStream.toByteArray();
             PacketHelper.sendTo(event.player, message);

@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "station-items-v0",
   "version": "${version}",
-
   "name": "Station Items (v0)",
   "description": "Essential systems for modded items.",
   "authors": [
@@ -13,10 +12,8 @@
     "sources": "https://github.com/ModificationStation/StationAPI",
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
-
   "license": "MIT",
   "icon": "assets/station-items-v0/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
@@ -37,25 +34,23 @@
   "mixins": [
     "station-items-v0.mixins.json"
   ],
-
   "depends": {
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
-
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
-      "net/minecraft/class_124": [
+      "net/minecraft/unmapped/C_98888256": [
         "net/modificationstation/stationapi/api/item/StationItem"
       ],
-      "net/minecraft/class_31": [
+      "net/minecraft/unmapped/C_88708284": [
         "net/modificationstation/stationapi/api/item/StationItemStack"
       ],
-      "net/minecraft/class_17": [
+      "net/minecraft/unmapped/C_81592558": [
         "net/modificationstation/stationapi/api/block/StationItemsBlock"
       ],
-      "net/minecraft/class_57": [
+      "net/minecraft/unmapped/C_42232651": [
         "net/modificationstation/stationapi/api/entity/StationItemsEntity"
       ]
     }

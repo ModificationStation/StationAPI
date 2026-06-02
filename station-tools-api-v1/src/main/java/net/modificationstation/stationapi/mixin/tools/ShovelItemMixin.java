@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.mixin.tools;
 import net.minecraft.block.Block;
 import net.minecraft.item.ShovelItem;
 import net.minecraft.item.ToolItem;
-import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;

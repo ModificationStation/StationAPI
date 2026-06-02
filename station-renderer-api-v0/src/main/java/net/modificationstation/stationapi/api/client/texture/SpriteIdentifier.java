@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.texture;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
@@ -10,19 +10,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 @Environment(EnvType.CLIENT)
 public class SpriteIdentifier {
 
    public static final Comparator<SpriteIdentifier> COMPARATOR = Comparator.<SpriteIdentifier, Identifier>comparing(id -> id.atlas).thenComparing(id -> id.texture);
    @NotNull
-   private static final Cache<String, SpriteIdentifier> CACHE = Caffeine.newBuilder().softValues().build();
+   private static final Cache<String, SpriteIdentifier> CACHE = CacheBuilder.newBuilder().softValues().build();
 
    public final Identifier atlas;
    public final Identifier texture;
 
    public static SpriteIdentifier of(Identifier atlas, Identifier texture) {
-      return CACHE.get(toString(atlas, texture), string -> new SpriteIdentifier(atlas, texture));
+       try {
+           return CACHE.get(toString(atlas, texture), () -> new SpriteIdentifier(atlas, texture));
+       } catch (ExecutionException e) {
+           throw new RuntimeException(e);
+       }
    }
 
    private SpriteIdentifier(Identifier atlas, Identifier texture) {

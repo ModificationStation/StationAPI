@@ -4,7 +4,7 @@ import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MultiplayerInteractionManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.HitResultType;
+import net.minecraft.util.hit.HitResult;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +28,7 @@ class MultiplayerInteractionManagerMixin extends InteractionManager {
         cir.setReturnValue((float) StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
                         .player(minecraft.player)
-                        .type(HitResultType.BLOCK)
+                        .type(HitResult.HitResultType.BLOCK)
                         .currentReach(cir.getReturnValueF())
                         .build()
         ).currentReach);

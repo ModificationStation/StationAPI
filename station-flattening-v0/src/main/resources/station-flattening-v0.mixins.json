@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.modificationstation.stationapi.mixin.flattening",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BlockItemMixin",
     "BlockMixin",
@@ -60,9 +60,9 @@
     "defaultRequire": 1
   },
   "server": [
-    "server.class_514Accessor",
-    "server.class_514Mixin",
-    "server.class_70Mixin",
+    "server.ChunkMap$TrackedChunkAccessor",
+    "server.ChunkMap$TrackedChunkMixin",
+    "server.ServerPlayerInteractionManagerMixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerEntityMixin",
     "server.ServerPlayerViewAccessor",

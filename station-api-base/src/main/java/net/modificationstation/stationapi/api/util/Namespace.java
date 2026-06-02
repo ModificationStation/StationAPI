@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.util;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.base.Suppliers;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
@@ -28,10 +28,10 @@ import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import java.util.zip.ZipError;
 
 @Slf4j
 public final class Namespace implements Comparable<@NotNull Namespace> {
@@ -39,7 +39,7 @@ public final class Namespace implements Comparable<@NotNull Namespace> {
     private static final Map<String, String> CREATE_FILESYSTEM_ARGS = Collections.singletonMap("create", "true");
 
     @NotNull
-    private static final Cache<@NotNull String, @NotNull Namespace> CACHE = Caffeine.newBuilder().softValues().build();
+    private static final Cache<@NotNull String, @NotNull Namespace> CACHE = CacheBuilder.newBuilder().softValues().build();
     @NotNull
     private static final Function<@NotNull String, @NotNull Namespace> NAMESPACE_FACTORY = Namespace::new;
 
@@ -57,7 +57,11 @@ public final class Namespace implements Comparable<@NotNull Namespace> {
     }
 
     public static @NotNull Namespace of(@NotNull final String namespace) {
-        return CACHE.get(namespace, NAMESPACE_FACTORY);
+        try {
+            return CACHE.get(namespace, () -> NAMESPACE_FACTORY.apply(namespace));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @ApiStatus.Experimental
@@ -93,7 +97,7 @@ public final class Namespace implements Comparable<@NotNull Namespace> {
                                 created = true;
                             } catch (FileSystemAlreadyExistsException ignore2) {
                                 fs = FileSystems.getFileSystem(jarUri);
-                            } catch (IOException | ZipError e) {
+                            } catch (IOException e) {
                                 throw new IOException("Error accessing " + uri + ": " + e, e);
                             }
                             callerRoot = fs.getPath("/").toUri();

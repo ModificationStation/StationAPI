@@ -1,9 +1,18 @@
 pluginManagement {
     repositories {
-        maven(url = "https://maven.glass-launcher.net/babric")
-        maven(url = "https://maven.fabricmc.net/")
-        maven(url = "https://jitpack.io/")
-        mavenCentral()
+        maven {
+            name = "Fabric"
+            url = uri("https://maven.fabricmc.net/")
+        }
+        maven {
+            name = "Ornithe Releases"
+            url = uri("https://maven.ornithemc.net/releases")
+        }
+        maven {
+            name = "Ornithe Snapshots"
+            url = uri("https://maven.ornithemc.net/snapshots")
+        }
+        mavenLocal()
         gradlePluginPortal()
     }
 }

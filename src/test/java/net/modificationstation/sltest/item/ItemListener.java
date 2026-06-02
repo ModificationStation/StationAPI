@@ -3,7 +3,6 @@ package net.modificationstation.sltest.item;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterial;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.sltest.block.VariationBlock;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
@@ -23,12 +22,12 @@ public class ItemListener {
     @EventListener
     public void registerItems(ItemRegistryEvent event) {
         ToolLevel moddedNode = new TagToolLevel(TagKey.of(BlockRegistry.KEY, NAMESPACE.id("needs_tool_level_modded")));
-        ToolLevel.GRAPH.putEdge(ToolMaterial.STONE.getToolLevel(), moddedNode);
-        ToolLevel.GRAPH.putEdge(moddedNode, ToolMaterial.IRON.getToolLevel());
+        ToolLevel.GRAPH.putEdge(Item.ToolMaterial.STONE.getToolLevel(), moddedNode);
+        ToolLevel.GRAPH.putEdge(moddedNode, Item.ToolMaterial.IRON.getToolLevel());
         ToolLevel siblingNode = new TagToolLevel(TagKey.of(BlockRegistry.KEY, NAMESPACE.id("needs_tool_level_sibling"))).equivalentToImmediateSiblings();
-        ToolLevel.GRAPH.putEdge(ToolMaterial.STONE.getToolLevel(), siblingNode);
-        ToolLevel.GRAPH.putEdge(siblingNode, ToolMaterial.IRON.getToolLevel());
-        ToolLevel.GRAPH.removeEdge(ToolMaterial.STONE.getToolLevel(), ToolMaterial.IRON.getToolLevel());
+        ToolLevel.GRAPH.putEdge(Item.ToolMaterial.STONE.getToolLevel(), siblingNode);
+        ToolLevel.GRAPH.putEdge(siblingNode, Item.ToolMaterial.IRON.getToolLevel());
+        ToolLevel.GRAPH.removeEdge(Item.ToolMaterial.STONE.getToolLevel(), Item.ToolMaterial.IRON.getToolLevel());
 
         testItem = new ModdedItem(NAMESPACE.id("test_item")); //8475
         testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2).toolLevel(siblingNode);
@@ -48,7 +47,7 @@ public class ItemListener {
     }
 
     public static Item testItem;
-    public static ToolMaterial testMaterial;
+    public static Item.ToolMaterial testMaterial;
     public static Item testPickaxe;
     public static Item testNBTItem;
     public static Item testModelItem;

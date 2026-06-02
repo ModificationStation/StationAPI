@@ -179,7 +179,7 @@ public final class ArsenicOverlayRenderer {
         Lighting.turnOn();
         glPopMatrix();
         ItemStack var5 = access.stationapi$getStack();
-        float var6 = access.stationapi$getMinecraft().world.method_1782(MathHelper.floor(var3.x), MathHelper.floor(var3.y), MathHelper.floor(var3.z));
+        float var6 = access.stationapi$getMinecraft().world.getLuminance(MathHelper.floor(var3.x), MathHelper.floor(var3.y), MathHelper.floor(var3.z));
         if (var5 != null) {
             int var7 = Item.ITEMS[var5.itemId].getColorMultiplier(var5.getDamage());
             float var8 = (float)(var7 >> 16 & 255) / 255.0F;

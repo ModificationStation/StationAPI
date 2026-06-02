@@ -55,6 +55,9 @@ class ReloadScreen extends Screen {
     private long GLOBAL_FADE_OUT = 1000;
     private long RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN;
     private long EXCEPTION_TRANSFORM = 500;
+    private static final long WRAP_UP_DURATION = 100; // 100ms wrap-up period after loading
+    private boolean inWrapUp = false;
+    private long wrapUpStart = 0;
 
     private final Screen parent;
     private final Runnable done;
@@ -105,6 +108,15 @@ class ReloadScreen extends Screen {
             GLOBAL_FADE_OUT =
             RELOAD_START =
             EXCEPTION_TRANSFORM = 1;
+        }
+        else if (ReloadScreenManager.isUsingEarlyRenderLoop()) {
+            // Faster animations for single-threaded LWJGL3 mode
+            BACKGROUND_FADE_IN = 250;
+            STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN;
+            STAGE_0_FADE_IN = 500;
+            GLOBAL_FADE_OUT = 300;
+            RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN;
+            EXCEPTION_TRANSFORM = 200;
         }
         else {
             BACKGROUND_FADE_IN = 1000;
@@ -368,7 +380,42 @@ class ReloadScreen extends Screen {
         if (partial) currentTime = lastRender;
         else lastRender = currentTime;
         val locationsSize = ReloadScreenManager.LOCATIONS.size();
-        if (!exceptionThrown && !finished && !(scrollProgress + .1 < locationsSize) && !(progress + .1 < 1) && ReloadScreenManager.isReloadComplete()) {
+
+        // Check if we should enter wrap-up mode (loading done, EarlyRenderLoop mode)
+        if (!exceptionThrown && !finished && !inWrapUp && ReloadScreenManager.isReloadComplete()) {
+            if (ReloadScreenManager.isUsingEarlyRenderLoop()) {
+                // Enter wrap-up mode - must complete before finishing
+                inWrapUp = true;
+                wrapUpStart = currentTime;
+            }
+        }
+
+        // During wrap-up, accelerate animations to catch up
+        float progressLerp = 0.05F;
+        float scrollLerp = 0.05F;
+        if (inWrapUp) {
+            // Speed up lerping during wrap-up
+            progressLerp = 0.4F;
+            scrollLerp = 0.4F;
+
+            // Wrap-up MUST complete its full duration before finishing
+            val wrapUpElapsed = currentTime - wrapUpStart;
+            if (wrapUpElapsed >= WRAP_UP_DURATION) {
+                try {
+                    ReloadScreenManager.getCurrentReload().ifPresent(ResourceReload::throwException);
+                    finished = true;
+                    fadeOutStart = currentTime;
+                    inWrapUp = false;
+                } catch (CompletionException e) {
+                    exceptionThrown = true;
+                    exceptionStart = currentTime;
+                    exception = e;
+                    inWrapUp = false;
+                    LOGGER.error("An exception occurred during resource loading", e);
+                }
+            }
+        } else if (!exceptionThrown && !finished && !(scrollProgress + .1 < locationsSize) && !(progress + .1 < 1) && ReloadScreenManager.isReloadComplete()) {
+            // Original logic for non-EarlyRenderLoop mode
             try {
                 ReloadScreenManager.getCurrentReload().ifPresent(ResourceReload::throwException);
                 finished = true;
@@ -380,10 +427,11 @@ class ReloadScreen extends Screen {
                 LOGGER.error("An exception occurred during resource loading", e);
             }
         }
+
         if (!partial) {
             Optional<ResourceReload> reload;
-            progress = Floats.constrainToRange(progress * .95F + (isReloadStarted() && (reload = ReloadScreenManager.getCurrentReload()).isPresent() ? reload.get().getProgress() : 0) * .05F, 0, 1);
-            scrollProgress = Floats.constrainToRange(scrollProgress * .95F + locationsSize * .05F, 0, locationsSize);
+            progress = Floats.constrainToRange(progress * (1 - progressLerp) + (isReloadStarted() && (reload = ReloadScreenManager.getCurrentReload()).isPresent() ? reload.get().getProgress() : 0) * progressLerp, 0, 1);
+            scrollProgress = Floats.constrainToRange(scrollProgress * (1 - scrollLerp) + locationsSize * scrollLerp, 0, locationsSize);
         }
         if ((finished ? currentTime <= fadeOutStart + GLOBAL_FADE_OUT : currentTime < BACKGROUND_START + BACKGROUND_FADE_IN) && parent != null)
             parent.render(mouseX, mouseY, delta);

@@ -1,13 +1,14 @@
 package net.modificationstation.stationapi.api.util;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
@@ -27,7 +28,7 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
 
     private record IdentifierCacheKey(@NotNull Namespace namespace, @NotNull String id) {}
     @NotNull
-    private static final Cache<@NotNull IdentifierCacheKey, @NotNull Identifier> CACHE = Caffeine.newBuilder().softValues().build();
+    private static final Cache<@NotNull IdentifierCacheKey, @NotNull Identifier> CACHE = CacheBuilder.newBuilder().softValues().build();
     @NotNull
     private static final Function<@NotNull IdentifierCacheKey, @NotNull Identifier> IDENTIFIER_FACTORY = Identifier::new;
 
@@ -46,7 +47,12 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
     }
 
     public static @NotNull Identifier of(@NotNull final Namespace namespace, @NotNull final String id) {
-        return CACHE.get(new IdentifierCacheKey(namespace, id), IDENTIFIER_FACTORY);
+        final var key = new IdentifierCacheKey(namespace, id);
+        try {
+            return CACHE.get(key, () -> IDENTIFIER_FACTORY.apply(key));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static @Nullable Identifier tryParse(@NotNull final String string) {

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ChunkMap.TrackedChunk.class)
-public interface class_514Accessor {
+public interface ChunkMap$TrackedChunkAccessor {
     @Invoker
     void invokeSendBlockEntityUpdate(BlockEntity tileEntity);
 }

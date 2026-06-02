@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.item.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.util.hit.HitResultType;
+import net.minecraft.util.hit.HitResult;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +23,7 @@ class GameRendererMixin {
         return StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
                         .player(client.player)
-                        .type(HitResultType.ENTITY)
+                        .type(HitResult.HitResultType.ENTITY)
                         .currentReach(originalReach)
                         .build()
         ).currentReach;

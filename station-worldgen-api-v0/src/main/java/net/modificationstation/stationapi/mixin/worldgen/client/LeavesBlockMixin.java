@@ -15,14 +15,14 @@ class LeavesBlockMixin {
             method = "getColorMultiplier",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/BlockView;method_1781()Lnet/minecraft/world/biome/source/BiomeSource;",
+                    target = "Lnet/minecraft/world/BlockView;getBiomeSource()Lnet/minecraft/world/biome/source/BiomeSource;",
                     ordinal = 0,
                     shift = Shift.BEFORE
             ),
             cancellable = true
     )
     private void stationapi_getBiomeColor(BlockView view, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
-        int color = BiomeColorsImpl.LEAVES_INTERPOLATOR.getColor(view.method_1781(), x, z);
+        int color = BiomeColorsImpl.LEAVES_INTERPOLATOR.getColor(view.getBiomeSource(), x, z);
         info.setReturnValue(color);
     }
 }

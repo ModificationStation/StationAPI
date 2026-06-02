@@ -59,11 +59,19 @@ public class RemapClientRegistryS2CPacket extends Packet implements ManagedPacke
         try {
             stream.writeInt(map.size());
             map.forEach((registryId, registryMapping) -> {
-                writeString(registryId.toString(), stream);
+                try {
+                    writeString(registryId.toString(), stream);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 try {
                     stream.writeInt(registryMapping.size());
                     registryMapping.forEach((identifier, rawId) -> {
-                        writeString(identifier.toString(), stream);
+                        try {
+                            writeString(identifier.toString(), stream);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         try {
                             stream.writeInt(rawId);
                         } catch (IOException e) {

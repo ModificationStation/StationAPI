@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS
 import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
 import net.modificationstation.stationapi.mixin.flattening.server.ServerPlayerViewAccessor;
-import net.modificationstation.stationapi.mixin.flattening.server.class_514Accessor;
+import net.modificationstation.stationapi.mixin.flattening.server.ChunkMap$TrackedChunkAccessor;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class ChunkSectionTracker {
             int z = (this.chunkZ << 4) + this.minZ;
             chunkTracker.sendPacketToPlayers(new FlattenedBlockChangeS2CPacket(x, y, z, world));
             if (Block.BLOCKS_WITH_ENTITY[world.getBlockId(x, y, z)]) {
-                ((class_514Accessor) chunkTracker).invokeSendBlockEntityUpdate(world.getBlockEntity(x, y, z));
+                ((ChunkMap$TrackedChunkAccessor) chunkTracker).invokeSendBlockEntityUpdate(world.getBlockEntity(x, y, z));
             }
         } else if (this.updatesCount == 10) {
             this.minY = this.minY / 2 * 2;
@@ -94,7 +94,7 @@ public class ChunkSectionTracker {
             //noinspection unchecked
             List<BlockEntity> list = world.getBlockEntities(x, y, z, x + sizeX, y + sizeY, z + sizeZ);
             for (int i = 0; i < list.size(); ++i) {
-                ((class_514Accessor) chunkTracker).invokeSendBlockEntityUpdate(list.get(i));
+                ((ChunkMap$TrackedChunkAccessor) chunkTracker).invokeSendBlockEntityUpdate(list.get(i));
             }
         } else {
             chunkTracker.sendPacketToPlayers(new FlattenedMultiBlockChangeS2CPacket(this.chunkX, this.chunkZ, sectionIndex, this.updates, this.updatesCount, world));
@@ -104,7 +104,7 @@ public class ChunkSectionTracker {
                 int n10 = this.chunkZ * 16 + (this.updatesCount >> 8 & 0xF);
                 if (!Block.BLOCKS_WITH_ENTITY[world.getBlockId(n, n9, n10)]) continue;
                 System.out.println("Sending!");
-                ((class_514Accessor) chunkTracker).invokeSendBlockEntityUpdate(world.getBlockEntity(n, n9, n10));
+                ((ChunkMap$TrackedChunkAccessor) chunkTracker).invokeSendBlockEntityUpdate(world.getBlockEntity(n, n9, n10));
             }
         }
         this.updatesCount = 0;

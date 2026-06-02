@@ -21,6 +21,7 @@ import net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataF
 import net.modificationstation.stationapi.impl.world.storage.FlattenedWorldStorage;
 import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenAccessor;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
@@ -52,7 +53,11 @@ public final class EditWorldScreenImpl {
                     FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.getWorldStorageSource();
                     mc.progressRenderer.progressStart("Converting World to " + worldStorage.getPreviousWorldFormat());
                     mc.progressRenderer.progressStage("This may take a while :)");
-                    worldStorage.convertWorld(screen.worldData.getSaveName(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.progressRenderer);
+                    try {
+                        worldStorage.convertWorld(screen.worldData.getSaveName(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.progressRenderer);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     mc.setScreen(screen);
                 }, WorldConversionWarning.TO_MCREGION_EXPLANATION_KEY, WorldConversionWarning.CONVERT_KEY))
         ));

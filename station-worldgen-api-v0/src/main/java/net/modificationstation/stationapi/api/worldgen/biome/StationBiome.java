@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.Feature;
 import net.modificationstation.stationapi.api.block.BlockState;
@@ -69,15 +70,15 @@ public interface StationBiome {
         Util.assertImpl();
     }
 
-    default void addPassiveEntity(Class<? extends Entity> entityClass, int rarity) {
+    default void addPassiveEntity(Class<? extends LivingEntity> entityClass, int rarity) {
         Util.assertImpl();
     }
 
-    default void addHostileEntity(Class<? extends Entity> entityClass, int rarity) {
+    default void addHostileEntity(Class<? extends LivingEntity> entityClass, int rarity) {
         Util.assertImpl();
     }
 
-    default void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
+    default void addWaterEntity(Class<? extends LivingEntity> entityClass, int rarity) {
         Util.assertImpl();
     }
 

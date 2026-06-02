@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "station-effects-api-v0",
   "version": "${version}",
-
   "name": "Station Entities (v0)",
   "description": "Provides essential systems for modded entities.",
   "authors": [
@@ -13,10 +12,8 @@
     "sources": "https://github.com/ModificationStation/StationAPI",
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
-
   "license": "MIT",
   "icon": "assets/station-effects-api-v0/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
@@ -26,16 +23,14 @@
   "mixins": [
     "station-effects-api-v0.mixins.json"
   ],
-
   "depends": {
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
-
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
-      "net/minecraft/class_57": [
+      "net/minecraft/unmapped/C_42232651": [
         "net/modificationstation/stationapi/api/entity/StationEffectsEntity"
       ]
     }

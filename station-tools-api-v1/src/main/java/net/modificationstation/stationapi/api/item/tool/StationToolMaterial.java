@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.item.tool;
 
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationToolMaterial {
-    default ToolMaterial toolLevel(ToolLevel toolLevel) {
+    default Item.ToolMaterial toolLevel(ToolLevel toolLevel) {
         return Util.assertImpl();
     }
 

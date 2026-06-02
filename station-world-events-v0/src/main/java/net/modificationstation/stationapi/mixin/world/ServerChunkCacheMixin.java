@@ -45,7 +45,7 @@ class ServerChunkCacheMixin {
                 WorldGenEvent.ChunkDecoration.builder()
                         .world(world)
                         .worldSource(this.generator)
-                        .biome(world.method_1781().getBiome(blockX + 16, blockZ + 16))
+                        .biome(world.getBiomeSource().getBiome(blockX + 16, blockZ + 16))
                         .x(blockX).z(blockZ)
                         .random(modRandom)
                         .build()

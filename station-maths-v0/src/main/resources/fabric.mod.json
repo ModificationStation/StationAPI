@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "station-maths-v0",
   "version": "${version}",
-
   "name": "Station Maths (v0)",
   "description": "Some math utilities.",
   "authors": [
@@ -13,24 +12,20 @@
     "sources": "https://github.com/ModificationStation/StationAPI",
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
-
   "license": "MIT",
   "icon": "assets/station-maths-v0/icon.png",
-
   "environment": "*",
   "mixins": [
     "station-maths-v0.mixins.json"
   ],
-
   "depends": {
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
-
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
-      "net/minecraft/class_339": [
+      "net/minecraft/unmapped/C_32594356": [
         "net/modificationstation/stationapi/api/util/math/StationBlockPos"
       ]
     }

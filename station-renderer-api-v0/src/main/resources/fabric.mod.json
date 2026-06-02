@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "station-renderer-api-v0",
   "version": "${version}",
-
   "name": "Station Renderer API (v0)",
   "description": "Textures, models, text color, etc.",
   "authors": [
@@ -13,10 +12,8 @@
     "sources": "https://github.com/ModificationStation/StationAPI",
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
-
   "license": "MIT",
   "icon": "assets/station-renderer-api-v0/icon.png",
-
   "environment": "client",
   "entrypoints": {
     "stationapi:event_bus_client": [
@@ -26,25 +23,23 @@
   "mixins": [
     "station-renderer-api-v0.mixins.json"
   ],
-
   "depends": {
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
-
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
-      "net/minecraft/class_17": [
+      "net/minecraft/unmapped/C_81592558": [
         "net/modificationstation/stationapi/api/client/block/StationRendererBlock"
       ],
-      "net/minecraft/class_67": [
+      "net/minecraft/unmapped/C_96603444": [
         "net/modificationstation/stationapi/api/client/render/StationTessellator"
       ],
-      "net/minecraft/class_124": [
+      "net/minecraft/unmapped/C_98888256": [
         "net/modificationstation/stationapi/api/client/item/StationRendererItem"
       ],
-      "net/minecraft/class_13": [
+      "net/minecraft/unmapped/C_03670941": [
         "net/modificationstation/stationapi/api/client/render/block/StationRendererBlockRenderManager"
       ]
     }

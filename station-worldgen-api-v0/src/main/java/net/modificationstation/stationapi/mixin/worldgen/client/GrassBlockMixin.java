@@ -16,7 +16,7 @@ class GrassBlockMixin {
             cancellable = true
     )
     private void stationapi_getBiomeColor(BlockView view, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
-        int color = BiomeColorsImpl.GRASS_INTERPOLATOR.getColor(view.method_1781(), x, z);
+        int color = BiomeColorsImpl.GRASS_INTERPOLATOR.getColor(view.getBiomeSource(), x, z);
         info.setReturnValue(color);
     }
 }

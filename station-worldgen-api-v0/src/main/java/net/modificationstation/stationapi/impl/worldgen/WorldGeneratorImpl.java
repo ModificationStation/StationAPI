@@ -16,7 +16,7 @@ public class WorldGeneratorImpl {
         cx <<= 4;
         cz <<= 4;
     
-        BiomeSource biomeSource = world.method_1781();
+        BiomeSource biomeSource = world.getBiomeSource();
         int sideY = (1 << (MathHelper.ceilLog2(world.getHeight()) - 3)) + 1;
         int bottom = world.getBottomY() >> 3;
         int dx = sideY * 5;

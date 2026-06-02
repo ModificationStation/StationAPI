@@ -17,11 +17,11 @@ import net.minecraft.nbt.*;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.mixin.nbt.NbtCompoundAccessor;
 import net.modificationstation.stationapi.mixin.nbt.NbtListAccessor;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.function.*;
@@ -195,12 +195,20 @@ public class NbtOps implements DynamicOps<NbtElement> {
 
         @Override
         public void write(DataOutput out) {
-            array.write(out);
+            try {
+                array.write(out);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
         public void read(DataInput in) {
-            array.read(in);
+            try {
+                array.read(in);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
@@ -215,10 +223,28 @@ public class NbtOps implements DynamicOps<NbtElement> {
     }
 
     private static NbtList createList(byte knownType, byte valueType) {
-        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 4)) return new ListArrayTag<>(new NbtLongArray(new long[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = ArrayUtils.insert(array.data.length, array.data, tag.value)), array -> i -> new NbtLong(array.data[i]), array -> () -> array.data.length, (byte) 4);
-        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 1)) return new ListArrayTag<>(new NbtByteArray(new byte[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.value = ArrayUtils.insert(array.value.length, array.value, tag.value)), array -> i -> new NbtByte(array.value[i]), array -> () -> array.value.length, (byte) 1);
-        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 3)) return new ListArrayTag<>(new NbtIntArray(new int[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = ArrayUtils.insert(array.data.length, array.data, tag.value)), array -> i -> new NbtInt(array.data[i]), array -> () -> array.data.length, (byte) 3);
+        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 4)) return new ListArrayTag<>(new NbtLongArray(new long[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = insert(array.data, tag.value)), array -> i -> new NbtLong(array.data[i]), array -> () -> array.data.length, (byte) 4);
+        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 1)) return new ListArrayTag<>(new NbtByteArray(new byte[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.value = insert(array.value, tag.value)), array -> i -> new NbtByte(array.value[i]), array -> () -> array.value.length, (byte) 1);
+        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 3)) return new ListArrayTag<>(new NbtIntArray(new int[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = insert(array.data, tag.value)), array -> i -> new NbtInt(array.data[i]), array -> () -> array.data.length, (byte) 3);
         return new NbtList();
+    }
+
+    private static long[] insert(long[] array, long value) {
+        long[] newArray = Arrays.copyOf(array, array.length + 1);
+        newArray[array.length] = value;
+        return newArray;
+    }
+
+    private static byte[] insert(byte[] array, byte value) {
+        byte[] newArray = Arrays.copyOf(array, array.length + 1);
+        newArray[array.length] = value;
+        return newArray;
+    }
+
+    private static int[] insert(int[] array, int value) {
+        int[] newArray = Arrays.copyOf(array, array.length + 1);
+        newArray[array.length] = value;
+        return newArray;
     }
 
     private static boolean isTypeEqual(byte knownType, byte valueType, byte expectedType) {

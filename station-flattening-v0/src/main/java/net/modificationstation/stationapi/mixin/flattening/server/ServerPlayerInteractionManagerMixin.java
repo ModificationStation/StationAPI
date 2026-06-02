@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerInteractionManager.class)
-class class_70Mixin {
+class ServerPlayerInteractionManagerMixin {
     @Shadow private ServerWorld world;
     @Shadow private int miningX;
     @Shadow private int miningY;

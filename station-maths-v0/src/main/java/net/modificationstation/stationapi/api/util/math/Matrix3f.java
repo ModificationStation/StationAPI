@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.util.math;
 
 import com.mojang.datafixers.util.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.nio.FloatBuffer;
 
@@ -203,7 +202,9 @@ public final class Matrix3f {
         this.a21 = f;
     }
 
-    public Triple<Quaternion, Vec3f, Quaternion> decomposeLinearTransformation() {
+    public record LinearTransformationDecomposition(Quaternion rotationBefore, Vec3f scale, Quaternion rotationAfter) {}
+
+    public LinearTransformationDecomposition decomposeLinearTransformation() {
         Quaternion quaternion = Quaternion.IDENTITY.copy();
         Quaternion quaternion2 = Quaternion.IDENTITY.copy();
         Matrix3f matrix3f = this.copy();
@@ -272,7 +273,7 @@ public final class Matrix3f {
         f = 1.0F / f;
         quaternion.scale((float)Math.sqrt(f));
         Vec3f vector3f = new Vec3f(matrix3f5.a00 * f, matrix3f5.a11 * f, matrix3f5.a22 * f);
-        return Triple.of(quaternion, vector3f, quaternion2);
+        return new LinearTransformationDecomposition(quaternion, vector3f, quaternion2);
     }
 
     public boolean equals(Object object) {

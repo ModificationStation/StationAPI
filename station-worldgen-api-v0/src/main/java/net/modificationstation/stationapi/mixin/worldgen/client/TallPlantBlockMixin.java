@@ -22,7 +22,7 @@ class TallPlantBlockMixin {
             x += (int) (l >> 14) & 7;
             z += (int) (l >> 24) & 7;
             
-            int color = BiomeColorsImpl.GRASS_INTERPOLATOR.getColor(view.method_1781(), x, z);
+            int color = BiomeColorsImpl.GRASS_INTERPOLATOR.getColor(view.getBiomeSource(), x, z);
             info.setReturnValue(color);
         }
     }

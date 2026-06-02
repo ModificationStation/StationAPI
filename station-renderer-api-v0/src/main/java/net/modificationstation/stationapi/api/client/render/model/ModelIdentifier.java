@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.fabricmc.api.EnvType;
@@ -9,12 +9,14 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 
+import java.util.concurrent.ExecutionException;
+
 @SuppressWarnings("ClassCanBeRecord")
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Environment(EnvType.CLIENT)
 public final class ModelIdentifier {
 
-   private static final Cache<String, ModelIdentifier> CACHE = Caffeine.newBuilder().softValues().build();
+   private static final Cache<String, ModelIdentifier> CACHE = CacheBuilder.newBuilder().softValues().build();
 
    public final Identifier id;
    public final String variant;
@@ -25,7 +27,11 @@ public final class ModelIdentifier {
    }
 
    public static ModelIdentifier of(Identifier id, String variant) {
-      return CACHE.get(variant.isEmpty() ? id.toString() : id + "#" + variant, s -> new ModelIdentifier(id, variant));
+       try {
+           return CACHE.get(variant.isEmpty() ? id.toString() : id + "#" + variant, () -> new ModelIdentifier(id, variant));
+       } catch (ExecutionException e) {
+           throw new RuntimeException(e);
+       }
    }
 
    public static ModelIdentifier of(String string, String string2) {

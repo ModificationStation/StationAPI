@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "station-nbt-v0",
   "version": "${version}",
-
   "name": "Station NBT (v0)",
   "description": "Expands and makes it easier to use in-game NBT.",
   "authors": [
@@ -13,57 +12,53 @@
     "sources": "https://github.com/ModificationStation/StationAPI",
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
-
   "license": "MIT",
   "icon": "assets/station-nbt-v0/icon.png",
-
   "environment": "*",
   "mixins": [
     "station-nbt-v0.mixins.json"
   ],
-
   "depends": {
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
-
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
-      "net/minecraft/class_360": [
+      "net/minecraft/unmapped/C_64685490": [
         "net/modificationstation/stationapi/api/nbt/StationNbtByte"
       ],
-      "net/minecraft/class_165": [
+      "net/minecraft/unmapped/C_03009146": [
         "net/modificationstation/stationapi/api/nbt/StationNbtByteArray"
       ],
-      "net/minecraft/class_8": [
+      "net/minecraft/unmapped/C_74087615": [
         "net/modificationstation/stationapi/api/nbt/StationNbtCompound"
       ],
-      "net/minecraft/class_419": [
+      "net/minecraft/unmapped/C_06229858": [
         "net/modificationstation/stationapi/api/nbt/StationNbtDouble"
       ],
-      "net/minecraft/class_187": [
+      "net/minecraft/unmapped/C_97075175": [
         "net/modificationstation/stationapi/api/nbt/StationNbtElement"
       ],
-      "net/minecraft/class_253": [
+      "net/minecraft/unmapped/C_50870163": [
         "net/modificationstation/stationapi/api/nbt/StationNbtEnd"
       ],
-      "net/minecraft/class_358": [
+      "net/minecraft/unmapped/C_02949887": [
         "net/modificationstation/stationapi/api/nbt/StationNbtFloat"
       ],
-      "net/minecraft/class_347": [
+      "net/minecraft/unmapped/C_57925352": [
         "net/modificationstation/stationapi/api/nbt/StationNbtInt"
       ],
-      "net/minecraft/class_202": [
+      "net/minecraft/unmapped/C_79370641": [
         "net/modificationstation/stationapi/api/nbt/StationNbtList"
       ],
-      "net/minecraft/class_273": [
+      "net/minecraft/unmapped/C_90490889": [
         "net/modificationstation/stationapi/api/nbt/StationNbtLong"
       ],
-      "net/minecraft/class_462": [
+      "net/minecraft/unmapped/C_80104453": [
         "net/modificationstation/stationapi/api/nbt/StationNbtShort"
       ],
-      "net/minecraft/class_522": [
+      "net/minecraft/unmapped/C_74891195": [
         "net/modificationstation/stationapi/api/nbt/StationNbtString"
       ]
     }

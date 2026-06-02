@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.impl.recipe.StationShapelessRecipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 
-@Mixin(targets = "net.minecraft.recipe.CraftingRecipeManager$1")
+@Mixin(targets = "net.minecraft.recipe.CraftingRecipeManager$57536588")
 class RecipeComparatorMixin {
     @WrapOperation(
             method = "compare(Lnet/minecraft/recipe/CraftingRecipe;Lnet/minecraft/recipe/CraftingRecipe;)I",

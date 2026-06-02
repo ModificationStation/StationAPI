@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "station-blockitems-v0",
   "version": "${version}",
-
   "name": "Station BlockItems (v0)",
   "description": "API for custom block items.",
   "authors": [
@@ -13,10 +12,8 @@
     "sources": "https://github.com/ModificationStation/StationAPI",
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
-
   "license": "MIT",
   "icon": "assets/station-blockitems-v0/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
@@ -29,16 +26,14 @@
   "mixins": [
     "station-blockitems-v0.mixins.json"
   ],
-
   "depends": {
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
-
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
-      "net/minecraft/class_17": [
+      "net/minecraft/unmapped/C_81592558": [
         "net/modificationstation/stationapi/api/block/StationBlockItemsBlock"
       ]
     }

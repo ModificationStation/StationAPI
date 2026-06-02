@@ -5,7 +5,7 @@ import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -66,9 +66,9 @@ public abstract class ToolLevel {
         list.add(diamond);
         GRAPH.putEdge(stone, iron);
         GRAPH.putEdge(iron, diamond);
-        ToolMaterial.STONE.toolLevel(stone);
-        ToolMaterial.IRON.toolLevel(iron);
-        ToolMaterial.DIAMOND.toolLevel(diamond);
+        Item.ToolMaterial toolMaterial = Item.ToolMaterial.STONE.toolLevel(stone);
+        Item.ToolMaterial.IRON.toolLevel(iron);
+        Item.ToolMaterial.DIAMOND.toolLevel(diamond);
     });
 
     public static ToolLevel getNumeric(int level) {

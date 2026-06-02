@@ -19,7 +19,7 @@ public class WorldDecoratorImpl {
         int x2 = x1 + 16;
         int z2 = z1 + 16;
         
-        world.method_1781().getBiomesInArea(BIOMES, x1, z1, 16, 16);
+        world.getBiomeSource().getBiomesInArea(BIOMES, x1, z1, 16, 16);
 
         int index = 0;
         for (int x = x1; x < x2; x++) {

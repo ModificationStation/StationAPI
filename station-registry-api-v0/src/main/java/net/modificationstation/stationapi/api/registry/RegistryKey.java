@@ -1,11 +1,12 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.mojang.serialization.Codec;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents a key for a value in a registry in a context where a
@@ -19,7 +20,7 @@ public class RegistryKey<T> {
     /**
      * A cache of all registry keys ever created.
      */
-    private static final Cache<RegistryIdPair, RegistryKey<?>> CACHE = Caffeine.newBuilder().softValues().build();
+    private static final Cache<RegistryIdPair, RegistryKey<?>> CACHE = CacheBuilder.newBuilder().softValues().build();
     /**
      * The identifier of the registry in the root registry.
      */
@@ -66,8 +67,13 @@ public class RegistryKey<T> {
     }
 
     private static <T> RegistryKey<T> of(Identifier registry, Identifier value) {
-        //noinspection unchecked
-        return (RegistryKey<T>) CACHE.get(new RegistryIdPair(registry, value), pair -> new RegistryKey<>(pair.registry, pair.id));
+        final var key = new RegistryIdPair(registry, value);
+        try {
+            //noinspection unchecked
+            return (RegistryKey<T>) CACHE.get(key, () -> new RegistryKey<>(key.registry, key.id));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private RegistryKey(Identifier registry, Identifier value) {
