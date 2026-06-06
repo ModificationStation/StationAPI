@@ -21,10 +21,10 @@ public class ItemTagConditionsImpl {
 
     @EventListener
     private static void registerConditions(ItemRegistryEvent event) {
-        event.registry.registerItemTagCondition(
+        event.registry.buildItemTagCondition(
                 NAMESPACE.id("item_damage"),
                 Codec.INT.fieldOf("damage"),
                 (damage, ctx) -> ctx.hasDamage() && ctx.damage() == damage
-        );
+        ).register();
     }
 }

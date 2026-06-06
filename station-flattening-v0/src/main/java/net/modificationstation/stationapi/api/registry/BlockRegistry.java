@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
@@ -7,6 +8,7 @@ import net.modificationstation.stationapi.api.block.context.BlockContext;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.context.ConditionType;
 import net.modificationstation.stationapi.api.util.context.Context;
 
 import java.util.function.BiPredicate;
@@ -26,26 +28,26 @@ public final class BlockRegistry extends SimpleRegistry<Block> {
     }
 
     /**
-     * Registers a data-less tag condition that operates on a {@link BlockContext}.
+     * Creates a builder for a data-less tag condition that operates on a {@link BlockContext}.
      * <p>
      * This is a convenience overload that automatically projects the raw context
      * via {@link BlockContext#of(Context)}.
      *
-     * @see #registerTagCondition(Identifier, Function, Predicate)
+     * @see #buildTagCondition(Identifier, Function, Predicate)
      */
-    public void registerBlockTagCondition(Identifier id, Predicate<BlockContext> condition) {
-        registerTagCondition(id, BlockContext::of, condition);
+    public ConditionType.Builder<Unit, BlockContext> buildBlockTagCondition(Identifier id, Predicate<BlockContext> condition) {
+        return buildTagCondition(id, BlockContext::of, condition);
     }
 
     /**
-     * Registers a data-backed tag condition that operates on a {@link BlockContext}.
+     * Creates a builder for a data-backed tag condition that operates on a {@link BlockContext}.
      * <p>
      * This is a convenience overload that automatically projects the raw context
      * via {@link BlockContext#of(Context)}.
      *
-     * @see #registerTagCondition(Identifier, MapCodec, Function, BiPredicate)
+     * @see #buildTagCondition(Identifier, MapCodec, Function, BiPredicate)
      */
-    public <DATA> void registerBlockTagCondition(Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, BlockContext> condition) {
-        registerTagCondition(id, codec, BlockContext::of, condition);
+    public <DATA> ConditionType.Builder<DATA, BlockContext> buildBlockTagCondition(Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, BlockContext> condition) {
+        return buildTagCondition(id, codec, BlockContext::of, condition);
     }
 }

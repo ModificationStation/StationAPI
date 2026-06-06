@@ -4,6 +4,8 @@ import com.mojang.serialization.MapCodec;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public final class ConditionType<DATA> {
     private final Identifier id;
@@ -11,14 +13,42 @@ public final class ConditionType<DATA> {
     private final BiPredicate<DATA, Context> logic;
     private final MapCodec<Condition<DATA>> conditionCodec;
 
-    public ConditionType(Identifier id, MapCodec<DATA> dataCodec, BiPredicate<DATA, Context> logic) {
-        this.id = id;
-        this.dataCodec = dataCodec;
-        this.logic = logic;
+    private <C extends Context> ConditionType(Builder<DATA, C> builder) {
+        this.id = builder.id;
+        this.dataCodec = builder.codec;
+        
+        BiPredicate<DATA, C> logic = builder.logic;
+        Function<Context, C> projection = builder.projection;
+        this.logic = (data, ctx) -> logic.test(data, projection.apply(ctx));
+        
         conditionCodec = dataCodec.xmap(
                 data -> new Condition<>(this, data),
                 Condition::data
         );
+    }
+
+    public static <DATA, C extends Context> Builder<DATA, C> builder(Identifier id, MapCodec<DATA> codec, Function<Context, C> projection, BiPredicate<DATA, C> logic, Consumer<ConditionType<DATA>> registryCallback) {
+        return new Builder<>(id, codec, projection, logic, registryCallback);
+    }
+
+    public static class Builder<DATA, C extends Context> {
+        private final Identifier id;
+        private final MapCodec<DATA> codec;
+        private final Function<Context, C> projection;
+        private final BiPredicate<DATA, C> logic;
+        private final Consumer<ConditionType<DATA>> registryCallback;
+
+        private Builder(Identifier id, MapCodec<DATA> codec, Function<Context, C> projection, BiPredicate<DATA, C> logic, Consumer<ConditionType<DATA>> registryCallback) {
+            this.id = id;
+            this.codec = codec;
+            this.projection = projection;
+            this.logic = logic;
+            this.registryCallback = registryCallback;
+        }
+
+        public void register() {
+            registryCallback.accept(new ConditionType<>(this));
+        }
     }
 
     public boolean test(DATA data, Context ctx) {

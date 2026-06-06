@@ -12,6 +12,7 @@ import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import net.modificationstation.stationapi.api.util.context.Condition;
+import net.modificationstation.stationapi.api.util.context.ConditionType;
 import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import net.modificationstation.stationapi.api.util.function.BulkBiConsumer;
@@ -506,32 +507,36 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
         };
     }
 
-    default void registerTagCondition(Identifier id, Predicate<Context> condition) {
-        registerTagCondition(id, MapCodec.unit(Unit.INSTANCE), (data, ctx) -> condition.test(ctx));
+    <DATA> void registerTagCondition(ConditionType<DATA> conditionType);
+
+    default ConditionType.Builder<Unit, Context> buildTagCondition(Identifier id, Predicate<Context> condition) {
+        return ConditionType.builder(id, MapCodec.unit(Unit.INSTANCE), Function.identity(), (data, ctx) -> condition.test(ctx), this::registerTagCondition);
     }
 
     /**
-     * Registers a tag condition with a context projection.
+     * Creates a builder for a tag condition with a context projection.
      *
      * @param id the condition ID
      * @param projection the function to project the raw context into a specific view
      * @param condition the condition to test against the projected view
      * @param <C> the type of the projected context
      */
-    default <C extends Context> void registerTagCondition(
+    default <C extends Context> ConditionType.Builder<Unit, C> buildTagCondition(
             Identifier id,
             Function<Context, C> projection,
             Predicate<C> condition
     ) {
-        registerTagCondition(id, ctx -> condition.test(projection.apply(ctx)));
+        return ConditionType.builder(id, MapCodec.unit(Unit.INSTANCE), projection, (data, ctx) -> condition.test(ctx), this::registerTagCondition);
     }
 
-    <DATA> void registerTagCondition(
+    default <DATA> ConditionType.Builder<DATA, Context> buildTagCondition(
             Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, Context> condition
-    );
+    ) {
+        return ConditionType.builder(id, codec, Function.identity(), condition, this::registerTagCondition);
+    }
 
     /**
-     * Registers a data-backed tag condition with a view context projection.
+     * Creates a builder for a data-backed tag condition with a view context projection.
      *
      * @param id the condition ID
      * @param codec the codec for the condition data
@@ -540,13 +545,13 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
      * @param <DATA> the type of the condition data
      * @param <C> the type of the projected context
      */
-    default <DATA, C extends Context> void registerTagCondition(
+    default <DATA, C extends Context> ConditionType.Builder<DATA, C> buildTagCondition(
             Identifier id,
             MapCodec<DATA> codec,
             Function<Context, C> projection,
             BiPredicate<DATA, C> condition
     ) {
-        registerTagCondition(id, codec, (data, ctx) -> condition.test(data, projection.apply(ctx)));
+        return ConditionType.builder(id, codec, projection, condition, this::registerTagCondition);
     }
 
     Codec<Condition<?>> getTagConditionCodec();

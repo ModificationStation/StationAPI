@@ -21,10 +21,10 @@ public class BlockTagConditionsImpl {
 
     @EventListener
     private static void registerConditions(BlockRegistryEvent event) {
-        event.registry.registerBlockTagCondition(
+        event.registry.buildBlockTagCondition(
                 NAMESPACE.id("block_metadata"),
                 Codec.INT.fieldOf("metadata"),
                 (metadata, ctx) -> ctx.hasBlockMeta() && ctx.blockMeta() == metadata
-        );
+        ).register();
     }
 }

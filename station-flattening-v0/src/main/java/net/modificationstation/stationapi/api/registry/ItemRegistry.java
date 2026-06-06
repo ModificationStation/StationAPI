@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
@@ -8,6 +9,7 @@ import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
 import net.modificationstation.stationapi.api.item.context.ItemContext;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.context.ConditionType;
 import net.modificationstation.stationapi.api.util.context.Context;
 
 import java.util.function.BiPredicate;
@@ -29,26 +31,26 @@ public final class ItemRegistry extends SimpleRegistry<Item> {
     }
 
     /**
-     * Registers a data-less tag condition that operates on an {@link ItemContext}.
+     * Creates a builder for a data-less tag condition that operates on an {@link ItemContext}.
      * <p>
      * This is a convenience overload that automatically projects the raw context
      * via {@link ItemContext#of(Context)}.
      *
-     * @see #registerTagCondition(Identifier, Function, Predicate)
+     * @see #buildTagCondition(Identifier, Function, Predicate)
      */
-    public void registerItemTagCondition(Identifier id, Predicate<ItemContext> condition) {
-        registerTagCondition(id, ItemContext::of, condition);
+    public ConditionType.Builder<Unit, ItemContext> buildItemTagCondition(Identifier id, Predicate<ItemContext> condition) {
+        return buildTagCondition(id, ItemContext::of, condition);
     }
 
     /**
-     * Registers a data-backed tag condition that operates on an {@link ItemContext}.
+     * Creates a builder for a data-backed tag condition that operates on an {@link ItemContext}.
      * <p>
      * This is a convenience overload that automatically projects the raw context
      * via {@link ItemContext#of(Context)}.
      *
-     * @see #registerTagCondition(Identifier, MapCodec, Function, BiPredicate)
+     * @see #buildTagCondition(Identifier, MapCodec, Function, BiPredicate)
      */
-    public <DATA> void registerItemTagCondition(Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, ItemContext> condition) {
-        registerTagCondition(id, codec, ItemContext::of, condition);
+    public <DATA> ConditionType.Builder<DATA, ItemContext> buildItemTagCondition(Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, ItemContext> condition) {
+        return buildTagCondition(id, codec, ItemContext::of, condition);
     }
 }

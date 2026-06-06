@@ -4,7 +4,6 @@ import com.google.common.collect.*;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
-import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
@@ -31,7 +30,6 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -737,8 +735,8 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public <DATA> void registerTagCondition(Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, Context> condition) {
-        tagConditionTypes.put(id, new ConditionType<>(id, codec, condition));
+    public <DATA> void registerTagCondition(ConditionType<DATA> conditionType) {
+        tagConditionTypes.put(conditionType.id(), conditionType);
     }
 
     @Override
