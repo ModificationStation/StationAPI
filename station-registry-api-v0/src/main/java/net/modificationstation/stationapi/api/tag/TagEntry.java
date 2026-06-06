@@ -1,23 +1,52 @@
 package net.modificationstation.stationapi.api.tag;
 
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JavaOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.context.Condition;
+import net.modificationstation.stationapi.api.util.context.ConditionType;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TagEntry {
-    public static Codec<TagEntry> createCodec(Codec<Condition<?>> tagConditionCodec) {
+    public static Codec<TagEntry> createCodec(Codec<Condition<?>> tagConditionCodec, Iterable<ConditionType<?>> tagConditionTypes) {
         return Codec.either(
-                Codecs.TAG_ENTRY_ID,
+                Codec.STRING.comapFlatMap(
+                        s -> {
+                            String path = s;
+                            List<Condition<?>> conditions = new ArrayList<>();
+                            boolean matched;
+                            do {
+                                matched = false;
+                                for (ConditionType<?> type : tagConditionTypes) {
+                                    Optional<Pair<String, Condition<?>>> result = captureAndParse(type, path);
+                                    if (result.isPresent()) {
+                                        path = result.get().getFirst();
+                                        conditions.add(result.get().getSecond());
+                                        matched = true;
+                                        break;
+                                    }
+                                }
+                            } while (matched);
+                            return Codecs.TAG_ENTRY_ID.parse(JavaOps.INSTANCE, path)
+                                    .map(id -> new TagEntry(id, true, conditions));
+                        },
+                        entry -> entry.getIdForCodec().toString()
+                ),
                 RecordCodecBuilder.<TagEntry>create(
                         instance -> instance.group(
                                 Codecs.TAG_ENTRY_ID.fieldOf("id")
@@ -29,12 +58,28 @@ public class TagEntry {
                         ).apply(instance, TagEntry::new)
                 )
         ).xmap(
-                either -> either.map(
-                        id -> new TagEntry(id, true),
-                        tagEntry -> tagEntry
-                ),
-                entry -> entry.required ? Either.left(entry.getIdForCodec()) : Either.right(entry)
+                Either::unwrap,
+                entry -> entry.required && entry.conditions.isEmpty()
+                        ? Either.left(entry)
+                        : Either.right(entry)
         );
+    }
+
+    private static <DATA> Optional<Pair<String, Condition<?>>> captureAndParse(ConditionType<DATA> type, String path) {
+        Pattern pattern = type.shorthandPattern();
+        if (pattern == null) return Optional.empty();
+
+        Matcher matcher = pattern.matcher(path);
+        if (!matcher.find()) return Optional.empty();
+
+        String remaining = path.substring(0, matcher.start()) + path.substring(matcher.end());
+        String extracted = matcher.group(1);
+
+        Dynamic<?> dynamic = new Dynamic<>(JavaOps.INSTANCE, extracted);
+        Dynamic<?> unfolded = type.unfolder().apply(dynamic);
+
+        DataResult<DATA> result = type.dataCodec().codec().parse(unfolded);
+        return result.result().map(data -> Pair.of(remaining, new Condition<>(type, data)));
     }
 
     private final Identifier id;

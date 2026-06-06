@@ -743,4 +743,9 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     public Codec<Condition<?>> getTagConditionCodec() {
         return tagConditionCodec;
     }
+
+    @Override
+    public Iterable<ConditionType<?>> getTagConditionTypes() {
+        return Collections.unmodifiableCollection(tagConditionTypes.values());
+    }
 }

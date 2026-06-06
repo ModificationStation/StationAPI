@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 import java.lang.invoke.MethodHandles;
+import java.util.regex.Pattern;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
@@ -21,10 +22,18 @@ public class ItemTagConditionsImpl {
 
     @EventListener
     private static void registerConditions(ItemRegistryEvent event) {
-        event.registry.buildItemTagCondition(
-                NAMESPACE.id("item_damage"),
-                Codec.INT.fieldOf("damage"),
-                (damage, ctx) -> ctx.hasDamage() && ctx.damage() == damage
-        ).register();
+        event.registry
+                .buildItemTagCondition(
+                        NAMESPACE.id("item_damage"),
+                        Codec.INT.fieldOf("damage"),
+                        (damage, ctx) -> ctx.hasDamage() && ctx.damage() == damage
+                )
+                .shorthand(
+                        Pattern.compile("@(\\d+)"),
+                        dynamic -> dynamic.emptyMap().set(
+                                "damage", dynamic.createInt(Integer.parseInt(dynamic.asString("0")))
+                        )
+                )
+                .register();
     }
 }

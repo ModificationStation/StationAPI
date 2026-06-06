@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 import java.lang.invoke.MethodHandles;
+import java.util.regex.Pattern;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
@@ -21,10 +22,18 @@ public class BlockTagConditionsImpl {
 
     @EventListener
     private static void registerConditions(BlockRegistryEvent event) {
-        event.registry.buildBlockTagCondition(
-                NAMESPACE.id("block_metadata"),
-                Codec.INT.fieldOf("metadata"),
-                (metadata, ctx) -> ctx.hasBlockMeta() && ctx.blockMeta() == metadata
-        ).register();
+        event.registry
+                .buildBlockTagCondition(
+                        NAMESPACE.id("block_metadata"),
+                        Codec.INT.fieldOf("metadata"),
+                        (metadata, ctx) -> ctx.hasBlockMeta() && ctx.blockMeta() == metadata
+                )
+                .shorthand(
+                        Pattern.compile("@(\\d+)"),
+                        dynamic -> dynamic.emptyMap().set(
+                                "metadata", dynamic.createInt(Integer.parseInt(dynamic.asString("0")))
+                        )
+                )
+                .register();
     }
 }

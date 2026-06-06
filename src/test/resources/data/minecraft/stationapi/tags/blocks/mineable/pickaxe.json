@@ -2,14 +2,6 @@
   "values": [
     "sltest:test_block",
     "sltest:variation_block",
-    {
-      "id": "minecraft:wool",
-      "conditions": [
-        {
-          "type": "stationapi:block_metadata",
-          "metadata": 1
-        }
-      ]
-    }
+    "minecraft:wool@1"
   ]
 }

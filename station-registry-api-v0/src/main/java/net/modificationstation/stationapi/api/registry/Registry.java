@@ -555,4 +555,6 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
     }
 
     Codec<Condition<?>> getTagConditionCodec();
+
+    Iterable<ConditionType<?>> getTagConditionTypes();
 }

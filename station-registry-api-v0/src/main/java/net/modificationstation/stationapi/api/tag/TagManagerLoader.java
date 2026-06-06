@@ -1,7 +1,10 @@
 package net.modificationstation.stationapi.api.tag;
 
 import lombok.val;
-import net.modificationstation.stationapi.api.registry.*;
+import net.modificationstation.stationapi.api.registry.DynamicRegistryManager;
+import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
+import net.modificationstation.stationapi.api.registry.RegistryKey;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
@@ -73,7 +76,7 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
         TagGroupLoader<RegistryEntry<T>> tagGroupLoader = new TagGroupLoader<>(
                 id -> registry.getEntry(RegistryKey.of(registryKey, id)),
                 getPath(registryKey),
-                TagFile.createCodec(registry.getTagConditionCodec())
+                TagFile.createCodec(registry.getTagConditionCodec(), registry.getTagConditionTypes())
         );
         return CompletableFuture.supplyAsync(() -> new RegistryTags<>(registryKey, tagGroupLoader.load(resourceManager)), prepareExecutor);
     }
