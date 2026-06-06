@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
-import net.modificationstation.stationapi.api.item.ItemContext;
+import net.modificationstation.stationapi.api.item.context.ItemContext;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.context.Context;
 

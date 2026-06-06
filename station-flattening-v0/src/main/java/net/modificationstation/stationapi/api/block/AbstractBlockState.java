@@ -11,12 +11,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.block.context.BlockTagContext;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList;
 import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
-import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.block.StationFlatteningBlockInternal;
 
@@ -88,8 +88,8 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     /**
-     * @deprecated Use {@link #isIn(TagKey, Context, Predicate)} instead.
-     * Relying on tag checks without a {@link Context} can lead to broken behavior if the tag contains conditions
+     * @deprecated Use {@link #isIn(TagKey, BlockTagContext, Predicate)} instead.
+     * Relying on tag checks without a {@link BlockTagContext} can lead to broken behavior if the tag contains conditions
      * that require contextual information (such as the block's world position, metadata, or the actor interacting with it).
      */
     @Deprecated
@@ -98,42 +98,42 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     /**
-     * @deprecated Use {@link #isIn(TagKey, Context)} instead.
-     * Relying on tag checks without a {@link Context} can lead to broken behavior if the tag contains conditions
+     * @deprecated Use {@link #isIn(TagKey, BlockTagContext)} instead.
+     * Relying on tag checks without a {@link BlockTagContext} can lead to broken behavior if the tag contains conditions
      * that require contextual information (such as the block's world position, metadata, or the actor interacting with it).
      */
     @Deprecated
     public boolean isIn(TagKey<Block> tag) {
-        return isIn(tag, Context.EMPTY);
+        return isIn(tag, BlockTagContext.DEFAULT);
     }
 
-    public boolean isIn(TagKey<Block> tag, Context context, Predicate<AbstractBlockState> predicate) {
+    public boolean isIn(TagKey<Block> tag, BlockTagContext context, Predicate<AbstractBlockState> predicate) {
         return isIn(tag, context) && predicate.test(this);
     }
 
-    public boolean isIn(TagKey<Block> tag, Context context) {
+    public boolean isIn(TagKey<Block> tag, BlockTagContext context) {
         return getBlock().getRegistryEntry().isIn(tag, context);
     }
 
     /**
-     * @deprecated Use {@link #isIn(RegistryEntryList, Context)} instead.
-     * Relying on list checks without a {@link Context} can lead to broken behavior if the underlying entries
+     * @deprecated Use {@link #isIn(RegistryEntryList, BlockTagContext)} instead.
+     * Relying on list checks without a {@link BlockTagContext} can lead to broken behavior if the underlying entries
      * have contextual conditions.
      */
     @Deprecated
     public boolean isIn(RegistryEntryList<Block> blocks) {
-        return isIn(blocks, Context.EMPTY);
+        return isIn(blocks, BlockTagContext.DEFAULT);
     }
 
-    public boolean isIn(RegistryEntryList<Block> blocks, Context context) {
+    public boolean isIn(RegistryEntryList<Block> blocks, BlockTagContext context) {
         return blocks.contains(getBlock().getRegistryEntry(), context);
     }
 
     public Stream<TagKey<Block>> streamTags() {
-        return streamTags(TagEvaluationContext.BYPASSED);
+        return streamTags(BlockTagContext.BYPASSED);
     }
 
-    public Stream<TagKey<Block>> streamTags(Context context) {
+    public Stream<TagKey<Block>> streamTags(BlockTagContext context) {
         return getBlock().getRegistryEntry().streamTags(context);
     }
 

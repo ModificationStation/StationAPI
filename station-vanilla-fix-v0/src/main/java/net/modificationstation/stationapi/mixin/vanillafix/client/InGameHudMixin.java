@@ -11,9 +11,9 @@ import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.context.BlockTagContext;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
-import net.modificationstation.stationapi.api.tag.conditional.BlockContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -61,7 +61,7 @@ abstract class InGameHudMixin extends DrawContext {
             }
 
             Collection<TagKey<Block>> tags = state.streamTags(
-                    BlockContext.of(minecraft.world, hit.blockX, hit.blockY, hit.blockZ)
+                    BlockTagContext.of(minecraft.world, hit.blockX, hit.blockY, hit.blockZ)
             ).toList();
             if (!tags.isEmpty()) {
                 text = "Tags:";

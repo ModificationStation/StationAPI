@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.block.context;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -14,45 +14,43 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
  */
 @FunctionalInterface
 public interface BlockContext extends Context {
-    BlockContext EMPTY = id -> null;
-
     /**
      * The context key used to evaluate world-related conditions in a block context.
      */
-    Context.Key<BlockView> BLOCK_VIEW = new Context.Key<>(NAMESPACE.id("block_view"));
+    Context.Key<BlockView> BLOCK_VIEW_KEY = new Context.Key<>(NAMESPACE.id("block_view"));
 
     /**
      * The context key used to evaluate position-related conditions in a block context.
      */
-    Context.Key<BlockPos> BLOCK_POS = new Context.Key<>(NAMESPACE.id("block_pos"));
+    Context.Key<BlockPos> BLOCK_POS_KEY = new Context.Key<>(NAMESPACE.id("block_pos"));
 
     /**
      * The context key used to evaluate block metadata conditions.
      */
-    Context.Key<Integer> BLOCK_METADATA = new Context.Key<>(NAMESPACE.id("block_metadata"));
+    Context.Key<Integer> BLOCK_METADATA_KEY = new Context.Key<>(NAMESPACE.id("block_metadata"));
 
     /**
      * {@return whether this context has block metadata}
      */
     default boolean hasBlockMeta() {
-        return contains(BLOCK_METADATA) || (blockView() != null && blockPos() != null);
+        return contains(BLOCK_METADATA_KEY) || (blockView() != null && blockPos() != null);
     }
 
     /**
      * {@return the block view the block interaction is occurring in}
      */
-    default @Nullable BlockView blockView() { return get(BLOCK_VIEW); }
+    default @Nullable BlockView blockView() { return get(BLOCK_VIEW_KEY); }
 
     /**
      * {@return the position of the block interaction}
      */
-    default @Nullable BlockPos blockPos() { return get(BLOCK_POS); }
+    default @Nullable BlockPos blockPos() { return get(BLOCK_POS_KEY); }
 
     /**
      * {@return the block metadata}
      */
     default int blockMeta() {
-        return getIntRaw(BLOCK_METADATA.id(), 0);
+        return getIntRaw(BLOCK_METADATA_KEY.id(), 0);
     }
 
     interface DataProvider extends BlockContext {
@@ -71,15 +69,15 @@ public interface BlockContext extends Context {
 
         @Override
         default Object getRaw(Identifier id) {
-            if (BLOCK_VIEW.id() == id) return blockView();
-            if (BLOCK_POS.id() == id) return blockPos();
-            if (BLOCK_METADATA.id() == id) return blockView() != null && blockPos() != null ? blockMeta() : null;
+            if (BLOCK_VIEW_KEY.id() == id) return blockView();
+            if (BLOCK_POS_KEY.id() == id) return blockPos();
+            if (BLOCK_METADATA_KEY.id() == id) return blockView() != null && blockPos() != null ? blockMeta() : null;
             return null;
         }
 
         @Override
         default int getIntRaw(Identifier id, int defaultValue) {
-            if (BLOCK_METADATA.id() == id) return blockMeta();
+            if (BLOCK_METADATA_KEY.id() == id) return blockMeta();
             return BlockContext.super.getIntRaw(id, defaultValue);
         }
     }

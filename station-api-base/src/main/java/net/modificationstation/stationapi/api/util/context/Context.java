@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+
 /**
  * A data source that contains keys and their associated values.
  * <p>
@@ -36,13 +38,22 @@ public interface Context {
         }
     }
 
-    /**
-     * A context that contains no keys and always returns {@code null}.
-     */
-    Context EMPTY = id -> null;
-
     @SuppressWarnings("unused")
     record Key<VALUE>(Identifier id) {}
+
+    /**
+     * A key used to mark a context as explicitly empty/inert.
+     * Composing with an empty context will yield the other context unchanged.
+     */
+    Key<Boolean> EMPTY_KEY = new Key<>(NAMESPACE.id("empty"));
+
+    /**
+     * An empty context that acts as an identity element for composition.
+     * <p>
+     * Composing with an empty context yields the other context unchanged.
+     * Any {@link Delegate} wrapping an empty context is also considered empty.
+     */
+    Context EMPTY = id -> EMPTY_KEY.id() == id ? Boolean.TRUE : null;
 
     /**
      * {@return a new context containing a single key-value pair}
@@ -138,8 +149,8 @@ public interface Context {
     }
 
     private static Context append(Context base, Context addition) {
-        if (addition == EMPTY) return base;
-        if (base == EMPTY) return addition;
+        if (addition == EMPTY || Boolean.TRUE.equals(addition.get(EMPTY_KEY))) return base;
+        if (base == EMPTY || Boolean.TRUE.equals(base.get(EMPTY_KEY))) return addition;
 
         record Composite(Context head, Context next) implements Context {
             private Context find(Identifier id) {

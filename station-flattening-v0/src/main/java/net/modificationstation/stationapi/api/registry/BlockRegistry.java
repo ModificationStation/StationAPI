@@ -3,9 +3,9 @@ package net.modificationstation.stationapi.api.registry;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
+import net.modificationstation.stationapi.api.block.context.BlockContext;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
-import net.modificationstation.stationapi.api.block.BlockContext;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.context.Context;
 

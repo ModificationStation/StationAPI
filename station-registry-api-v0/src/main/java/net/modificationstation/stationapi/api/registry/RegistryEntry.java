@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Either;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.context.TagEvaluationContext;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.context.Context;
-import net.modificationstation.stationapi.api.util.context.TagEvaluationContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -25,22 +25,22 @@ public interface RegistryEntry<T> {
     boolean matches(Predicate<RegistryKey<T>> predicate);
 
     /**
-     * @deprecated Use {@link #isIn(TagKey, Context)} instead.
-     * <p>This method implicitly uses {@link Context#EMPTY}, meaning it will only evaluate to {@code true}
+     * @deprecated Use {@link #isIn(TagKey, TagEvaluationContext)} instead.
+     * <p>This method implicitly uses {@link TagEvaluationContext#DEFAULT}, meaning it will only evaluate to {@code true}
      * for unconditional tag references.
      */
     @Deprecated
     default boolean isIn(TagKey<T> tag) {
-        return isIn(tag, Context.EMPTY);
+        return isIn(tag, TagEvaluationContext.DEFAULT);
     }
 
-    boolean isIn(TagKey<T> tag, Context context);
+    boolean isIn(TagKey<T> tag, TagEvaluationContext context);
 
     default Stream<TagKey<T>> streamTags() {
         return streamTags(TagEvaluationContext.BYPASSED);
     }
 
-    Stream<TagKey<T>> streamTags(Context context);
+    Stream<TagKey<T>> streamTags(TagEvaluationContext context);
 
     Set<TagKey<T>> getTags();
 
@@ -73,7 +73,7 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public boolean isIn(TagKey<T> tag, Context context) {
+        public boolean isIn(TagKey<T> tag, TagEvaluationContext context) {
             return false;
         }
 
@@ -108,7 +108,7 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public Stream<TagKey<T>> streamTags(Context context) {
+        public Stream<TagKey<T>> streamTags(TagEvaluationContext context) {
             return Stream.of();
         }
 
@@ -139,9 +139,9 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public boolean isIn(TagKey<ENTRY> tag, Context context) {
+        public boolean isIn(TagKey<ENTRY> tag, TagEvaluationContext context) {
             if (!tags.containsKey(tag)) return false;
-            if (Boolean.TRUE.equals(context.get(TagEvaluationContext.IGNORE_TAG_CONDITIONS))) return true;
+            if (context.ignoreTagConditions()) return true;
             Predicate<Context> predicate = tags.get(tag);
             return predicate == null || predicate.test(context);
         }
@@ -180,8 +180,8 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public Stream<TagKey<ENTRY>> streamTags(Context context) {
-            return Boolean.TRUE.equals(context.get(TagEvaluationContext.IGNORE_TAG_CONDITIONS))
+        public Stream<TagKey<ENTRY>> streamTags(TagEvaluationContext context) {
+            return context.ignoreTagConditions()
                     ? this.tags.keySet().stream()
                     : this.tags.entrySet().stream()
                     .filter(entry -> entry.getValue() == null || entry.getValue().test(context))

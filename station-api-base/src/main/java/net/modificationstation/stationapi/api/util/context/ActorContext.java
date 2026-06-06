@@ -11,7 +11,7 @@ public interface ActorContext extends Context {
     /**
      * The context key used to evaluate actor-related conditions.
      */
-    Context.Key<Object> ACTOR = new Context.Key<>(NAMESPACE.id("actor"));
+    Context.Key<Object> ACTOR_KEY = new Context.Key<>(NAMESPACE.id("actor"));
 
     static ActorContext of(Context context) {
         return context instanceof ActorContext a ? a : context::getRaw;
@@ -21,6 +21,6 @@ public interface ActorContext extends Context {
      * {@return the actor performing the action, or {@code null} if none}
      */
     default @Nullable Object actor() {
-        return get(ACTOR);
+        return get(ACTOR_KEY);
     }
 }

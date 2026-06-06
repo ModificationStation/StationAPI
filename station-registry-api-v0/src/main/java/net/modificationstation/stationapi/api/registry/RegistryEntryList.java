@@ -3,10 +3,9 @@ package net.modificationstation.stationapi.api.registry;
 import com.mojang.datafixers.util.Either;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.tag.TagMatchGroup;
+import net.modificationstation.stationapi.api.tag.context.TagEvaluationContext;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.context.Condition;
-import net.modificationstation.stationapi.api.util.context.Context;
-import net.modificationstation.stationapi.api.util.context.TagEvaluationContext;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
@@ -39,12 +38,12 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     /**
      * {@return a stream of registry entries in this list, including match groups that pass the given context}
      */
-    Stream<RegistryEntry<T>> stream(Context context);
+    Stream<RegistryEntry<T>> stream(TagEvaluationContext context);
 
     /**
      * {@return an iterable of registry entries in this list, including match groups that pass the given context}
      */
-    default Iterable<RegistryEntry<T>> iterable(Context context) {
+    default Iterable<RegistryEntry<T>> iterable(TagEvaluationContext context) {
         return () -> stream(context).iterator();
     }
 
@@ -60,7 +59,7 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     /**
      * {@return the number of entries in this list, including match groups that pass the given context}
      */
-    int size(Context context);
+    int size(TagEvaluationContext context);
 
     /**
      * {@return the object that identifies this registry entry list}
@@ -81,7 +80,7 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     /**
      * {@return a random entry of the list matching the context, or an empty optional if this list is empty}
      */
-    Optional<RegistryEntry<T>> getRandom(Random var1, Context context);
+    Optional<RegistryEntry<T>> getRandom(Random var1, TagEvaluationContext context);
 
     /**
      * This method implicitly uses {@link TagEvaluationContext#BYPASSED}, meaning it operates on the flattened list of all registry entries
@@ -99,24 +98,24 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
      * 
      * @throws IndexOutOfBoundsException if the index is out of bounds
      */
-    RegistryEntry<T> get(int var1, Context context);
+    RegistryEntry<T> get(int var1, TagEvaluationContext context);
 
     /**
      * {@return whether {@code entry} is in this list}
      *
-     * @deprecated Use {@link #contains(RegistryEntry, Context)} instead.
-     * <p>This method implicitly uses {@link Context#EMPTY}, meaning it will only evaluate to {@code true}
+     * @deprecated Use {@link #contains(RegistryEntry, TagEvaluationContext)} instead.
+     * <p>This method implicitly uses {@link TagEvaluationContext#DEFAULT}, meaning it will only evaluate to {@code true}
      * for unconditional tag references.
      */
     @Deprecated
     default boolean contains(RegistryEntry<T> entry) {
-        return contains(entry, Context.EMPTY);
+        return contains(entry, TagEvaluationContext.DEFAULT);
     }
 
     /**
      * {@return whether {@code entry} is in this list, evaluating match groups with the given context}
      */
-    boolean contains(RegistryEntry<T> var1, Context context);
+    boolean contains(RegistryEntry<T> var1, TagEvaluationContext context);
 
     boolean ownerEquals(RegistryEntryOwner<T> var1);
 
@@ -184,8 +183,8 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public Stream<RegistryEntry<T>> stream(Context context) {
-            return Boolean.TRUE.equals(context.get(TagEvaluationContext.IGNORE_TAG_CONDITIONS))
+        public Stream<RegistryEntry<T>> stream(TagEvaluationContext context) {
+            return context.ignoreTagConditions()
                     ? this.getEntries().stream()
                     : this.matchGroups.stream()
                     .filter(matchGroup -> {
@@ -198,8 +197,8 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public int size(Context context) {
-            return Boolean.TRUE.equals(context.get(TagEvaluationContext.IGNORE_TAG_CONDITIONS)) ? this.allEntries.size() : (int) this.stream(context).count();
+        public int size(TagEvaluationContext context) {
+            return context.ignoreTagConditions() ? this.allEntries.size() : (int) this.stream(context).count();
         }
 
         @Override
@@ -213,7 +212,7 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public boolean contains(RegistryEntry<T> entry, Context context) {
+        public boolean contains(RegistryEntry<T> entry, TagEvaluationContext context) {
             return entry.isIn(this.tag, context);
         }
 
@@ -254,7 +253,7 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public boolean contains(RegistryEntry<T> entry, Context context) {
+        public boolean contains(RegistryEntry<T> entry, TagEvaluationContext context) {
             if (this.entrySet == null) this.entrySet = Set.copyOf(this.entries);
             return this.entrySet.contains(entry);
         }
@@ -268,7 +267,7 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         protected abstract List<RegistryEntry<T>> getEntries();
 
         @Override
-        public int size(Context context) {
+        public int size(TagEvaluationContext context) {
             return this.getEntries().size();
         }
 
@@ -283,17 +282,17 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public Stream<RegistryEntry<T>> stream(Context context) {
+        public Stream<RegistryEntry<T>> stream(TagEvaluationContext context) {
             return this.getEntries().stream();
         }
 
         @Override
-        public Optional<RegistryEntry<T>> getRandom(Random random, Context context) {
+        public Optional<RegistryEntry<T>> getRandom(Random random, TagEvaluationContext context) {
             return Util.getRandomOrEmpty(this.stream(context).toList(), random);
         }
 
         @Override
-        public RegistryEntry<T> get(int index, Context context) {
+        public RegistryEntry<T> get(int index, TagEvaluationContext context) {
             return this.stream(context).skip(index).findFirst()
                     .orElseThrow(() -> new IndexOutOfBoundsException("Index out of bounds: " + index));
         }

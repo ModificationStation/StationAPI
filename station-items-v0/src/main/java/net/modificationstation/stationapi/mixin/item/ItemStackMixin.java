@@ -11,9 +11,9 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
 import net.modificationstation.stationapi.api.item.StationFlatteningItemStack;
 import net.modificationstation.stationapi.api.item.StationItemStack;
+import net.modificationstation.stationapi.api.item.context.ItemContext;
 import net.modificationstation.stationapi.api.tag.TagKey;
-import net.modificationstation.stationapi.api.tag.conditional.ItemContext;
-import net.modificationstation.stationapi.api.util.context.Context;
+import net.modificationstation.stationapi.api.tag.context.TagEvaluationContext;
 import net.modificationstation.stationapi.impl.item.StationNBTSetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -55,7 +55,14 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter, Sta
     private NbtCompound stationapi_stationNbt = new NbtCompound();
 
     @Unique
-    private final ItemContext stationapi_itemContext = ItemContext.of((ItemStack) (Object) this);
+    private ItemContext stationapi_itemContext;
+
+    @Unique
+    private ItemContext stationapi_getItemContext() {
+        if (stationapi_itemContext == null)
+            stationapi_itemContext = ItemContext.of((ItemStack) (Object) this);
+        return stationapi_itemContext;
+    }
 
     @Inject(
             method = "split",
@@ -179,13 +186,13 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter, Sta
 
     @Override
     @Unique
-    public boolean isIn(TagKey<Item> tag, Context context) {
-        return getRegistryEntry().isIn(tag, stationapi_itemContext.with(context));
+    public boolean isIn(TagKey<Item> tag, TagEvaluationContext context) {
+        return getRegistryEntry().isIn(tag, TagEvaluationContext.of(stationapi_getItemContext().with(context)));
     }
 
     @Override
     @Unique
-    public Stream<TagKey<Item>> streamTags(Context context) {
-        return getRegistryEntry().streamTags(stationapi_itemContext.with(context));
+    public Stream<TagKey<Item>> streamTags(TagEvaluationContext context) {
+        return getRegistryEntry().streamTags(TagEvaluationContext.of(stationapi_getItemContext().with(context)));
     }
 }
