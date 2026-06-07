@@ -14,7 +14,9 @@ public interface ActorContext extends Context {
     Context.Key<Object> ACTOR_KEY = new Context.Key<>(NAMESPACE.id("actor"));
 
     static ActorContext of(Context context) {
-        return context instanceof ActorContext a ? a : context::getRaw;
+        if (context instanceof ActorContext a) return a;
+        interface ActorContextDelegate extends ActorContext, Delegate {}
+        return (ActorContextDelegate) () -> context;
     }
 
     /**

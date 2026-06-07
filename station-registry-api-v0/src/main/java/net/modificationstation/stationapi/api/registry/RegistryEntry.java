@@ -120,7 +120,7 @@ public interface RegistryEntry<T> {
 
     abstract class Reference<ENTRY> implements RegistryEntry<ENTRY> {
         final RegistryEntryOwner<ENTRY> owner;
-        private Map<TagKey<ENTRY>, Predicate<Context>> tags = Map.of();
+        private volatile Map<TagKey<ENTRY>, Predicate<Context>> tags = Map.of();
 
         private Reference(RegistryEntryOwner<ENTRY> owner) {
             this.owner = owner;
@@ -140,10 +140,10 @@ public interface RegistryEntry<T> {
 
         @Override
         public boolean isIn(TagKey<ENTRY> tag, TagEvaluationContext context) {
-            if (!tags.containsKey(tag)) return false;
-            if (context.ignoreTagConditions()) return true;
             Predicate<Context> predicate = tags.get(tag);
-            return predicate == null || predicate.test(context);
+            if (predicate == null) return false;
+            if (context.ignoreTagConditions()) return true;
+            return predicate.test(context);
         }
 
         @Override
@@ -184,7 +184,7 @@ public interface RegistryEntry<T> {
             return context.ignoreTagConditions()
                     ? this.tags.keySet().stream()
                     : this.tags.entrySet().stream()
-                    .filter(entry -> entry.getValue() == null || entry.getValue().test(context))
+                    .filter(entry -> entry.getValue().test(context))
                     .map(Map.Entry::getKey);
         }
 

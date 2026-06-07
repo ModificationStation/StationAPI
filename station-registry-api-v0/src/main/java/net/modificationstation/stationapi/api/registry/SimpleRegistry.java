@@ -39,6 +39,9 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.util.Namespace.MINECRAFT;
 
 public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry, ListenableRegistry {
+
+
+
     final RegistryKey<? extends Registry<T>> key;
     private final ReferenceList<Reference<T>> rawIdToEntry = new ReferenceArrayList<>(256);
     private final Reference2IntMap<T> entryToRawId = Util.make(new Reference2IntOpenHashMap<>(), map -> map.defaultReturnValue(-1));
@@ -478,7 +481,8 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
 
         tagEntries.forEach((tag, resolvedTag) -> {
             for (TagMatchGroup<RegistryEntry<T>> matchGroup : resolvedTag) {
-                Predicate<Context> predicate = matchGroup.conditions().isEmpty()
+                boolean isUnconditional = matchGroup.conditions().isEmpty();
+                Predicate<Context> predicate = isUnconditional
                         ? ctx -> true
                         : ctx -> {
                             for (Condition<?> condition : matchGroup.conditions())
@@ -498,12 +502,13 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
                                 "Found direct holder " + entry + " value in tag " + tag
                         );
 
-                    if (matchGroup.remove())
-                        map.get(reference).computeIfPresent(
-                                tag, (k, oldPred) -> oldPred.and(predicate.negate())
-                        );
-                    else
-                        map.get(reference).merge(tag, predicate, Predicate::or);
+                    Map<TagKey<T>, Predicate<Context>> tags = map.get(reference);
+                    if (matchGroup.remove()) {
+                        Predicate<Context> oldPred = tags.get(tag);
+                        if (oldPred != null) if (isUnconditional) tags.remove(tag);
+                        else tags.put(tag, oldPred.and(predicate.negate()));
+                    } else if (isUnconditional) tags.put(tag, ctx -> true);
+                    else tags.compute(tag, (k, oldPred) -> oldPred == null ? predicate : oldPred.or(predicate));
                 }
             }
         });

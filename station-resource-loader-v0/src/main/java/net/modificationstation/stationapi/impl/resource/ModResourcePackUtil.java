@@ -11,6 +11,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.resource.ResourcePackActivationType;
 import net.modificationstation.stationapi.api.resource.ResourceType;
 import org.apache.commons.io.IOUtils;
@@ -106,11 +107,15 @@ public final class ModResourcePackUtil {
             }
         }
 
-        for (ModResourcePack p : packs) {
-            if (inDegree.get(p) > 0) {
-                sorted.add(p);
-            }
-        }
+        List<String> cyclicPacks = packs.stream()
+                .filter(p -> inDegree.get(p) > 0)
+                .peek(sorted::add)
+                .map(ModResourcePack::getFabricModMetadata)
+                .map(ModMetadata::getId)
+                .toList();
+        if (!cyclicPacks.isEmpty()) StationAPI.LOGGER.warn(
+                "Resource pack priority cycle detected for {}! Order is not guaranteed.", cyclicPacks
+        );
 
         packs.clear();
         packs.addAll(sorted);
