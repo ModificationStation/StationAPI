@@ -49,8 +49,9 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
     public static final Identifier LANGUAGES = NAMESPACE.id("languages");
     @Entrypoint.Instance
     private static LanguageManager instance;
+    private static final Predicate<String> enUsPathPredicate = buildPathPredicate("en_US");
     @NotNull
-    private static Predicate<String> pathPredicate = buildPathPredicate("en_US");
+    private static Predicate<String> pathPredicate = enUsPathPredicate;
     private static final Object2ReferenceMap<String, Namespace> LANG_PATHS = Util.make(new Object2ReferenceOpenHashMap<>(), paths -> {
         paths.put("/lang", Namespace.MINECRAFT);
         paths.put(NAMESPACE + "/lang", null);
@@ -64,6 +65,8 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
     }
 
     public static void changeLanguage(String langDef) {
+        pathPredicate = enUsPathPredicate;
+        instance.reload();
         pathPredicate = buildPathPredicate(langDef);
         instance.reload();
     }
@@ -144,7 +147,6 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
         profiler.startTick();
         profiler.push("upload");
         Properties translations = ((TranslationStorageAccessor) TranslationStorage.getInstance()).getTranslations();
-        translations.clear();
         translations.putAll(prepared);
         profiler.swap("invalidate");
         StationAPI.EVENT_BUS.post(TranslationInvalidationEvent.builder().build());
