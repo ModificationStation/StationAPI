@@ -103,6 +103,11 @@ allprojects {
         modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
             isTransitive = false
         }
+        
+        // The "enableAmiCompat" program argument needs to be present in order to apply a dev-only patch for AMI to work
+        modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
+            isTransitive = false
+        }
 
         annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
 
@@ -291,6 +296,10 @@ loom {
         register("runTestmodServer") {
             source("test")
             server()
+        }
+
+        configureEach {
+            programArgs("enableAmiCompat")
         }
     }
 }
