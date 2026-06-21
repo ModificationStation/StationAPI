@@ -25,7 +25,7 @@ allprojects {
         }
         withSourcesJar()
     }
-    
+
     repositories {
         maven(url = "https://maven.minecraftforge.net/")
         maven(url = "https://maven.glass-launcher.net/babric")
@@ -103,7 +103,7 @@ allprojects {
         modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
             isTransitive = false
         }
-        
+
         // The "enableAmiCompat" program argument needs to be present in order to apply a dev-only patch for AMI to work
         modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
             isTransitive = false
@@ -209,14 +209,14 @@ version = (if (project.hasProperty("override_version")) (project.properties["ove
 
 subprojects {
     version = rootProject.version
-    
+
     // This makes the older pre-releases easier to clean up.
     group = if (rootProject.hasProperty("override_version")) {
         (rootProject.properties["maven_group"] as String) + ".StationAPI.${(rootProject.properties["override_version"] as String).substring(0, 7)}"
     } else {
         (rootProject.properties["maven_group"] as String) + ".StationAPI.submodule.$name"
     }
-    
+
     configurations {
         create("out") {
             isCanBeConsumed = true
