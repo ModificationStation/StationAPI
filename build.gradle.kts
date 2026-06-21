@@ -315,6 +315,6 @@ tasks.withType<GenerateModuleMetadata> {
 }
 
 // Gradle 9 fails the build if there are no tests, but we are using the test package for a test mod
-tasks.withType(Test::class.java) {
+tasks.withType<Test> {
     failOnNoDiscoveredTests = false
 }
