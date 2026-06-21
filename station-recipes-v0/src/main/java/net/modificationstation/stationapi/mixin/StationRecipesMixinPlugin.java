@@ -13,7 +13,7 @@ import java.util.Set;
 public class StationRecipesMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
-        
+
     }
 
     @Override
@@ -33,30 +33,33 @@ public class StationRecipesMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment() && FabricLoader.getInstance().isModLoaded("alwaysmoreitems")) {
-            boolean enableAmiCompat = false;
-
-            String[] launchArgs = FabricLoader.getInstance().getLaunchArguments(true);
-            for (String arg : launchArgs) {
-                if (arg.contains("enableAmiCompat")) {
-                    enableAmiCompat = true;
-                    break;
-                }
-            }
-
-            if (!enableAmiCompat) {
-                return null;
-            }
-            
-            StationAPI.LOGGER.info("AlwaysMoreItems detected in development environment, adding mixins to make it work");
-            
-            ArrayList<String> mixins = new ArrayList<>();
-            mixins.add("dev.StationShapedRecipeMixin");
-            mixins.add("dev.StationShapelessRecipeMixin");
-            return mixins;
+        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            return null;
         }
-        
-        return null;
+
+        if (FabricLoader.getInstance().isModLoaded("alwaysmoreitems")) {
+            return null;
+        }
+
+        boolean enableAmiCompat = false;
+        String[] launchArgs = FabricLoader.getInstance().getLaunchArguments(true);
+        for (String arg : launchArgs) {
+            if (arg.contains("enableAmiCompat")) {
+                enableAmiCompat = true;
+                break;
+            }
+        }
+
+        if (!enableAmiCompat) {
+            return null;
+        }
+
+        StationAPI.LOGGER.info("AlwaysMoreItems detected in development environment, adding mixins to make it work");
+
+        ArrayList<String> mixins = new ArrayList<>();
+        mixins.add("dev.StationShapedRecipeMixin");
+        mixins.add("dev.StationShapelessRecipeMixin");
+        return mixins;
     }
 
     @Override
