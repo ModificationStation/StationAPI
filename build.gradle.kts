@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.16.2"
+    id("fabric-loom") version "1.17.12"
     id("babric-loom-extension") version "1.16.1"
 }
 
