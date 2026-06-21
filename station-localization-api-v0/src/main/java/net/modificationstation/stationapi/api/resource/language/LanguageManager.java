@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -17,12 +18,18 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.ResourceType;
 import net.modificationstation.stationapi.api.resource.SinglePreparationResourceReloader;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
+import net.modificationstation.stationapi.api.util.SideUtil;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
+import net.modificationstation.stationapi.impl.resource.DefaultResourcePackProvider;
+import net.modificationstation.stationapi.impl.resource.LifecycledResourceManagerImpl;
+import net.modificationstation.stationapi.impl.resource.ResourcePackManager;
+import net.modificationstation.stationapi.impl.resource.loader.ModResourcePackCreator;
 import net.modificationstation.stationapi.mixin.lang.TranslationStorageAccessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -91,13 +98,26 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
         reload();
     }
 
+    private static ResourcePackManager serverAssetsPackManager;
+
     private void reload() {
+        ResourceManager manager = SideUtil.get(
+                () -> ReloadableAssetsManager.INSTANCE,
+                () -> {
+                    if (serverAssetsPackManager == null) serverAssetsPackManager = new ResourcePackManager(
+                            new DefaultResourcePackProvider(),
+                            ModResourcePackCreator.CLIENT_RESOURCE_PACK_PROVIDER
+                    );
+                    serverAssetsPackManager.scanPacks();
+                    return new LifecycledResourceManagerImpl(ResourceType.CLIENT_RESOURCES, serverAssetsPackManager.createResourcePacks());
+                }
+        );
         instance.apply(
                 instance.prepare(
-                        ReloadableAssetsManager.INSTANCE,
+                        manager,
                         DummyProfiler.INSTANCE
                 ),
-                ReloadableAssetsManager.INSTANCE,
+                manager,
                 DummyProfiler.INSTANCE
         );
     }
