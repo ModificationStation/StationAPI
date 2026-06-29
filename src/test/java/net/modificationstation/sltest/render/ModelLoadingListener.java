@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.util.Identifier;
 
 public class ModelLoadingListener {
     @EventListener
-    public void modelsLodaded(UnbakedModelLoadingFinishedEvent event) {
+    public void modelsLoaded(UnbakedModelLoadingFinishedEvent event) {
         SLTest.LOGGER.info(event.unbakedModels.size() + " models loaded");
     }
     
