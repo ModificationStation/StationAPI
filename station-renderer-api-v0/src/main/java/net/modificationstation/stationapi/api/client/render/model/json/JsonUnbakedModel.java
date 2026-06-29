@@ -144,7 +144,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<com.mojang.datafixers.util.Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         Set<UnbakedModel> set = Sets.newLinkedHashSet();
 
         for(JsonUnbakedModel JsonModel = this; JsonModel.parentId != null && JsonModel.parent == null; JsonModel = JsonModel.parent) {
