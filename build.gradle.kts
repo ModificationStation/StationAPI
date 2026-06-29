@@ -20,9 +20,6 @@ allprojects {
     apply(plugin = "babric-loom-extension")
 
     java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
         withSourcesJar()
     }
 
@@ -192,6 +189,10 @@ allprojects {
                 }
             }
         }
+    }
+
+    tasks.withType<JavaCompile>().configureEach {
+        options.release = 17
     }
 
     tasks.register("purgeBuildFolder") {
