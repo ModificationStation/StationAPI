@@ -144,33 +144,8 @@ public final class JsonUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences) {
-        Set<UnbakedModel> set = Sets.newLinkedHashSet();
-
-        JsonUnbakedModel jsonUnbakedModel = this;
-        while (jsonUnbakedModel.parentId != null && jsonUnbakedModel.parent == null) {
-            set.add(jsonUnbakedModel);
-            
-            UnbakedModel unbakedModel = modelLoader.apply(jsonUnbakedModel.parentId);
-            if (unbakedModel == null)
-                LOGGER.warn("No parent '{}' while loading model '{}'", this.parentId, jsonUnbakedModel);
-            if (set.contains(unbakedModel)) {
-                LOGGER.warn("Found 'parent' loop while loading model '{}' in chain: {} -> {}", jsonUnbakedModel, set.stream().map(Object::toString).collect(Collectors.joining(" -> ")), this.parentId);
-                unbakedModel = null;
-            }
-            
-            if (unbakedModel == null) {
-                unbakedModel = modelLoader.apply(ModelLoader.MISSING_ID.asIdentifier());
-            }
-            
-            if (!(unbakedModel instanceof JsonUnbakedModel)) {
-                throw new IllegalStateException("BlockModel parent has to be a block model.");
-            }
-            
-            jsonUnbakedModel = jsonUnbakedModel.parent;
-        }
-
-        Set<SpriteIdentifier> dependencies = Sets.newHashSet(this.resolveSprite("particle"));
+    public Collection<SpriteIdentifier> getTextures(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences) {
+        Set<SpriteIdentifier> textures = Sets.newHashSet(this.resolveSprite("particle"));
 
         for (ModelElement modelElement : this.getElements()) {
             SpriteIdentifier spriteIdentifier;
@@ -181,22 +156,15 @@ public final class JsonUnbakedModel implements UnbakedModel {
                     unresolvedTextureReferences.add(Pair.of(modelElementFace.textureId, this.id));
                 }
                 
-                dependencies.add(spriteIdentifier);
+                textures.add(spriteIdentifier);
             }
         }
 
-        this.overrides.forEach((modelOverride) -> {
-            UnbakedModel overrideModel = modelLoader.apply(modelOverride.getModelId());
-            if (!Objects.equals(overrideModel, this)) {
-                dependencies.addAll(overrideModel.getTextureDependencies(modelLoader, unresolvedTextureReferences));
-            }
-        });
-        
         if (this.getRootModel() == ModelLoader.GENERATION_MARKER) {
-            ItemModelGenerator.LAYERS.forEach((string) -> dependencies.add(this.resolveSprite(string)));
+            ItemModelGenerator.LAYERS.forEach((string) -> textures.add(this.resolveSprite(string)));
         }
 
-        return dependencies;
+        return textures;
     }
 
     @Override

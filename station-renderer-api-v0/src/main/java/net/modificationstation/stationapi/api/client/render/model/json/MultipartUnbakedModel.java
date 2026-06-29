@@ -71,8 +71,8 @@ public class MultipartUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return this.getComponents().stream().flatMap((multipartModelComponent) -> multipartModelComponent.getModel().getTextureDependencies(modelLoader, unresolvedTextureReferences).stream()).collect(Collectors.toSet());
+    public Collection<SpriteIdentifier> getTextures(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences) {
+        return this.getComponents().stream().flatMap((multipartModelComponent) -> multipartModelComponent.getModel().getTextures(modelLoader, unresolvedTextureReferences).stream()).collect(Collectors.toSet());
     }
 
     @Nullable

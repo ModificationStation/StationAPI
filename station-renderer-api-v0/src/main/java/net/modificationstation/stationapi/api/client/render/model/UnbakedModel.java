@@ -18,7 +18,7 @@ public interface UnbakedModel {
 
    void setParents(Function<Identifier, UnbakedModel> parents);
 
-   Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences);
+   Collection<SpriteIdentifier> getTextures(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences);
 
    @Nullable
    BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId);

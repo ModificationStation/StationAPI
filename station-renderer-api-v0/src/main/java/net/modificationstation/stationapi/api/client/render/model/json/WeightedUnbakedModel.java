@@ -55,8 +55,8 @@ public class WeightedUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return this.getVariants().stream().map(ModelVariant::getLocation).distinct().flatMap((identifier) -> modelLoader.apply(identifier).getTextureDependencies(modelLoader, unresolvedTextureReferences).stream()).collect(Collectors.toSet());
+    public Collection<SpriteIdentifier> getTextures(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences) {
+        return this.getVariants().stream().map(ModelVariant::getLocation).distinct().flatMap((identifier) -> modelLoader.apply(identifier).getTextures(modelLoader, unresolvedTextureReferences).stream()).collect(Collectors.toSet());
     }
 
     @Nullable
