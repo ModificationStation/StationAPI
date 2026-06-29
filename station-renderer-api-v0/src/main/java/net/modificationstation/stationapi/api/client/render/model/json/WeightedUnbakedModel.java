@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.client.render.model.json;
 
 import com.google.common.collect.Lists;
 import com.google.gson.*;
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.render.model.*;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,6 +52,11 @@ public class WeightedUnbakedModel implements UnbakedModel {
     @Override
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
         this.getVariants().stream().map(ModelVariant::getLocation).distinct().forEach(id -> modelLoader.apply(id).setParents(modelLoader));
+    }
+
+    @Override
+    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+        return this.getVariants().stream().map(ModelVariant::getLocation).distinct().flatMap((identifier) -> unbakedModelGetter.apply(identifier).getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences).stream()).collect(Collectors.toSet());
     }
 
     @Nullable

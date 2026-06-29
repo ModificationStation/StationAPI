@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.api.client.render.model.json;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -67,6 +68,11 @@ public class MultipartUnbakedModel implements UnbakedModel {
     @Override
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
         this.getComponents().forEach(component -> component.getModel().setParents(modelLoader));
+    }
+
+    @Override
+    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+        return this.getComponents().stream().flatMap((multipartModelComponent) -> multipartModelComponent.getModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences).stream()).collect(Collectors.toSet());
     }
 
     @Nullable

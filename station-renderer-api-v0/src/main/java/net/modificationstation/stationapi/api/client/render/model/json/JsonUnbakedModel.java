@@ -3,8 +3,10 @@ package net.modificationstation.stationapi.api.client.render.model.json;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.gson.*;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.fabricmc.api.EnvType;
@@ -139,6 +141,60 @@ public final class JsonUnbakedModel implements UnbakedModel {
             if (Objects.equals(unbakedModel, this)) return;
             unbakedModel.setParents(modelLoader);
         });
+    }
+
+    @Override
+    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<com.mojang.datafixers.util.Pair<String, String>> unresolvedTextureReferences) {
+        Set<UnbakedModel> set = Sets.newLinkedHashSet();
+
+        for(JsonUnbakedModel JsonModel = this; JsonModel.parentId != null && JsonModel.parent == null; JsonModel = JsonModel.parent) {
+            set.add(JsonModel);
+            UnbakedModel unbakedModel = unbakedModelGetter.apply(JsonModel.parentId);
+            if (unbakedModel == null) {
+                LOGGER.warn("No parent '{}' while loading model '{}'", this.parentId, JsonModel);
+            }
+
+            if (set.contains(unbakedModel)) {
+                LOGGER.warn("Found 'parent' loop while loading model '{}' in chain: {} -> {}", JsonModel, set.stream().map(Object::toString).collect(Collectors.joining(" -> ")), this.parentId);
+                unbakedModel = null;
+            }
+
+            if (unbakedModel == null) {
+                JsonModel.parentId = ModelLoader.MISSING_ID.asIdentifier();
+                unbakedModel = unbakedModelGetter.apply(JsonModel.parentId);
+            }
+
+            if (!(unbakedModel instanceof JsonUnbakedModel jsonModel)) {
+                throw new IllegalStateException("BlockModel parent has to be a block model.");
+            }
+
+            JsonModel.parent = jsonModel;
+        }
+
+        Set<SpriteIdentifier> set2 = Sets.newHashSet(this.resolveSprite("particle"));
+
+        for (ModelElement modelElement : this.getElements()) {
+            SpriteIdentifier spriteIdentifier;
+            for (ModelElementFace modelElementFace : modelElement.faces.values()) {
+                spriteIdentifier = this.resolveSprite(modelElementFace.textureId);
+                if (spriteIdentifier.texture == MissingSprite.getMissingSpriteId()) {
+                    unresolvedTextureReferences.add(Pair.of(modelElementFace.textureId, this.id));
+                }
+                set2.add(spriteIdentifier);
+            }
+        }
+
+        this.overrides.forEach((modelOverride) -> {
+            UnbakedModel unbakedModel = unbakedModelGetter.apply(modelOverride.getModelId());
+            if (!Objects.equals(unbakedModel, this)) {
+                set2.addAll(unbakedModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
+            }
+        });
+        if (this.getRootModel() == ModelLoader.GENERATION_MARKER) {
+            ItemModelGenerator.LAYERS.forEach((string) -> set2.add(this.resolveSprite(string)));
+        }
+
+        return set2;
     }
 
     @Override
