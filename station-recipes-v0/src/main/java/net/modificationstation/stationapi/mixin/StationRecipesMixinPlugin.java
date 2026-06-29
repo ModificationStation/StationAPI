@@ -37,7 +37,7 @@ public class StationRecipesMixinPlugin implements IMixinConfigPlugin {
             return null;
         }
 
-        if (FabricLoader.getInstance().isModLoaded("alwaysmoreitems")) {
+        if (!FabricLoader.getInstance().isModLoaded("alwaysmoreitems")) {
             return null;
         }
 
