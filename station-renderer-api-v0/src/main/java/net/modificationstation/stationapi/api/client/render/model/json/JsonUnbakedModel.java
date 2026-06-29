@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 public final class JsonUnbakedModel implements UnbakedModel {
-
     public static final Identifier BUILTIN_GENERATED = Identifier.of("builtin/generated");
 
     private static final BakedQuadFactory QUAD_FACTORY = new BakedQuadFactory();
@@ -92,6 +91,18 @@ public final class JsonUnbakedModel implements UnbakedModel {
 
     private ModelOverrideList compileOverrides(Baker baker, JsonUnbakedModel parent) {
         return this.overrides.isEmpty() ? ModelOverrideList.EMPTY : new ModelOverrideList(baker, parent, baker::getOrLoadModel, this.overrides);
+    }
+
+    public @Nullable JsonUnbakedModel getParent() {
+        return parent;
+    }
+
+    public @Nullable Identifier getParentId() {
+        return parentId;
+    }
+
+    public Map<String, Either<SpriteIdentifier, String>> getTextureMap() {
+        return textureMap;
     }
 
     public Collection<Identifier> getModelDependencies() {

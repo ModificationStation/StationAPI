@@ -40,8 +40,8 @@ public class EffectsRenderer extends DrawContext {
         int py = 2;
         for (EntityEffect<?> effect : renderEffects) {
             if (extended) {
-                String name = effect.getName();
-                String desc = effect.getDescription();
+                String name = effect.getTranslatedName();
+                String desc = effect.getTranslatedDescription();
                 int width = Math.max(
                     textRenderer.getWidth(name),
                     textRenderer.getWidth(desc)
@@ -127,8 +127,8 @@ public class EffectsRenderer extends DrawContext {
     
     private int getEffectWidth(EntityEffect<?> effect) {
         if (effect.isInfinite()) return 26;
-        String name = effect.getName();
-        String desc = effect.getDescription();
+        String name = effect.getTranslatedName();
+        String desc = effect.getTranslatedDescription();
         return Math.max(
             textRenderer.getWidth(name),
             textRenderer.getWidth(desc)

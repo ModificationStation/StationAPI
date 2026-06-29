@@ -17,6 +17,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.event.render.model.LoadUnbakedModelEvent;
+import net.modificationstation.stationapi.api.client.event.render.model.UnbakedModelLoadingFinishedEvent;
 import net.modificationstation.stationapi.api.client.event.render.model.PreLoadUnbakedModelEvent;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
@@ -55,7 +56,6 @@ import static net.modificationstation.stationapi.impl.client.texture.StationRend
 
 @Environment(EnvType.CLIENT)
 public class ModelLoader {
-
     public static final List<Identifier> BLOCK_DESTRUCTION_STAGES = IntStream.range(0, 10).mapToObj(stage -> Identifier.of("block/destroy_stage_" + stage)).collect(Collectors.toList());
     public static final List<Identifier> BLOCK_DESTRUCTION_STAGE_TEXTURES = BLOCK_DESTRUCTION_STAGES.stream().map(id -> Identifier.of(NAMESPACE + "/textures/" + id.path + ".png")).collect(Collectors.toList());
     public static final ModelIdentifier MISSING_ID;
@@ -87,6 +87,7 @@ public class ModelLoader {
         this.blockColors = blockColors;
         this.jsonUnbakedModels = jsonUnbakedModels;
         this.blockStates = blockStates;
+
         profiler.push("missing_model");
         try {
             this.unbakedModels.put(MISSING_ID.asIdentifier(), this.loadModelFromJson(MISSING_ID.asIdentifier()));
@@ -95,17 +96,23 @@ public class ModelLoader {
             LOGGER.error("Error loading missing model, should never happen :(", iOException);
             throw new RuntimeException(iOException);
         }
+
         profiler.swap("static_definitions");
         STATIC_DEFINITIONS.forEach((id, stateManager) -> stateManager.getStates().forEach(state -> this.addModel(BlockModels.getModelId(id, state).asIdentifier())));
+
         profiler.swap("blocks");
         for (Block block : BlockRegistry.INSTANCE)
             block.getStateManager().getStates().forEach(state -> this.addModel(BlockModels.getModelId(state).asIdentifier()));
+
         profiler.swap("items");
         for (Identifier identifier : ItemRegistry.INSTANCE.getIds())
             this.addModel(ModelIdentifier.of(identifier, "inventory").asIdentifier());
+
         profiler.swap("special");
         this.modelsToBake.values().forEach(model -> model.setParents(this::getOrLoadModel));
+
         profiler.pop();
+        StationAPI.EVENT_BUS.post(new UnbakedModelLoadingFinishedEvent(this, this.unbakedModels, this.modelsToBake, this.blockStates, this.blockColors));
     }
 
     public void bake(BiFunction<Identifier, SpriteIdentifier, Sprite> spriteLoader) {

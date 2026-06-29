@@ -187,7 +187,7 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
         profiler.endTick();
     }
 
-    record BakingResult(ModelLoader modelLoader, BakedModel missingModel, Map<BlockState, BakedModel> modelCache, Map<Identifier, SpriteAtlasManager.AtlasPreparation> atlasPreparations, CompletableFuture<Void> readyForUpload) {}
+    public record BakingResult(ModelLoader modelLoader, BakedModel missingModel, Map<BlockState, BakedModel> modelCache, Map<Identifier, SpriteAtlasManager.AtlasPreparation> atlasPreparations, CompletableFuture<Void> readyForUpload) {}
 
     @Override
     public Identifier getId() {

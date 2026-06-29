@@ -32,6 +32,10 @@ public class WeightedBakedModel implements BakedModel {
    public ImmutableList<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
       return Objects.requireNonNull(WeightedPicker.getAt(this.models, Math.abs((int) random.nextLong()) % this.totalWeight)).model.getQuads(state, face, random);
    }
+   
+   public Entry pickModel(Random random) {
+      return WeightedPicker.getAt(this.models, Math.abs((int) random.nextLong()) % this.totalWeight);
+   }
 
    public boolean useAmbientOcclusion() {
       return this.defaultModel.useAmbientOcclusion();
@@ -61,13 +65,29 @@ public class WeightedBakedModel implements BakedModel {
       return this.defaultModel.getOverrides();
    }
 
+   public int getTotalWeight() {
+      return totalWeight;
+   }
+
+   public List<Entry> getModels() {
+      return models;
+   }
+
+   public BakedModel getDefaultModel() {
+      return defaultModel;
+   }
+
    @Environment(EnvType.CLIENT)
-   static class Entry extends WeightedPicker.Entry {
+   public static class Entry extends WeightedPicker.Entry {
       protected final BakedModel model;
 
       public Entry(BakedModel model, int weight) {
          super(weight);
          this.model = model;
+      }
+
+      public BakedModel getModel() {
+         return model;
       }
    }
 
