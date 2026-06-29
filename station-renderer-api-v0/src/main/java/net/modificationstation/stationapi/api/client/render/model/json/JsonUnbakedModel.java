@@ -144,57 +144,59 @@ public final class JsonUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences) {
         Set<UnbakedModel> set = Sets.newLinkedHashSet();
 
-        for(JsonUnbakedModel JsonModel = this; JsonModel.parentId != null && JsonModel.parent == null; JsonModel = JsonModel.parent) {
-            set.add(JsonModel);
-            UnbakedModel unbakedModel = unbakedModelGetter.apply(JsonModel.parentId);
-            if (unbakedModel == null) {
-                LOGGER.warn("No parent '{}' while loading model '{}'", this.parentId, JsonModel);
-            }
-
+        JsonUnbakedModel jsonUnbakedModel = this;
+        while (jsonUnbakedModel.parentId != null && jsonUnbakedModel.parent == null) {
+            set.add(jsonUnbakedModel);
+            
+            UnbakedModel unbakedModel = modelLoader.apply(jsonUnbakedModel.parentId);
+            if (unbakedModel == null)
+                LOGGER.warn("No parent '{}' while loading model '{}'", this.parentId, jsonUnbakedModel);
             if (set.contains(unbakedModel)) {
-                LOGGER.warn("Found 'parent' loop while loading model '{}' in chain: {} -> {}", JsonModel, set.stream().map(Object::toString).collect(Collectors.joining(" -> ")), this.parentId);
+                LOGGER.warn("Found 'parent' loop while loading model '{}' in chain: {} -> {}", jsonUnbakedModel, set.stream().map(Object::toString).collect(Collectors.joining(" -> ")), this.parentId);
                 unbakedModel = null;
             }
-
+            
             if (unbakedModel == null) {
-                JsonModel.parentId = ModelLoader.MISSING_ID.asIdentifier();
-                unbakedModel = unbakedModelGetter.apply(JsonModel.parentId);
+                unbakedModel = modelLoader.apply(ModelLoader.MISSING_ID.asIdentifier());
             }
-
-            if (!(unbakedModel instanceof JsonUnbakedModel jsonModel)) {
+            
+            if (!(unbakedModel instanceof JsonUnbakedModel)) {
                 throw new IllegalStateException("BlockModel parent has to be a block model.");
             }
-
-            JsonModel.parent = jsonModel;
+            
+            jsonUnbakedModel = jsonUnbakedModel.parent;
         }
 
-        Set<SpriteIdentifier> set2 = Sets.newHashSet(this.resolveSprite("particle"));
+        Set<SpriteIdentifier> dependencies = Sets.newHashSet(this.resolveSprite("particle"));
 
         for (ModelElement modelElement : this.getElements()) {
             SpriteIdentifier spriteIdentifier;
             for (ModelElementFace modelElementFace : modelElement.faces.values()) {
                 spriteIdentifier = this.resolveSprite(modelElementFace.textureId);
+                
                 if (spriteIdentifier.texture == MissingSprite.getMissingSpriteId()) {
                     unresolvedTextureReferences.add(Pair.of(modelElementFace.textureId, this.id));
                 }
-                set2.add(spriteIdentifier);
+                
+                dependencies.add(spriteIdentifier);
             }
         }
 
         this.overrides.forEach((modelOverride) -> {
-            UnbakedModel unbakedModel = unbakedModelGetter.apply(modelOverride.getModelId());
-            if (!Objects.equals(unbakedModel, this)) {
-                set2.addAll(unbakedModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
+            UnbakedModel overrideModel = modelLoader.apply(modelOverride.getModelId());
+            if (!Objects.equals(overrideModel, this)) {
+                dependencies.addAll(overrideModel.getTextureDependencies(modelLoader, unresolvedTextureReferences));
             }
         });
+        
         if (this.getRootModel() == ModelLoader.GENERATION_MARKER) {
-            ItemModelGenerator.LAYERS.forEach((string) -> set2.add(this.resolveSprite(string)));
+            ItemModelGenerator.LAYERS.forEach((string) -> dependencies.add(this.resolveSprite(string)));
         }
 
-        return set2;
+        return dependencies;
     }
 
     @Override
