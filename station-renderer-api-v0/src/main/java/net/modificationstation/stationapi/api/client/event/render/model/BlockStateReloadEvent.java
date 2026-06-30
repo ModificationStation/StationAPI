@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.client.event.render.model;
 
 import com.mojang.datafixers.util.Pair;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.event.EventPhases;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -21,17 +22,11 @@ import static net.modificationstation.stationapi.impl.client.texture.StationRend
 /**
  * An event which is fired when block states are being reloaded
  */
-@EventPhases(StationAPI.INTERNAL_PHASE)
+@SuperBuilder
 public class BlockStateReloadEvent extends Event {
     public final ResourceManager resourceManager;
     public final Executor executor;
     public final List<CompletableFuture<Pair<Identifier, List<ModelLoader.SourceTrackedData>>>> states;
-
-    public BlockStateReloadEvent(ResourceManager resourceManager, Executor executor, List<CompletableFuture<Pair<Identifier, List<ModelLoader.SourceTrackedData>>>> states) {
-        this.resourceManager = resourceManager;
-        this.executor = executor;
-        this.states = states;
-    }
 
     /**
      * Adds a blockstate json to the list of blockstates to be loaded

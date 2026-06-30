@@ -131,7 +131,7 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
     private static CompletableFuture<Map<Identifier, List<ModelLoader.SourceTrackedData>>> reloadBlockStates(ResourceManager resourceManager, Executor executor) {
         return CompletableFuture.supplyAsync(() -> ModelLoader.BLOCK_STATES_FINDER.findAllResources(resourceManager), executor).thenCompose(blockStates2 -> {
             List<CompletableFuture<Pair<Identifier, List<ModelLoader.SourceTrackedData>>>> list = new ArrayList<>(blockStates2.size());
-            StationAPI.EVENT_BUS.post(new BlockStateReloadEvent(resourceManager, executor, list));
+            StationAPI.EVENT_BUS.post(BlockStateReloadEvent.builder().resourceManager(resourceManager).executor(executor).states(list).build());
             for (Map.Entry<Identifier, List<Resource>> entry : blockStates2.entrySet()) {
                 list.add(CompletableFuture.supplyAsync(() -> {
                     List<Resource> resources = entry.getValue();

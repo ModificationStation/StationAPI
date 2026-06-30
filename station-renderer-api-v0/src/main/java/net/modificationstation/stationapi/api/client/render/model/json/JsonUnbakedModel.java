@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
-public final class JsonUnbakedModel implements UnbakedModel {
+public class JsonUnbakedModel implements UnbakedModel {
     public static final Identifier BUILTIN_GENERATED = Identifier.of("builtin/generated");
 
     private static final BakedQuadFactory QUAD_FACTORY = new BakedQuadFactory();

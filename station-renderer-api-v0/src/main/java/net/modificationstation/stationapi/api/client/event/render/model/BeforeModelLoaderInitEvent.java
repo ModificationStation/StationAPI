@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuperBuilder
-public final class UnbakedModelLoadingFinishedEvent extends Event {
+public final class BeforeModelLoaderInitEvent extends Event {
     public final ModelLoader modelLoader;
     public final Map<Identifier, UnbakedModel> unbakedModels;
     public final Map<Identifier, UnbakedModel> modelsToBake;
