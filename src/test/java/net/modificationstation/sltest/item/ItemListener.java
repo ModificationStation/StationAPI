@@ -35,8 +35,8 @@ public class ItemListener {
         testPickaxe = new ModdedPickaxeItem(NAMESPACE.id("test_pickaxe"), testMaterial); //8476
         testNBTItem = new NBTItem(NAMESPACE.id("nbt_item")); //8477
         testModelItem = new ModelItem(NAMESPACE.id("model_item")).setMaxCount(1);
-        ironOre = event.register(NAMESPACE.id("iron_ore"), new Item(ItemRegistry.AUTO_ID));
-        generatedItem = event.register(NAMESPACE.id("generated_item"), new Item(ItemRegistry.AUTO_ID));
+        ironOre = event.register(NAMESPACE.id("iron_ore"), new Item(ItemRegistry.AUTO_ID).setTranslationKey(NAMESPACE.id("iron_ore")));
+        generatedItem = event.register(NAMESPACE.id("generated_item"), new Item(ItemRegistry.AUTO_ID).setTranslationKey(NAMESPACE.id("generated_item")));
         variationBlockIdle = new BlockStateItem(NAMESPACE.id("variation_block_idle"), Blocks.VARIATION_BLOCK.get().getDefaultState());
         variationBlockPassive = new BlockStateItem(NAMESPACE.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE));
         variationBlockActive = new BlockStateItem(NAMESPACE.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE));
