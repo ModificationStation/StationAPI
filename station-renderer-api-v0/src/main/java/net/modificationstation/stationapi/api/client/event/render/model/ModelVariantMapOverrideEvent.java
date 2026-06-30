@@ -7,10 +7,13 @@ import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.model.ModelLoader;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelVariantMap;
+import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 
 import java.util.List;
+
+import static net.modificationstation.stationapi.api.client.render.model.json.ModelVariantMap.*;
 
 /**
  * Fired after the {@link ModelVariantMap} is deserialized, allowing to add custom overrides
@@ -29,6 +32,14 @@ public final class ModelVariantMapOverrideEvent extends Event {
      * The map of the variants of the {@link BlockState}
      */
     public final List<Pair<String, ModelVariantMap>> variantMaps;
+    /**
+     * The {@link StateManager} of the {@link Block} for which the {@link BlockState} is being loaded.
+     */
+    public final StateManager<Block, BlockState> stateManager;
+    /**
+     * The {@link ModelVariantMap.DeserializationContext} for deserializing the {@link ModelVariantMap}
+     */
+    public final DeserializationContext deserializationContext;
 
     /**
      * Adds a custom {@link ModelVariantMap} to the list of overrides for the given {@link BlockState}

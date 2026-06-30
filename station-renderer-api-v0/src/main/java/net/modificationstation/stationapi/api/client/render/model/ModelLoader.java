@@ -235,15 +235,15 @@ public class ModelLoader {
             ModelDefinition modelDefinition2 = new ModelDefinition(ImmutableList.of(unbakedModel), ImmutableList.of());
             Pair<UnbakedModel, Supplier<ModelDefinition>> pair = Pair.of(unbakedModel, () -> modelDefinition2);
             try {
-                List<Pair<String, ModelVariantMap>> list2 = this.blockStates.getOrDefault(identifier2, List.of()).stream().map((blockState) -> {
+                List<Pair<String, ModelVariantMap>> list2 = new ArrayList<>(this.blockStates.getOrDefault(identifier2, List.of()).stream().map((blockState) -> {
                     try {
                         return Pair.of(blockState.source, ModelVariantMap.fromJson(variantMapDeserializationContext, blockState.data));
                     } catch (Exception var4) {
                         throw new ModelLoaderException(String.format(Locale.ROOT, "Exception loading blockstate definition: '%s' in texturepack: '%s': %s", identifier2, blockState.source, var4.getMessage()));
                     }
-                }).toList();
+                }).toList());
 
-                StationAPI.EVENT_BUS.post(ModelVariantMapOverrideEvent.builder().modelLoader(this).id(modelIdentifier.id).variantMaps(list2).build());
+                StationAPI.EVENT_BUS.post(ModelVariantMapOverrideEvent.builder().modelLoader(this).id(modelIdentifier.id).variantMaps(list2).stateManager(stateManager).deserializationContext(variantMapDeserializationContext).build());
 
                 for (Pair<String, ModelVariantMap> pair2 : list2) {
                     MultipartUnbakedModel multipartUnbakedModel;
