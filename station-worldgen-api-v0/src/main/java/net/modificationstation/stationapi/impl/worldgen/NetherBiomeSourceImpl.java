@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
@@ -12,7 +13,12 @@ public class NetherBiomeSourceImpl extends FixedBiomeSource {
     private NetherBiomeSourceImpl() {
         super(Biome.HELL, 1.0, 0.0);
     }
-    
+
+    @Override
+    public Biome getBiome(ChunkPos chunkPos) {
+        return getBiome(chunkPos.x << 4, chunkPos.z << 4);
+    }
+
     @Override
     public Biome getBiome(int x, int z) {
         return getBiomesInArea(BUFFER, x, z, 1, 1)[0];
