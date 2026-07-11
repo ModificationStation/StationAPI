@@ -13,6 +13,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
+import net.modificationstation.stationapi.impl.world.chunk.CachedFlattenedChunk;
 import net.modificationstation.stationapi.impl.world.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.world.chunk.PalettedContainer;
@@ -78,7 +79,7 @@ public class FlattenedWorldManager {
     public static Chunk loadChunk(World world, NbtCompound chunkTag) {
         int xPos = chunkTag.getInt("xPos");
         int zPos = chunkTag.getInt("zPos");
-        FlattenedChunk chunk = new FlattenedChunk(world, xPos, zPos);
+        FlattenedChunk chunk = new CachedFlattenedChunk(world, xPos, zPos);
         ChunkSection[] sections = chunk.sections;
         if (chunkTag.contains(SECTIONS)) {
             NbtList sectionTags = chunkTag.getList(SECTIONS);

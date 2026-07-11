@@ -99,7 +99,7 @@ public class FlattenedChunk extends Chunk {
         return y >= getShortHeight(relX, relZ);
     }
 
-    private ChunkSection getSection(int y) {
+    protected ChunkSection getSection(int y) {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }

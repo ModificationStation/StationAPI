@@ -12,6 +12,7 @@ import net.minecraft.world.gen.carver.CaveCarver;
 import net.minecraft.world.gen.chunk.OverworldChunkGenerator;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.world.CaveGenBaseImpl;
+import net.modificationstation.stationapi.impl.world.chunk.CachedFlattenedChunk;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,7 +58,7 @@ class OverworldChunkGeneratorMixin {
             )
     )
     private Chunk stationapi_redirectChunk(World world, byte[] tiles, int xPos, int zPos) {
-        return new FlattenedChunk(world, xPos, zPos);
+        return new CachedFlattenedChunk(world, xPos, zPos);
     }
 
     @Inject(
