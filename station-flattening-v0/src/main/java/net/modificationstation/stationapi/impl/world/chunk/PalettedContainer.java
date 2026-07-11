@@ -39,6 +39,8 @@ public class PalettedContainer<T>
     private final PaletteResizeListener<T> dummyListener = (newSize, added) -> 0;
     private final IndexedIterable<T> idList;
     private volatile Data<T> data;
+    private Palette<T> dataPalette;
+    private PaletteStorage dataStorage;
     private final PaletteProvider paletteProvider;
 
     /**
@@ -58,20 +60,26 @@ public class PalettedContainer<T>
     public PalettedContainer(IndexedIterable<T> idList, PaletteProvider paletteProvider, DataProvider<T> dataProvider, PaletteStorage storage, List<T> paletteEntries) {
         this.idList = idList;
         this.paletteProvider = paletteProvider;
-        this.data = new Data<>(dataProvider, storage, dataProvider.factory().create(dataProvider.bits(), idList, this, paletteEntries));
+        this.setData(new Data<>(dataProvider, storage, dataProvider.factory().create(dataProvider.bits(), idList, this, paletteEntries)));
     }
 
     private PalettedContainer(IndexedIterable<T> idList, PaletteProvider paletteProvider, Data<T> data) {
         this.idList = idList;
         this.paletteProvider = paletteProvider;
-        this.data = data;
+        this.setData(data);
     }
 
     public PalettedContainer(IndexedIterable<T> idList, T object, PaletteProvider paletteProvider) {
         this.paletteProvider = paletteProvider;
         this.idList = idList;
-        this.data = this.getCompatibleData(null, 0);
+        this.setData(this.getCompatibleData(null, 0));
         this.data.palette.index(object);
+    }
+    
+    void setData(Data<T> data) {
+        this.data = data;
+        this.dataPalette = data.palette;
+        this.dataStorage = data.storage;
     }
 
     /**
@@ -93,7 +101,7 @@ public class PalettedContainer<T>
         Data<T> data = this.data;
         Data<T> data2 = this.getCompatibleData(data, i);
         data2.importFrom(data.palette, data.storage);
-        this.data = data2;
+        this.setData(data2);
         return data2.palette.index(object);
     }
 
@@ -121,8 +129,8 @@ public class PalettedContainer<T>
     }
 
     protected T get(int index) {
-        Data<T> data = this.data;
-        return data.palette.get(data.storage.get(index));
+        int storageValue = dataStorage.get(index);
+        return dataPalette.get(storageValue);
     }
 
     public void forEachValue(Consumer<T> consumer) {
@@ -150,7 +158,7 @@ public class PalettedContainer<T>
                                 .get(data.storage.getData())
                                 .position() * Long.BYTES
         );
-        this.data = data;
+        this.setData(data);
     }
 
     /**
