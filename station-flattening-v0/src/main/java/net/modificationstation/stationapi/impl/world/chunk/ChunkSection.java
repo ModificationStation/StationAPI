@@ -25,7 +25,10 @@ public class ChunkSection {
     private final NibbleArray metadataArray = new NibbleArray(4096);
     private final NibbleArray skyLightArray = new NibbleArray(4096);
     private final NibbleArray blockLightArray = new NibbleArray(4096);
-    public int[] blockIdCache = null;
+    
+    // Used for CachedFlattenedChunk
+    public int worldBottomY = 0;
+    public short[] blockIdCache = null;
 
     public ChunkSection(int chunkPos, PalettedContainer<BlockState> blockStateContainer) {
         this.yOffset = (short) ChunkSection.blockCoordFromChunkCoord(chunkPos);
@@ -52,7 +55,7 @@ public class ChunkSection {
 
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
         if (blockIdCache != null) {
-            blockIdCache[x | (z << 4) | (y + this.yOffset << 8)] = -1;
+            blockIdCache[x | (z << 4) | ((y - worldBottomY) + this.yOffset << 8)] = -1;
         }
         
         BlockState blockState = this.blockStateContainer.swap(x, y, z, state);
