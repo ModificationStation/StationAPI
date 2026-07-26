@@ -6,7 +6,6 @@ import com.mojang.serialization.MapCodec;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.collection.FastImmutableTable;
 import net.modificationstation.stationapi.api.util.collection.FastImmutableTableCache;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
