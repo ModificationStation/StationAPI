@@ -20,12 +20,10 @@ import java.util.Random;
 public class WeightedBakedModel implements BakedModel {
    private final int totalWeight;
    private final List<Entry> models;
-   private final ImmutableList<Entry> immutableModels;
    private final BakedModel defaultModel;
 
    public WeightedBakedModel(List<Entry> models) {
-      this.models = models;
-      this.immutableModels = ImmutableList.copyOf(models);
+      this.models = List.copyOf(models);
       this.totalWeight = WeightedPicker.getWeightSum(models);
       this.defaultModel = models.get(0).model;
    }
@@ -71,8 +69,8 @@ public class WeightedBakedModel implements BakedModel {
       return totalWeight;
    }
 
-   public ImmutableList<Entry> getModels() {
-      return immutableModels;
+   public List<Entry> getModels() {
+      return models;
    }
 
    public BakedModel getDefaultModel() {
