@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public abstract class AbstractBlockState extends State<Block, BlockState> {
+    public final Block block;
     private final boolean isAir;
     private final Material material;
     private final MapColor materialColor;
@@ -32,6 +33,7 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
 
     protected AbstractBlockState(Block block, ImmutableMap<Property<?>, Comparable<?>> propertyMap, MapCodec<BlockState> mapCodec) {
         super(block, propertyMap, mapCodec);
+        this.block = block;
         this.isAir = block.material == Material.AIR;
         this.material = block.material;
         this.materialColor = block.material.mapColor;
@@ -40,7 +42,7 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     public Block getBlock() {
-        return this.owner;
+        return this.block;
     }
 
     public Material getMaterial() {
@@ -52,7 +54,7 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
      */
     public int getLuminance() {
         return luminance == -1 ?
-                luminance = ((StationFlatteningBlockInternal) owner).stationapi_getLuminanceProvider().applyAsInt(asBlockState()) :
+                luminance = ((StationFlatteningBlockInternal) block).stationapi_getLuminanceProvider().applyAsInt(asBlockState()) :
                 luminance;
     }
 
@@ -65,11 +67,11 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     public float getHardness(BlockView world, BlockPos pos) {
-        return owner.getHardness(asBlockState(), world, pos);
+        return block.getHardness(asBlockState(), world, pos);
     }
 
     public float calcBlockBreakingDelta(PlayerEntity player, BlockView world, BlockPos pos) {
-        return owner.calcBlockBreakingDelta(asBlockState(), player, world, pos);
+        return block.calcBlockBreakingDelta(asBlockState(), player, world, pos);
     }
 
     public boolean isOpaque() {
@@ -77,15 +79,15 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     public void onStateReplaced(World world, BlockPos pos, BlockState state) {
-        this.owner.onStateReplaced(this.asBlockState(), world, pos, state);
+        this.block.onStateReplaced(this.asBlockState(), world, pos, state);
     }
 
     public boolean canReplace(ItemPlacementContext context) {
-        return this.owner.canReplace(this.asBlockState(), context);
+        return this.block.canReplace(this.asBlockState(), context);
     }
 
     public boolean isIn(TagKey<Block> tag) {
-        return owner.getRegistryEntry().isIn(tag);
+        return block.getRegistryEntry().isIn(tag);
     }
 
     public boolean isIn(TagKey<Block> tag, Predicate<AbstractBlockState> predicate) {
@@ -93,19 +95,19 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     public boolean isIn(RegistryEntryList<Block> blocks) {
-        return blocks.contains(owner.getRegistryEntry());
+        return blocks.contains(block.getRegistryEntry());
     }
 
     public Stream<TagKey<Block>> streamTags() {
-        return owner.getRegistryEntry().streamTags();
+        return block.getRegistryEntry().streamTags();
     }
 
     public boolean isOf(Block block) {
-        return this.owner == block;
+        return this.block == block;
     }
 
     public boolean hasRandomTicks() {
-        return Block.BLOCKS_RANDOM_TICK[owner.id];
+        return Block.BLOCKS_RANDOM_TICK[block.id];
     }
 
     @Environment(EnvType.CLIENT)

@@ -31,7 +31,7 @@ abstract class BlockRenderManagerMixin implements StationRendererBlockRenderMana
     @Unique
     public void renderAllSides(BlockState state, int x, int y, int z) {
         if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel)
-            renderWithoutCulling(state.owner, x, y, z);
+            renderWithoutCulling(state.block, x, y, z);
         else if (RendererAccess.INSTANCE.hasRenderer())
             RendererAccess.INSTANCE.getRenderer().bakedModelRenderer().renderBlock(state, stationapi_pos.set(x, y, z), blockView, false, stationapi_random);
     }

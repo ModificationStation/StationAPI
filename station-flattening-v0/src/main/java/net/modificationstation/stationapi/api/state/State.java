@@ -30,8 +30,7 @@ public abstract class State<O, S> {
             return property.name((T) value);
         }
     };
-    @ApiStatus.Internal
-    public final O owner;
+    protected final O owner;
     private final ImmutableMap<Property<?>, Comparable<?>> entries;
     private Table<Property<?>, Comparable<?>, S> withTable;
     protected final MapCodec<S> codec;

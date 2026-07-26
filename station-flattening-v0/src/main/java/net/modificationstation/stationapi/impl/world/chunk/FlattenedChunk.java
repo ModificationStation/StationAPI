@@ -313,7 +313,7 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public int getBlockId(int x, int y, int z) {
-        return getBlockState(x, y, z).owner.id;
+        return getBlockState(x, y, z).block.id;
     }
 
     @Override
@@ -380,7 +380,7 @@ public class FlattenedChunk extends Chunk {
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state && sameMeta) return null;
 
-        Block oldBlock = oldState.owner;
+        Block oldBlock = oldState.block;
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
                         .block(oldBlock)
@@ -395,7 +395,7 @@ public class FlattenedChunk extends Chunk {
         section.setMeta(x, y & 15, z, meta);
 
         if (!this.world.dimension.hasCeiling) {
-            if (Block.BLOCKS_LIGHT_OPACITY[state.owner.id] != 0) {
+            if (Block.BLOCKS_LIGHT_OPACITY[state.block.id] != 0) {
                 if (y >= var6)
                     this.updateHeightMap(x, y + 1, z);
             } else if (y == var6 - 1)
@@ -407,7 +407,7 @@ public class FlattenedChunk extends Chunk {
         this.world.queueLightUpdate(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
         ((ChunkAccessor) this).invokeLightGaps(x, z);
         section.setMeta(x, y & 15, z, meta);
-        state.owner.onBlockPlaced(this.world, worldX, y, worldZ, oldState);
+        state.block.onBlockPlaced(this.world, worldX, y, worldZ, oldState);
 
         this.dirty = true;
         return oldState;
@@ -432,7 +432,7 @@ public class FlattenedChunk extends Chunk {
         if (oldState == state) return null;
 
         short topY = getShortHeight(x, z);
-        Block oldBlock = oldState.owner;
+        Block oldBlock = oldState.block;
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
                         .block(oldBlock)
@@ -444,7 +444,7 @@ public class FlattenedChunk extends Chunk {
         section.setBlockState(x, y & 15, z, state);
         oldState.onStateReplaced(world, CACHED_BLOCK_POS.get().set(worldX, y, worldZ), state);
         section.setMeta(x, y & 15, z, 0);
-        if (Block.BLOCKS_LIGHT_OPACITY[state.owner.id] != 0) {
+        if (Block.BLOCKS_LIGHT_OPACITY[state.block.id] != 0) {
             if (y >= topY)
                 this.updateHeightMap(x, y + 1, z);
         } else if (y == topY - 1)
@@ -453,7 +453,7 @@ public class FlattenedChunk extends Chunk {
         this.world.queueLightUpdate(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
         ((ChunkAccessor) this).invokeLightGaps(x, z);
         if (!this.world.isRemote) {
-            state.owner.onBlockPlaced(this.world, worldX, y, worldZ, oldState);
+            state.block.onBlockPlaced(this.world, worldX, y, worldZ, oldState);
         }
 
         this.dirty = true;
