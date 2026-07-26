@@ -67,11 +67,10 @@ public abstract class GroupResourcePack implements ResourcePack {
 
         if (packs == null) return;
 
-        for (int i = packs.size() - 1; i >= 0; i--) {
-            ResourcePack pack = packs.get(i);
-
+        // Ascending priority, unlike open() above: consumers of findResources keep the *last*
+        // result they're handed for an ID, so the highest priority pack has to be visited last.
+        for (ModResourcePack pack : packs)
             pack.findResources(type, namespace, prefix, consumer);
-        }
     }
 
     @Override
@@ -86,7 +85,11 @@ public abstract class GroupResourcePack implements ResourcePack {
 
         Identifier metadataId = NamespaceResourceManager.getMetadataPath(id);
 
-        for (ModResourcePack pack : packs) {
+        // Descending priority: getAllResources walks its pack list from the top down and reverses
+        // the result at the end, so appending ascending here would leave this group's entries
+        // inverted relative to every other pack once that reverse happens.
+        for (int i = packs.size() - 1; i >= 0; i--) {
+            ModResourcePack pack = packs.get(i);
             InputSupplier<InputStream> supplier = pack.open(type, id);
 
             if (supplier != null) {

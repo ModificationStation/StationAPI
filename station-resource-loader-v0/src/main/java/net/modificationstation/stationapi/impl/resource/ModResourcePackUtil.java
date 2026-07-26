@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationapi.api.resource.ResourcePackActivationType;
 import net.modificationstation.stationapi.api.resource.ResourceType;
+import net.modificationstation.stationapi.impl.resource.loader.ResourceManagerHelperImpl;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,6 +60,10 @@ public final class ModResourcePackUtil {
                 packs.add(pack);
             }
         }
+
+        // Added before the sort so that code-supplied packs are ordered by the same priority rules.
+        ResourceManagerHelperImpl.appendRuntimeResourcePacks(packs, type);
+
         packs.sort((pack1, pack2) -> {
             String id1 = pack1.getFabricModMetadata().getId();
             String id2 = pack2.getFabricModMetadata().getId();
