@@ -75,7 +75,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
             index = 9
     )
     private int stationapi_changeCaveSoundY(int y) {
-        return y + getBottomY();
+        return (y % getHeight()) + getBottomY();
     }
 
     @ModifyExpressionValue(
