@@ -65,11 +65,11 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     public float getHardness(BlockView world, BlockPos pos) {
-        return getBlock().getHardness(asBlockState(), world, pos);
+        return owner.getHardness(asBlockState(), world, pos);
     }
 
     public float calcBlockBreakingDelta(PlayerEntity player, BlockView world, BlockPos pos) {
-        return getBlock().calcBlockBreakingDelta(asBlockState(), player, world, pos);
+        return owner.calcBlockBreakingDelta(asBlockState(), player, world, pos);
     }
 
     public boolean isOpaque() {
@@ -77,15 +77,15 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     public void onStateReplaced(World world, BlockPos pos, BlockState state) {
-        this.getBlock().onStateReplaced(this.asBlockState(), world, pos, state);
+        this.owner.onStateReplaced(this.asBlockState(), world, pos, state);
     }
 
     public boolean canReplace(ItemPlacementContext context) {
-        return this.getBlock().canReplace(this.asBlockState(), context);
+        return this.owner.canReplace(this.asBlockState(), context);
     }
 
     public boolean isIn(TagKey<Block> tag) {
-        return getBlock().getRegistryEntry().isIn(tag);
+        return owner.getRegistryEntry().isIn(tag);
     }
 
     public boolean isIn(TagKey<Block> tag, Predicate<AbstractBlockState> predicate) {
@@ -93,19 +93,19 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     }
 
     public boolean isIn(RegistryEntryList<Block> blocks) {
-        return blocks.contains(getBlock().getRegistryEntry());
+        return blocks.contains(owner.getRegistryEntry());
     }
 
     public Stream<TagKey<Block>> streamTags() {
-        return getBlock().getRegistryEntry().streamTags();
+        return owner.getRegistryEntry().streamTags();
     }
 
     public boolean isOf(Block block) {
-        return this.getBlock() == block;
+        return this.owner == block;
     }
 
     public boolean hasRandomTicks() {
-        return Block.BLOCKS_RANDOM_TICK[getBlock().id];
+        return Block.BLOCKS_RANDOM_TICK[owner.id];
     }
 
     @Environment(EnvType.CLIENT)

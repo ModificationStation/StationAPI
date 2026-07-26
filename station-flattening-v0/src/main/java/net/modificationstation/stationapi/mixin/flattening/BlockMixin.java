@@ -338,7 +338,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
         return index < ItemRegistry.ID_SHIFT ? array[index] : null;
     }
 
-    @Unique private ToIntFunction<BlockState> stationapi_luminance = state -> Block.BLOCKS_LIGHT_LUMINANCE[state.getBlock().id];
+    @Unique private ToIntFunction<BlockState> stationapi_luminance = state -> Block.BLOCKS_LIGHT_LUMINANCE[state.owner.id];
 
     @Override
     @Unique

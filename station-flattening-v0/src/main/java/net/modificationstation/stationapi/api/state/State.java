@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.collection.FastImmutableTable;
 import net.modificationstation.stationapi.api.util.collection.FastImmutableTableCache;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -29,7 +30,8 @@ public abstract class State<O, S> {
             return property.name((T) value);
         }
     };
-    protected final O owner;
+    @ApiStatus.Internal
+    public final O owner;
     private final ImmutableMap<Property<?>, Comparable<?>> entries;
     private Table<Property<?>, Comparable<?>, S> withTable;
     protected final MapCodec<S> codec;
