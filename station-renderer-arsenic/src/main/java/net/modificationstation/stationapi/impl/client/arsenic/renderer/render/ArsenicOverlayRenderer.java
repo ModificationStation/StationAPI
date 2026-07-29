@@ -1,13 +1,17 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.item.HeldItemRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.platform.Lighting;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ClientPlayerEntity;
 import net.minecraft.item.Item;
@@ -15,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.map.MapState;
 import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
+import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
@@ -50,8 +55,17 @@ public final class ArsenicOverlayRenderer {
 
     private void renderVanilla(LivingEntity entity, ItemStack item, SpriteAtlasTexture atlas) {
         Block block;
-        if (item.getItem() instanceof BlockItemForm blockItemForm && BlockRenderManager.isSideLit((block = blockItemForm.getBlock()).getRenderType()))
-            access.stationapi$getBlockRenderManager().render(block, item.getDamage(), entity.getBrightnessAtEyes(1.0F));
+        if (item.getItem() instanceof BlockItemForm blockItemForm && BlockRenderManager.isSideLit((block = blockItemForm.getBlock()).getRenderType())) {
+            if (item.getItem() instanceof ItemWithRenderer renderer) {
+                //noinspection deprecation
+                Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+                ItemRenderer itemRenderer = (ItemRenderer) EntityRenderDispatcher.INSTANCE.get(ItemEntity.class);
+                renderer.renderItemInHand(itemRenderer, minecraft.textRenderer, minecraft.textureManager, item, entity.getBrightnessAtEyes(1f));
+            }
+            else {
+                access.stationapi$getBlockRenderManager().render(block, item.getDamage(), entity.getBrightnessAtEyes(1.0F));
+            }
+        }
         else {
             Tessellator var3 = Tessellator.INSTANCE;
             int var4 = entity.getItemStackTextureId(item);
@@ -280,7 +294,15 @@ public final class ArsenicOverlayRenderer {
         f4 = 0.4f;
         glScalef(f4, f4, f4);
         if (var5.getItem().isHandheldRod()) glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+        if (var5.getItem() instanceof ItemWithRenderer renderer) {
+            //noinspection deprecation
+            Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+            ItemRenderer itemRenderer = (ItemRenderer) EntityRenderDispatcher.INSTANCE.get(ItemEntity.class);
+            renderer.renderItemInHand(itemRenderer, minecraft.textRenderer, minecraft.textureManager, var5, var3.getBrightnessAtEyes(f));
+        }
+        else {
         this.renderItem3D(var3, var5);
+        }
         glPopMatrix();
     }
 
