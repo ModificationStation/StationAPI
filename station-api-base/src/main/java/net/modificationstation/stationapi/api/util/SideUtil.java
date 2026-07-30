@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.util;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.util.function.Supplier;
@@ -43,5 +44,27 @@ public class SideUtil {
     @API
     public static void run(Runnable clientRunnable, Runnable serverRunnable) {
         choose(clientRunnable, serverRunnable).run();
+    }
+
+    /**
+     * Side-dependent runnable execution which only runs on the client side.
+     * @param clientRunnable the runnable that should be executed on client side.
+     */
+    @API
+    public static void runClient(Runnable clientRunnable) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            clientRunnable.run();
+        }
+    }
+
+    /**
+     * Side-dependent runnable execution which only runs on the server side.
+     * @param serverRunnable the runnable that should be executed on server side.
+     */
+    @API
+    public static void runServer(Runnable serverRunnable) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            serverRunnable.run();
+        }
     }
 }
