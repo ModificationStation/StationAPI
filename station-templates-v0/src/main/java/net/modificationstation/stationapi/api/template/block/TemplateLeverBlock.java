@@ -4,12 +4,12 @@ import net.minecraft.block.LeverBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateLeverBlock extends LeverBlock implements BlockTemplate {
-    public TemplateLeverBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateLeverBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateLeverBlock(int i, int j) {
-        super(i, j);
+    public TemplateLeverBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

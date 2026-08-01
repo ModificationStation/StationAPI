@@ -4,12 +4,18 @@ import net.minecraft.item.StackableFoodItem;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateStackableFoodItem extends StackableFoodItem implements ItemTemplate {
-    public TemplateStackableFoodItem(Identifier identifier, int healAmount, boolean isWolfFood, int maxStackSize) {
-        this(ItemTemplate.getNextId(), healAmount, isWolfFood, maxStackSize);
+    /**
+     * @param meat Controls whether the food can be eaten by wolves.
+     */
+    public TemplateStackableFoodItem(Identifier identifier, int healthRestored, boolean meat, int maxCount) {
+        this(ItemTemplate.getNextId(), healthRestored, meat, maxCount);
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateStackableFoodItem(int id, int healAmount, boolean isWolfFood, int maxStackSize) {
-        super(id, healAmount, isWolfFood, maxStackSize);
+
+    /**
+     * @param meat Controls whether the food can be eaten by wolves.
+     */
+    public TemplateStackableFoodItem(int id, int healthRestored, boolean meat, int maxCount) {
+        super(id, healthRestored, meat, maxCount);
     }
 }

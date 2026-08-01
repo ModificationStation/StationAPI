@@ -4,12 +4,12 @@ import net.minecraft.block.DeadBushBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateDeadBushBlock extends DeadBushBlock implements BlockTemplate {
-    public TemplateDeadBushBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateDeadBushBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateDeadBushBlock(int i, int j) {
-        super(i, j);
+    public TemplateDeadBushBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

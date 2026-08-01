@@ -8,8 +8,8 @@ public class TemplateSaddleItem extends SaddleItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSaddleItem(int i) {
-        super(i);
+
+    public TemplateSaddleItem(int id) {
+        super(id);
     }
 }

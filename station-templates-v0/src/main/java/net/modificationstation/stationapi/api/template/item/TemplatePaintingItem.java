@@ -8,8 +8,8 @@ public class TemplatePaintingItem extends PaintingItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplatePaintingItem(int i) {
-        super(i);
+
+    public TemplatePaintingItem(int id) {
+        super(id);
     }
 }

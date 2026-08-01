@@ -5,12 +5,12 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateTrapdoorBlock extends TrapdoorBlock implements BlockTemplate {
-    public TemplateTrapdoorBlock(Identifier identifier, Material arg) {
-        this(BlockTemplate.getNextId(), arg);
+    public TemplateTrapdoorBlock(Identifier identifier, Material material) {
+        this(BlockTemplate.getNextId(), material);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateTrapdoorBlock(int i, Material arg) {
-        super(i, arg);
+
+    public TemplateTrapdoorBlock(int id, Material material) {
+        super(id, material);
     }
 }

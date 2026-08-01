@@ -4,12 +4,12 @@ import net.minecraft.item.MushroomStewItem;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateMushroomStewItem extends MushroomStewItem implements ItemTemplate {
-    public TemplateMushroomStewItem(Identifier identifier, int healAmount) {
-        this(ItemTemplate.getNextId(), healAmount);
+    public TemplateMushroomStewItem(Identifier identifier, int healthRestored) {
+        this(ItemTemplate.getNextId(), healthRestored);
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateMushroomStewItem(int id, int healAmount) {
-        super(id, healAmount);
+
+    public TemplateMushroomStewItem(int id, int healthRestored) {
+        super(id, healthRestored);
     }
 }
