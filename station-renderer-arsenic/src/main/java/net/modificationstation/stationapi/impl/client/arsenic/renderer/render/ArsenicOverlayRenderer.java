@@ -301,7 +301,7 @@ public final class ArsenicOverlayRenderer {
             renderer.renderItemInHand(itemRenderer, minecraft.textRenderer, minecraft.textureManager, var5, var3.getBrightnessAtEyes(f));
         }
         else {
-        this.renderItem3D(var3, var5);
+            this.renderItem3D(var3, var5);
         }
         glPopMatrix();
     }
