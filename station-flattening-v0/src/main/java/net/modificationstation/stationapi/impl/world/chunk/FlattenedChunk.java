@@ -47,10 +47,9 @@ public class FlattenedChunk extends Chunk {
             this.entities[i] = new ArrayList<>();
         }
 
-        //blockIdCache = new short[16 * 16 * world.getHeight()];
-        blockIdCache = null;
+        blockIdCache = new short[16 * 16 * world.getHeight()];
         bottomY = world.getBottomY();
-        //Arrays.fill(blockIdCache, (short) -1);
+        Arrays.fill(blockIdCache, (short) -1);
     }
 
     public void fromLegacy(byte[] tiles) {
