@@ -113,12 +113,7 @@ public class FlattenedChunk extends Chunk {
             return null;
         }
 
-        ChunkSection section = sections[world.sectionCoordToIndex(y >> 4)];
-        if (section != null) {
-            section.blockIdCache = blockIdCache;
-            section.worldBottomY = bottomY;
-        }
-        return section;
+        return sections[world.sectionCoordToIndex(y >> 4)];
     }
 
     @Override
