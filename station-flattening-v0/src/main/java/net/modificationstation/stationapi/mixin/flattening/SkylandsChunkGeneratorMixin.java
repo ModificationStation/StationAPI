@@ -7,7 +7,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.carver.CaveCarver;
 import net.minecraft.world.gen.chunk.SkyChunkGenerator;
 import net.modificationstation.stationapi.impl.world.CaveGenBaseImpl;
-import net.modificationstation.stationapi.impl.world.chunk.CachedFlattenedChunk;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,7 +38,7 @@ class SkylandsChunkGeneratorMixin {
             )
     )
     private Chunk stationapi_redirectChunk(World world, byte[] tiles, int xPos, int zPos) {
-        return new CachedFlattenedChunk(world, xPos, zPos);
+        return new FlattenedChunk(world, xPos, zPos);
     }
 
     @Inject(

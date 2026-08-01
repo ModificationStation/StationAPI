@@ -5,7 +5,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.impl.world.StationClientWorld;
-import net.modificationstation.stationapi.impl.world.chunk.CachedFlattenedChunk;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,7 +29,7 @@ class MultiplayerChunkCacheMixin {
         if (!((StationClientWorld) world).stationAPI$isModded())
             return;
         ChunkPos vec2i = new ChunkPos(i, j);
-        FlattenedChunk chunk = new CachedFlattenedChunk(this.world, i, j);
+        FlattenedChunk chunk = new FlattenedChunk(this.world, i, j);
         this.chunksByPos.put(vec2i, chunk);
         chunk.loaded = true;
         cir.setReturnValue(chunk);

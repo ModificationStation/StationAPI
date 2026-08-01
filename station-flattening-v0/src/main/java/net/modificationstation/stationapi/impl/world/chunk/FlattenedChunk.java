@@ -21,6 +21,8 @@ import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import net.modificationstation.stationapi.mixin.flattening.ChunkAccessor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
 import java.util.List;
 
 public class FlattenedChunk extends Chunk {
@@ -30,6 +32,9 @@ public class FlattenedChunk extends Chunk {
     public final short firstBlock;
     public final short lastBlock;
     private final short[] stationHeightmap = new short[256];
+
+    public final short[] blockIdCache;
+    public final int bottomY;
 
     public FlattenedChunk(World world, int xPos, int zPos) {
         super(world, xPos, zPos);
@@ -41,6 +46,11 @@ public class FlattenedChunk extends Chunk {
         for(short i = 0; i < entities.length; i++) {
             this.entities[i] = new ArrayList<>();
         }
+
+        //blockIdCache = new short[16 * 16 * world.getHeight()];
+        blockIdCache = null;
+        bottomY = world.getBottomY();
+        //Arrays.fill(blockIdCache, (short) -1);
     }
 
     public void fromLegacy(byte[] tiles) {
@@ -103,7 +113,13 @@ public class FlattenedChunk extends Chunk {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
-        return sections[world.sectionCoordToIndex(y >> 4)];
+
+        ChunkSection section = sections[world.sectionCoordToIndex(y >> 4)];
+        if (section != null) {
+            section.blockIdCache = blockIdCache;
+            section.worldBottomY = bottomY;
+        }
+        return section;
     }
 
     @Override
@@ -129,6 +145,9 @@ public class FlattenedChunk extends Chunk {
             }
             sections[index] = section;
         }
+
+        section.blockIdCache = blockIdCache;
+        section.worldBottomY = bottomY;
         return section;
     }
 
@@ -313,7 +332,22 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public int getBlockId(int x, int y, int z) {
-        return getBlockState(x, y, z).block.id;
+        if (blockIdCache == null) {
+            return getBlockState(x, y, z).block.id;
+        }
+        
+        int key = x | (z << 4) | ((y - bottomY) << 8);
+
+        if (key < 0 || key >= blockIdCache.length) {
+            System.err.println("x = " + x + ", y = " + y + ", z = " + z);
+            return 0;
+        }
+
+        if (blockIdCache[key] == -1) {
+            blockIdCache[key] = (short) getBlockState(x, y, z).block.id;
+        }
+
+        return blockIdCache[key];
     }
 
     @Override
