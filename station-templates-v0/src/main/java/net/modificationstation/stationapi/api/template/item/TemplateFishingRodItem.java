@@ -8,8 +8,8 @@ public class TemplateFishingRodItem extends FishingRodItem implements ItemTempla
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateFishingRodItem(int i) {
-        super(i);
+
+    public TemplateFishingRodItem(int id) {
+        super(id);
     }
 }

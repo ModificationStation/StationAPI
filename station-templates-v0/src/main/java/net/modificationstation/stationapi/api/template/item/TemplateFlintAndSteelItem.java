@@ -9,7 +9,7 @@ public class TemplateFlintAndSteelItem extends FlintAndSteel implements ItemTemp
         ItemTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateFlintAndSteelItem(int i) {
-        super(i);
+    public TemplateFlintAndSteelItem(int id) {
+        super(id);
     }
 }

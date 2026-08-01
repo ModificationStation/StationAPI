@@ -20,8 +20,8 @@ public class TemplateDoorBlock extends DoorBlock implements BlockTemplate {
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateDoorBlock(int i, Material arg) {
-        super(i, arg);
+    public TemplateDoorBlock(int id, Material material) {
+        super(id, material);
     }
 
     public boolean isTop(int meta) {
