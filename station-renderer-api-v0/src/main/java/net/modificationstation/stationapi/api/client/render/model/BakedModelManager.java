@@ -186,9 +186,10 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
         this.missingModel = bakingResult.missingModel;
         profiler.swap("cache");
         this.blockModelCache.setModels(bakingResult.modelCache);
+        profiler.swap("models_uploaded_event");
+        StationAPI.EVENT_BUS.post(new ModelsUploadedEvent());
         profiler.pop();
         profiler.endTick();
-        StationAPI.EVENT_BUS.post(new ModelsUploadedEvent());
     }
 
     record BakingResult(ModelLoader modelLoader, BakedModel missingModel, Map<BlockState, BakedModel> modelCache, Map<Identifier, SpriteAtlasManager.AtlasPreparation> atlasPreparations, CompletableFuture<Void> readyForUpload) {}
