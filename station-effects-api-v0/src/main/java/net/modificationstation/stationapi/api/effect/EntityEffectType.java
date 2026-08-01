@@ -36,7 +36,7 @@ public final class EntityEffectType<EFFECT_INSTANCE extends EntityEffect<EFFECT_
      * Returns the translation key of the effect's name.
      */
     public String getTranslationKey() {
-        Identifier identifier = registryEntry.registryKey().getValue();
+        Identifier identifier = getIdentifier();
         return "gui.stationapi.effect." + identifier.namespace + "." + identifier.path + ".name";
     }
 
@@ -44,7 +44,7 @@ public final class EntityEffectType<EFFECT_INSTANCE extends EntityEffect<EFFECT_
      * Returns the translation key of the effect's description.
      */
     public String getDescriptionTranslationKey() {
-        Identifier identifier = registryEntry.registryKey().getValue();
+        Identifier identifier = getIdentifier();
         return "gui.stationapi.effect." + identifier.namespace + "." + identifier.path + ".desc";
     }
 
