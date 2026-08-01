@@ -12,8 +12,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
+import net.modificationstation.stationapi.api.client.event.render.model.ModelsUploadedEvent;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -186,9 +188,10 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
         this.blockModelCache.setModels(bakingResult.modelCache);
         profiler.pop();
         profiler.endTick();
+        StationAPI.EVENT_BUS.post(new ModelsUploadedEvent());
     }
 
-    public record BakingResult(ModelLoader modelLoader, BakedModel missingModel, Map<BlockState, BakedModel> modelCache, Map<Identifier, SpriteAtlasManager.AtlasPreparation> atlasPreparations, CompletableFuture<Void> readyForUpload) {}
+    record BakingResult(ModelLoader modelLoader, BakedModel missingModel, Map<BlockState, BakedModel> modelCache, Map<Identifier, SpriteAtlasManager.AtlasPreparation> atlasPreparations, CompletableFuture<Void> readyForUpload) {}
 
     @Override
     public Identifier getId() {
