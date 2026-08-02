@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ChunkCacheMixin",
+    "ChunkMixin",
     "WorldPropertiesMixin",
     "recipe.BasicBlockRecipesMixin",
     "recipe.CraftingRecipeManagerMixin",
