@@ -32,7 +32,7 @@ class PlayerInventoryMixin {
             @Local(index = 1, argsOnly = true) ItemStack stack
     ) {
         final var newStack = original.call(id, count, damage);
-        StationNBTSetter.cast(newStack).setStationNbt(stack.getStationNbt());
+        StationNBTSetter.cast(newStack).setStationNbt(stack.getStationNbt().copy());
         return newStack;
     }
 
