@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.flattening.client;
+package net.modificationstation.stationapi.mixin.vanillafix.client;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
@@ -11,6 +11,7 @@ import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.context.BlockTagContext;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
@@ -59,7 +60,9 @@ abstract class InGameHudMixin extends DrawContext {
                 }
             }
 
-            Collection<TagKey<Block>> tags = state.streamTags().toList();
+            Collection<TagKey<Block>> tags = state.streamTags(
+                    BlockTagContext.of(minecraft.world, hit.blockX, hit.blockY, hit.blockZ)
+            ).toList();
             if (!tags.isEmpty()) {
                 text = "Tags:";
                 drawTextWithShadow(var8, text, var6 - var8.getWidth(text) - 2, offset += 10, 16777215);

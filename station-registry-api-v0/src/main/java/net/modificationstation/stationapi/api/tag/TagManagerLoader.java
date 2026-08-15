@@ -1,7 +1,10 @@
 package net.modificationstation.stationapi.api.tag;
 
 import lombok.val;
-import net.modificationstation.stationapi.api.registry.*;
+import net.modificationstation.stationapi.api.registry.DynamicRegistryManager;
+import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
+import net.modificationstation.stationapi.api.registry.RegistryKey;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
@@ -63,14 +66,18 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
 
     private static <T> void repopulateTags(DynamicRegistryManager dynamicRegistryManager, TagManagerLoader.RegistryTags<T> tags) {
         RegistryKey<? extends Registry<T>> registryKey = tags.key();
-        Map<TagKey<T>, List<RegistryEntry<T>>> map = tags.tags().entrySet().stream().collect(Collectors.toUnmodifiableMap(entry -> TagKey.of(registryKey, entry.getKey()), entry -> List.copyOf(entry.getValue())));
+        Map<TagKey<T>, Collection<TagMatchGroup<RegistryEntry<T>>>> map = tags.tags().entrySet().stream().collect(Collectors.toUnmodifiableMap(entry -> TagKey.of(registryKey, entry.getKey()), entry -> entry.getValue()));
         dynamicRegistryManager.get(registryKey).populateTags(map);
     }
 
     private <T> CompletableFuture<RegistryTags<T>> buildRequiredGroup(ResourceManager resourceManager, Executor prepareExecutor, DynamicRegistryManager.Entry<T> requirement) {
         RegistryKey<? extends Registry<T>> registryKey = requirement.key();
         Registry<T> registry = requirement.value();
-        TagGroupLoader<RegistryEntry<T>> tagGroupLoader = new TagGroupLoader<>(id -> registry.getEntry(RegistryKey.of(registryKey, id)), getPath(registryKey));
+        TagGroupLoader<RegistryEntry<T>> tagGroupLoader = new TagGroupLoader<>(
+                id -> registry.getEntry(RegistryKey.of(registryKey, id)),
+                getPath(registryKey),
+                TagFile.createCodec(registry.getTagConditionCodec(), registry.getTagConditionTypes())
+        );
         return CompletableFuture.supplyAsync(() -> new RegistryTags<>(registryKey, tagGroupLoader.load(resourceManager)), prepareExecutor);
     }
 
@@ -79,6 +86,6 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
         return TAGS;
     }
 
-    public record RegistryTags<T>(RegistryKey<? extends Registry<T>> key, Map<Identifier, Collection<RegistryEntry<T>>> tags) { }
+    public record RegistryTags<T>(RegistryKey<? extends Registry<T>> key, Map<Identifier, Collection<TagMatchGroup<RegistryEntry<T>>>> tags) { }
 }
 

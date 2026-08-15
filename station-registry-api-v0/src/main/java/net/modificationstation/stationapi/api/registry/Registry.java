@@ -2,20 +2,27 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.TagMatchGroup;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
+import net.modificationstation.stationapi.api.util.context.Condition;
+import net.modificationstation.stationapi.api.util.context.ConditionType;
+import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import net.modificationstation.stationapi.api.util.function.BulkBiConsumer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -436,7 +443,7 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
 
     void clearTags();
 
-    void populateTags(Map<TagKey<T>, List<RegistryEntry<T>>> var1);
+    void populateTags(Map<TagKey<T>, Collection<TagMatchGroup<RegistryEntry<T>>>> var1);
 
     default IndexedIterable<RegistryEntry<T>> getIndexedEntries() {
         return new IndexedIterable<>() {
@@ -499,5 +506,55 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
             }
         };
     }
-}
 
+    <DATA> void registerTagCondition(ConditionType<DATA> conditionType);
+
+    default ConditionType.Builder<Unit, Context> buildTagCondition(Identifier id, Predicate<Context> condition) {
+        return ConditionType.builder(id, MapCodec.unit(Unit.INSTANCE), Function.identity(), (data, ctx) -> condition.test(ctx), this::registerTagCondition);
+    }
+
+    /**
+     * Creates a builder for a tag condition with a context projection.
+     *
+     * @param id the condition ID
+     * @param projection the function to project the raw context into a specific view
+     * @param condition the condition to test against the projected view
+     * @param <C> the type of the projected context
+     */
+    default <C extends Context> ConditionType.Builder<Unit, C> buildTagCondition(
+            Identifier id,
+            Function<Context, C> projection,
+            Predicate<C> condition
+    ) {
+        return ConditionType.builder(id, MapCodec.unit(Unit.INSTANCE), projection, (data, ctx) -> condition.test(ctx), this::registerTagCondition);
+    }
+
+    default <DATA> ConditionType.Builder<DATA, Context> buildTagCondition(
+            Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, Context> condition
+    ) {
+        return ConditionType.builder(id, codec, Function.identity(), condition, this::registerTagCondition);
+    }
+
+    /**
+     * Creates a builder for a data-backed tag condition with a view context projection.
+     *
+     * @param id the condition ID
+     * @param codec the codec for the condition data
+     * @param projection the function to project the raw context into a specific view
+     * @param condition the condition to test against the data and projected view
+     * @param <DATA> the type of the condition data
+     * @param <C> the type of the projected context
+     */
+    default <DATA, C extends Context> ConditionType.Builder<DATA, C> buildTagCondition(
+            Identifier id,
+            MapCodec<DATA> codec,
+            Function<Context, C> projection,
+            BiPredicate<DATA, C> condition
+    ) {
+        return ConditionType.builder(id, codec, projection, condition, this::registerTagCondition);
+    }
+
+    Codec<Condition<?>> getTagConditionCodec();
+
+    Iterable<ConditionType<?>> getTagConditionTypes();
+}
