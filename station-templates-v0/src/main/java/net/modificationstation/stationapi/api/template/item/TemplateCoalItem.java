@@ -8,8 +8,8 @@ public class TemplateCoalItem extends CoalItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateCoalItem(int i) {
-        super(i);
+
+    public TemplateCoalItem(int id) {
+        super(id);
     }
 }

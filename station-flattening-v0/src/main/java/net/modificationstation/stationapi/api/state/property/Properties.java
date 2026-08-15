@@ -171,7 +171,7 @@ public class Properties {
    /**
     * A property that specifies the direction a block is facing.
     */
-   public static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
+   public static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.UP, Direction.DOWN);
    /**
     * A property that specifies the direction a hopper's output faces.
     * 

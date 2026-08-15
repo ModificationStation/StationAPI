@@ -44,7 +44,7 @@ public class StationShapelessRecipe implements CraftingRecipe {
                             ItemStack item = itemOpt.get();
                             boolean ignoreDamage = item.getDamage() == -1;
                             if (ignoreDamage) item.setDamage(itemToTest.getDamage());
-                            equals = item.isItemEqual(itemToTest);
+                            equals = areItemsEqual(item, itemToTest);
                             if (ignoreDamage) item.setDamage(-1);
                         }
                     }
@@ -58,6 +58,10 @@ public class StationShapelessRecipe implements CraftingRecipe {
             }
         }
         return matchedIngredients.nextClearBit(0) >= ingredients.length;
+    }
+
+    public boolean areItemsEqual(ItemStack stack, ItemStack other) {
+        return stack.isItemEqual(other);
     }
 
     @Override

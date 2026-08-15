@@ -8,8 +8,8 @@ public class TemplateNoteBlock extends NoteBlock implements BlockTemplate {
         this(BlockTemplate.getNextId());
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateNoteBlock(int i) {
-        super(i);
+
+    public TemplateNoteBlock(int id) {
+        super(id);
     }
 }

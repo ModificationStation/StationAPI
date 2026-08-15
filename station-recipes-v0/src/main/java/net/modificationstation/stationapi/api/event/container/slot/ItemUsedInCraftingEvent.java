@@ -6,6 +6,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 
+/**
+ * This is fired for <b>each ingredient</b> when an item is taken from the result slot.
+ */
 @SuperBuilder
 public class ItemUsedInCraftingEvent extends Event {
     public final PlayerEntity player;

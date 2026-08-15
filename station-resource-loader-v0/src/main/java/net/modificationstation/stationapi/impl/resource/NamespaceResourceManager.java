@@ -52,7 +52,7 @@ public class NamespaceResourceManager implements ResourceManager {
 
     private Function<ResourcePack, InputSupplier<InputStream>> createOpener(Identifier id) {
         if (id.namespace == Namespace.MINECRAFT && id.path.startsWith("/")) {
-            final String[] segments = PathUtil.split(id.path.substring(1)).getOrThrow(false, LOGGER::error).toArray(String[]::new);
+            final String[] segments = PathUtil.split(id.path.substring(1)).getOrThrow().toArray(String[]::new);
             return pack -> pack.openRoot(segments.clone());
         } else return pack -> pack.open(type, id);
     }

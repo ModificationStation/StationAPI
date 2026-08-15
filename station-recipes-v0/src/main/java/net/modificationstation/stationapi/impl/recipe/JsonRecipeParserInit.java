@@ -65,7 +65,11 @@ public class JsonRecipeParserInit {
             keys[i] = pattern[i];
         for (Map.Entry<String, JsonElement> key : rawKeys) {
             keys[i] = key.getKey().charAt(0);
-            keys[i + 1] = new Gson().fromJson(key.getValue(), JsonItemKey.class).get().map(Function.identity(), Function.identity());
+            Object out = new Gson().fromJson(key.getValue(), JsonItemKey.class).get().map(Function.identity(), Function.identity());
+            if (out == null) {
+                throw new RuntimeException("Invalid element " + key.getValue() + " inside " + recipe + ", potential invalid item ID?");
+            }
+            keys[i + 1] = out;
             i += 2;
         }
         CraftingRegistry.addShapedRecipe(json.getResult().getItemStack(), keys);

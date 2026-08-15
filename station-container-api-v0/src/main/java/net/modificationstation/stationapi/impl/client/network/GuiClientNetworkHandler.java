@@ -4,7 +4,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.gui.screen.GuiHandler;
 import net.modificationstation.stationapi.api.client.registry.GuiHandlerRegistry;
@@ -15,6 +14,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.network.packet.play.InventoryMessagePacket;
 
 import java.lang.invoke.MethodHandles;
 
@@ -38,7 +38,7 @@ public final class GuiClientNetworkHandler {
         GuiHandler guiHandler = GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings[0]));
         if (guiHandler != null)
             //noinspection deprecation
-            ((Minecraft) FabricLoader.getInstance().getGameInstance()).setScreen(guiHandler.screenFactory().create(player, isClient ? guiHandler.inventoryFactory().create() : (Inventory) message.objects[0], message));
+            ((Minecraft) FabricLoader.getInstance().getGameInstance()).setScreen(guiHandler.screenFactory().create(player, isClient ? guiHandler.inventoryFactory().create() : ((InventoryMessagePacket) message).inventory, message));
         if (isClient)
             player.currentScreenHandler.syncId = message.ints[0];
     }

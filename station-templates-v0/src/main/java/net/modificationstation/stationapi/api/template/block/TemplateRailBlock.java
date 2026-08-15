@@ -4,12 +4,12 @@ import net.minecraft.block.RailBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateRailBlock extends RailBlock implements BlockTemplate {
-    public TemplateRailBlock(Identifier identifier, int j, boolean flag) {
-        this(BlockTemplate.getNextId(), j, flag);
+    public TemplateRailBlock(Identifier identifier, int textureId, boolean alwaysStraight) {
+        this(BlockTemplate.getNextId(), textureId, alwaysStraight);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateRailBlock(int i, int j, boolean flag) {
-        super(i, j, flag);
+    public TemplateRailBlock(int id, int textureId, boolean alwaysStraight) {
+        super(id, textureId, alwaysStraight);
     }
 }

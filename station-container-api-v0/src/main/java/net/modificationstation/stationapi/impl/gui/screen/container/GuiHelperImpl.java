@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.network.packet.play.InventoryMessagePacket;
 
 import java.util.function.Consumer;
 
@@ -17,7 +18,7 @@ public abstract class GuiHelperImpl {
     }
 
     public void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, ScreenHandler container, Consumer<MessagePacket> customData) {
-        MessagePacket message = new MessagePacket(Identifier.of(StationAPI.NAMESPACE, "open_gui"));
+        MessagePacket message = new InventoryMessagePacket(Identifier.of(StationAPI.NAMESPACE, "open_gui"));
         message.strings = new String[] { identifier.toString() };
         sideDependentPacket(player, inventory, message);
         customData.accept(message);

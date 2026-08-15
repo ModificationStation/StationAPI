@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.resource;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
+import com.mojang.serialization.DataResult;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
@@ -56,13 +57,16 @@ public class DirectoryResourcePack extends AbstractFileResourcePack {
     }
 
     public static InputSupplier<InputStream> open(Identifier id, Path path) {
-        return PathUtil.split(id.path).get().map(segments -> {
+        var result = PathUtil.split(id.path);
+
+        if (result.isSuccess()) {
+            var segments = result.getOrThrow();
             Path path2 = PathUtil.getPath(path, segments);
             return DirectoryResourcePack.open(path2);
-        }, result -> {
-            LOGGER.error("Invalid path {}: {}", id, result.message());
+        } else {
+            LOGGER.error("Invalid path {}: {}", id, result.error().map(DataResult.Error::message));
             return null;
-        });
+        }
     }
 
     @Nullable
@@ -75,10 +79,15 @@ public class DirectoryResourcePack extends AbstractFileResourcePack {
 
     @Override
     public void findResources(ResourceType type, Namespace namespace, String prefix, ResourcePack.ResultConsumer consumer) {
-        PathUtil.split(prefix).get().ifLeft(prefixSegments -> {
+        var result = PathUtil.split(prefix);
+
+        if (result.isSuccess()) {
+            var prefixSegments = result.getOrThrow();
             Path path = this.root.resolve(type.getDirectory()).resolve(namespace.toString());
             DirectoryResourcePack.findResources(namespace, path, prefixSegments, consumer);
-        }).ifRight(result -> LOGGER.error("Invalid path {}: {}", prefix, result.message()));
+        } else {
+            LOGGER.error("Invalid path {}: {}", prefix, result.error().map(DataResult.Error::message));
+        }
     }
 
     public static void findResources(Namespace namespace, Path path, List<String> prefixSegments, ResourcePack.ResultConsumer consumer) {

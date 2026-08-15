@@ -2,7 +2,7 @@
   "values": [
     "bookshelf",
     "chest",
-    "#logs",
-    "#planks"
+    "#c:logs",
+    "#c:planks"
   ]
 }

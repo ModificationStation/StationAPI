@@ -21,26 +21,26 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public enum Blocks {
 
-    TEST_BLOCK("test_block", "testBlock", id -> new TemplateBlock(id, Material.STONE).setHardness(1)),
-    TEST_ANIMATED_BLOCK("test_animated_block", "testAnimatedBlock", id -> new ModdedMetaBlock(id, Material.NETHER_PORTAL)),
-    CUSTOM_MODEL_BLOCK("farlands_block", "farlands_block", id -> new ModdedModelBlock(id, Material.SOIL).setHardness(1)),
-    FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSoundGroup(TemplateBlock.DEFAULT_SOUND_GROUP)),
-    ALTAR("altar", "altar", id -> new BlockAltar(id, Material.STONE).setHardness(3)),
-    VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSoundGroup(Block.DEFAULT_SOUND_GROUP).disableAutoItemRegistration()),
-    EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new),
-    INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new),
-    MODDED_LEAVES("modded_leaves", "moddedLeaves", id -> new TemplateLeavesBlock(id, 52)),
-    MODDED_LOG("modded_log", "moddedLog", TemplateLogBlock::new),
-    EFFECT_BLOCK("effect_block", "effectBlock", EffectBlock::new),
-    EFFECT_BLOCK_INF("effect_block_inf", "effectBlockInf", EffectBlockInf::new),
-    EFFECT_BLOCK_CLEAR("effect_block_clear", "effectBlockClear", EffectBlockClear::new),
-    FANCY_WOOD_DOOR("fancy_wood_door_block", "fancyWoodDoor", id -> new TemplateDoorBlock(id, Material.WOOD));
+    TEST_BLOCK("test_block", id -> new TemplateBlock(id, Material.STONE).setHardness(1)),
+    TEST_ANIMATED_BLOCK("test_animated_block", id -> new ModdedMetaBlock(id, Material.NETHER_PORTAL)),
+    CUSTOM_MODEL_BLOCK("farlands_block", id -> new ModdedModelBlock(id, Material.SOIL).setHardness(1)),
+    FREEZER("freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSoundGroup(TemplateBlock.DEFAULT_SOUND_GROUP)),
+    ALTAR("altar", id -> new BlockAltar(id, Material.STONE).setHardness(3)),
+    VARIATION_BLOCK("variation_block", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSoundGroup(Block.DEFAULT_SOUND_GROUP).disableAutoItemRegistration()),
+    EMISSION_CHECKER("emission_checker", LampBlock::new),
+    INDISPENSABLE_BLOCK("indispensable_block", IndispensableBlock::new),
+    MODDED_LEAVES("modded_leaves", id -> new TemplateLeavesBlock(id, 52)),
+    MODDED_LOG("modded_log", TemplateLogBlock::new),
+    EFFECT_BLOCK("effect_block", EffectBlock::new),
+    EFFECT_BLOCK_INF("effect_block_inf", EffectBlockInf::new),
+    EFFECT_BLOCK_CLEAR("effect_block_clear", EffectBlockClear::new),
+    FANCY_WOOD_DOOR("fancy_wood_door_block", id -> new TemplateDoorBlock(id, Material.WOOD));
 
     private final Runnable register;
     private Block block;
 
-    Blocks(String id, String translationKey, Function<Identifier, Block> factory) {
-        this.register = () -> block = factory.apply(of(NAMESPACE, id)).setTranslationKey(NAMESPACE, translationKey);
+    Blocks(String id, Function<Identifier, Block> factory) {
+        this.register = () -> block = factory.apply(of(NAMESPACE, id));
     }
 
     public Block get() {

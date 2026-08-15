@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#c:cobblestones/normal",
+      "required": false
+    },
+    {
+      "id": "#c:cobblestones/mossy",
+      "required": false
+    }
+  ]
+}

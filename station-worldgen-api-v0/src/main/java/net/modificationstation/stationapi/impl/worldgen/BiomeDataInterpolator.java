@@ -1,11 +1,17 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
+import it.unimi.dsi.fastutil.longs.Long2ReferenceMap;
+import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
 import java.util.function.Function;
 
 public class BiomeDataInterpolator {
+    // TODO: remove when proper caching/saving is implemented
+    private static final Long2ReferenceMap<Biome> GLOBAL_CACHE = new Long2ReferenceOpenHashMap<>();
+    private static BiomeSource lastBiomeSource;
+
     private final Function<Biome, Number> provider;
     private final float[] data = new float[4];
     private final int bitShift;
@@ -28,6 +34,11 @@ public class BiomeDataInterpolator {
     }
 
     public float get(BiomeSource source, int x, int z) {
+        if (lastBiomeSource != source) {
+            GLOBAL_CACHE.clear();
+            lastBiomeSource = source;
+        }
+
         int x1 = x >> bitShift;
         int z1 = z >> bitShift;
 
@@ -61,7 +72,12 @@ public class BiomeDataInterpolator {
         float value = 0;
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
-                Biome biome = source.getBiome(x + dx * distance, z + dz * distance);
+                final int lookupX = x + dx * distance;
+                final int lookupZ = z + dz * distance;
+                final long key = ((long) (lookupX) << 32L) | lookupZ;
+                Biome biome = GLOBAL_CACHE.get(key);
+                if (biome == null)
+                    GLOBAL_CACHE.put(key, biome = source.getBiome(lookupX, lookupZ));
                 value += provider.apply(biome).floatValue();
             }
         }

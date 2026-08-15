@@ -1,7 +1,7 @@
 {
   "values": [
     "cobweb",
-    "#leaves",
-    "#wool"
+    "#c:leaves",
+    "#c:wools"
   ]
 }

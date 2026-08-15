@@ -44,10 +44,10 @@ public class ModelElement {
         return switch (direction) {
             case DOWN -> new float[] { from.getX(), 16 - to.getZ(), to.getX(), 16 - from.getZ() };
             case UP -> new float[] { from.getX(), from.getZ(), to.getX(), to.getZ() };
-            case NORTH -> new float[] { 16 - to.getX(), 16 - to.getY(), 16 - from.getX(), 16 - from.getY() };
-            case SOUTH -> new float[] { from.getX(), 16 - to.getY(), to.getX(), 16 - from.getY() };
-            case WEST -> new float[] { from.getZ(), 16 - to.getY(), to.getZ(), 16 - from.getY() };
-            case EAST -> new float[] { 16 - to.getZ(), 16 - to.getY(), 16 - from.getZ(), 16 - from.getY() };
+            case WEST -> new float[] { 16 - to.getX(), 16 - to.getY(), 16 - from.getX(), 16 - from.getY() };
+            case EAST -> new float[] { from.getX(), 16 - to.getY(), to.getX(), 16 - from.getY() };
+            case SOUTH -> new float[] { from.getZ(), 16 - to.getY(), to.getZ(), 16 - from.getY() };
+            case NORTH -> new float[] { 16 - to.getZ(), 16 - to.getY(), 16 - from.getZ(), 16 - from.getY() };
         };
     }
 
@@ -119,7 +119,7 @@ public class ModelElement {
         }
 
         private Direction getDirection(String name) {
-            Direction direction = Direction.byName(name).rotateClockwise(Direction.Axis.Y);
+            Direction direction = Direction.byName(name);
             if (direction == null) throw new JsonParseException("Unknown facing: " + name);
             else return direction;
         }

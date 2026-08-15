@@ -30,20 +30,20 @@ public class ItemListener {
         ToolLevel.GRAPH.putEdge(siblingNode, ToolMaterial.IRON.getToolLevel());
         ToolLevel.GRAPH.removeEdge(ToolMaterial.STONE.getToolLevel(), ToolMaterial.IRON.getToolLevel());
 
-        testItem = new ModdedItem(NAMESPACE.id("test_item")).setTranslationKey(NAMESPACE, "testItem"); //8475
+        testItem = new ModdedItem(NAMESPACE.id("test_item")); //8475
         testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2).toolLevel(siblingNode);
-        testPickaxe = new ModdedPickaxeItem(NAMESPACE.id("test_pickaxe"), testMaterial).setTranslationKey(NAMESPACE, "testPickaxe"); //8476
-        testNBTItem = new NBTItem(NAMESPACE.id("nbt_item")).setTranslationKey(NAMESPACE, "nbt_item"); //8477
-        testModelItem = new ModelItem(NAMESPACE.id("model_item")).setMaxCount(1).setTranslationKey(NAMESPACE, "idkSomething");
-        ironOre = event.register(NAMESPACE.id("ironOre"), new Item(ItemRegistry.AUTO_ID)).setTranslationKey(NAMESPACE.id("ironOre"));
-        generatedItem = event.register(NAMESPACE.id("generated_item"), new Item(ItemRegistry.AUTO_ID)).setTranslationKey(NAMESPACE.id("generatedItem"));
-        variationBlockIdle = new BlockStateItem(NAMESPACE.id("variation_block_idle"), Blocks.VARIATION_BLOCK.get().getDefaultState()).setTranslationKey(NAMESPACE, "variationBlockIdle");
-        variationBlockPassive = new BlockStateItem(NAMESPACE.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE)).setTranslationKey(NAMESPACE, "variationBlockPassive");
-        variationBlockActive = new BlockStateItem(NAMESPACE.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE)).setTranslationKey(NAMESPACE, "variationBlockActive");
-        testShears = new TestShearsItem(NAMESPACE.id("test_shears")).setTranslationKey(NAMESPACE, "test_shears");
-        pacifistSword = new PacifistSwordItem(NAMESPACE.id("pacifist_sword")).setTranslationKey(NAMESPACE, "pacifist_sword");
-        dullPickaxe = new DullPickaxeItem(NAMESPACE.id("dull_pickaxe")).setTranslationKey(NAMESPACE, "dull_pickaxe");
-        fancyDoor = new TemplateDoorItem(NAMESPACE.id("fancy_wood_door"), Material.WOOD, Blocks.FANCY_WOOD_DOOR.get()).setTranslationKey(NAMESPACE, "fancyWoodDoor");
+        testPickaxe = new ModdedPickaxeItem(NAMESPACE.id("test_pickaxe"), testMaterial); //8476
+        testNBTItem = new NBTItem(NAMESPACE.id("nbt_item")); //8477
+        testModelItem = new ModelItem(NAMESPACE.id("model_item")).setMaxCount(1);
+        ironOre = event.register(NAMESPACE.id("iron_ore"), new Item(ItemRegistry.AUTO_ID));
+        generatedItem = event.register(NAMESPACE.id("generated_item"), new Item(ItemRegistry.AUTO_ID));
+        variationBlockIdle = new BlockStateItem(NAMESPACE.id("variation_block_idle"), Blocks.VARIATION_BLOCK.get().getDefaultState());
+        variationBlockPassive = new BlockStateItem(NAMESPACE.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE));
+        variationBlockActive = new BlockStateItem(NAMESPACE.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE));
+        testShears = new TestShearsItem(NAMESPACE.id("test_shears"));
+        pacifistSword = new PacifistSwordItem(NAMESPACE.id("pacifist_sword"));
+        dullPickaxe = new DullPickaxeItem(NAMESPACE.id("dull_pickaxe"));
+        fancyDoor = new TemplateDoorItem(NAMESPACE.id("fancy_wood_door"), Material.WOOD, Blocks.FANCY_WOOD_DOOR.get());
 
     }
 

@@ -64,7 +64,7 @@ public class AtlasLoader {
         ArrayList<AtlasSource> list = new ArrayList<>();
         for (Resource resource : resourceManager.getAllResources(identifier))
             try (BufferedReader bufferedReader = resource.getReader()) {
-                list.addAll(AtlasSourceManager.LIST_CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, JsonParser.parseReader(bufferedReader))).getOrThrow(false, LOGGER::error));
+                list.addAll(AtlasSourceManager.LIST_CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, JsonParser.parseReader(bufferedReader))).getOrThrow());
             } catch (Exception exception) {
                 LOGGER.warn("Failed to parse atlas definition {} in pack {}", identifier, "Default", exception);
             }

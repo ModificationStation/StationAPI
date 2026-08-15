@@ -31,7 +31,7 @@ abstract class ChunkMixin implements StationFlatteningChunk {
 
     @Override
     @Unique
-    public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState blockState, int meta) {
+    public BlockState setBlockState(int x, int y, int z, BlockState blockState, int meta) {
         BlockState oldState = getBlockState(x, y, z);
         return setBlock(x, y, z, blockState.getBlock().id, meta) ? oldState : null;
     }

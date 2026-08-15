@@ -36,7 +36,7 @@ public class TestTree extends Feature {
                                     (random.nextInt(2) == 0 || dy == 0) ||
                                     Block.BLOCKS_OPAQUE[level.getBlockId(px, py, pz)]
                     ) continue;
-                    level.setBlockState(px, py, pz, leaves);
+                    level.setBlockStateWithoutNotifyingNeighbors(px, py, pz, leaves);
                 }
             }
         }
@@ -44,7 +44,7 @@ public class TestTree extends Feature {
         for (int i = 0; i < height; ++i) {
             BlockState state = level.getBlockState(x, y + i, z);
             if (!state.isAir() && !state.getMaterial().isReplaceable() && state.isOf(Block.LEAVES)) continue;
-            level.setBlockState(x, y + i, z, log);
+            level.setBlockStateWithoutNotifyingNeighbors(x, y + i, z, log);
         }
 
         return true;

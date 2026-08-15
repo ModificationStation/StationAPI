@@ -26,14 +26,14 @@ public enum Direction implements StringIdentifiable {
     DOWN(0, 1, -1, "down", AxisDirection.NEGATIVE, Y, new Vec3i(0, -1, 0)),
     @SerializedName("up")
     UP(1, 0, -1, "up", AxisDirection.POSITIVE, Y, new Vec3i(0, 1, 0)),
-    @SerializedName("east")
-    EAST(2, 3, 2, "east", AxisDirection.NEGATIVE, Z, new Vec3i(0, 0, -1)),
-    @SerializedName("west")
-    WEST(3, 2, 0, "west", AxisDirection.POSITIVE, Z, new Vec3i(0, 0, 1)),
     @SerializedName("north")
-    NORTH(4, 5, 1, "north", AxisDirection.NEGATIVE, X, new Vec3i(-1, 0, 0)),
+    NORTH(2, 3, 2, "north", AxisDirection.NEGATIVE, Z, new Vec3i(0, 0, -1)),
     @SerializedName("south")
-    SOUTH(5, 4, 3, "south", AxisDirection.POSITIVE, X, new Vec3i(1, 0, 0));
+    SOUTH(3, 2, 0, "south", AxisDirection.POSITIVE, Z, new Vec3i(0, 0, 1)),
+    @SerializedName("west")
+    WEST(4, 5, 1, "west", AxisDirection.NEGATIVE, X, new Vec3i(-1, 0, 0)),
+    @SerializedName("east")
+    EAST(5, 4, 3, "east", AxisDirection.POSITIVE, X, new Vec3i(1, 0, 0));
 
     public static final Codec<Direction> CODEC;
     public static final com.mojang.serialization.Codec<Direction> VERTICAL_CODEC;
@@ -78,9 +78,9 @@ public enum Direction implements StringIdentifiable {
         final float n = bl3 ? k : -k;
         final float o = l * i;
         final float p = n * i;
-        final Direction direction = bl ? SOUTH : NORTH;
+        final Direction direction = bl ? EAST : WEST;
         final Direction direction2 = bl2 ? UP : DOWN;
-        final Direction direction3 = bl3 ? WEST : EAST;
+        final Direction direction3 = bl3 ? SOUTH : NORTH;
         return l > n ? m > o ? Direction.listClosest(direction2, direction, direction3) : p > m ? Direction.listClosest(direction, direction3, direction2) : Direction.listClosest(direction, direction2, direction3) : m > p ? Direction.listClosest(direction2, direction3, direction) : o > m ? Direction.listClosest(direction3, direction, direction2) : Direction.listClosest(direction3, direction2, direction);
     }
 
@@ -111,16 +111,16 @@ public enum Direction implements StringIdentifiable {
         return switch (this) {
             case DOWN -> Vec3f.POSITIVE_X.getDegreesQuaternion(180.0f);
             case UP -> Quaternion.IDENTITY.copy();
-            case EAST -> {
+            case NORTH -> {
                 quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f));
                 yield quaternion;
             }
-            case WEST -> quaternion;
-            case NORTH -> {
+            case SOUTH -> quaternion;
+            case WEST -> {
                 quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.0f));
                 yield quaternion;
             }
-            case SOUTH -> {
+            case EAST -> {
                 quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(90.0f));
                 yield quaternion;
             }
@@ -141,8 +141,8 @@ public enum Direction implements StringIdentifiable {
 
     public static Direction getLookDirectionForAxis(Entity entity, Axis axis) {
         return switch (axis) {
-            case X -> NORTH.pointsTo(entity.yaw) ? NORTH : SOUTH;
-            case Z -> EAST.pointsTo(entity.yaw) ? EAST : WEST;
+            case X -> WEST.pointsTo(entity.yaw) ? WEST : EAST;
+            case Z -> NORTH.pointsTo(entity.yaw) ? NORTH : SOUTH;
             case Y -> entity.pitch < 0.0f ? UP : DOWN;
         };
     }
@@ -153,76 +153,76 @@ public enum Direction implements StringIdentifiable {
 
     public Direction rotateClockwise(Axis axis) {
         return switch (axis) {
-            case X -> this == NORTH || this == SOUTH ? this : rotateXClockwise();
+            case X -> this == WEST || this == EAST ? this : rotateXClockwise();
             case Y -> this == UP || this == DOWN ? this : rotateYClockwise();
-            case Z -> this == EAST || this == WEST ? this : rotateZClockwise();
+            case Z -> this == NORTH || this == SOUTH ? this : rotateZClockwise();
         };
     }
 
     public Direction rotateCounterclockwise(Axis axis) {
         return switch (axis) {
-            case X -> this == NORTH || this == SOUTH ? this : rotateXCounterclockwise();
+            case X -> this == WEST || this == EAST ? this : rotateXCounterclockwise();
             case Y -> this == UP || this == DOWN ? this : rotateYCounterclockwise();
-            case Z -> this == EAST || this == WEST ? this : rotateZCounterclockwise();
+            case Z -> this == NORTH || this == SOUTH ? this : rotateZCounterclockwise();
         };
     }
 
     public Direction rotateYClockwise() {
         return switch (this) {
+            case WEST -> NORTH;
             case NORTH -> EAST;
             case EAST -> SOUTH;
             case SOUTH -> WEST;
-            case WEST -> NORTH;
             default -> throw new IllegalStateException("Unable to get Y-rotated facing of " + this);
         };
     }
 
     private Direction rotateXClockwise() {
         return switch (this) {
-            case UP -> EAST;
-            case EAST -> DOWN;
-            case DOWN -> WEST;
-            case WEST -> UP;
+            case UP -> NORTH;
+            case NORTH -> DOWN;
+            case DOWN -> SOUTH;
+            case SOUTH -> UP;
             default -> throw new IllegalStateException("Unable to get X-rotated facing of " + this);
         };
     }
 
     private Direction rotateXCounterclockwise() {
         return switch (this) {
-            case UP -> WEST;
-            case WEST -> DOWN;
-            case DOWN -> EAST;
-            case EAST -> UP;
+            case UP -> SOUTH;
+            case SOUTH -> DOWN;
+            case DOWN -> NORTH;
+            case NORTH -> UP;
             default -> throw new IllegalStateException("Unable to get X-rotated facing of " + this);
         };
     }
 
     private Direction rotateZClockwise() {
         return switch (this) {
-            case UP -> NORTH;
-            case NORTH -> DOWN;
-            case DOWN -> SOUTH;
-            case SOUTH -> UP;
+            case UP -> WEST;
+            case WEST -> DOWN;
+            case DOWN -> EAST;
+            case EAST -> UP;
             default -> throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
         };
     }
 
     private Direction rotateZCounterclockwise() {
         return switch (this) {
-            case UP -> SOUTH;
-            case SOUTH -> DOWN;
-            case DOWN -> NORTH;
-            case NORTH -> UP;
+            case UP -> EAST;
+            case EAST -> DOWN;
+            case DOWN -> WEST;
+            case WEST -> UP;
             default -> throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
         };
     }
 
     public Direction rotateYCounterclockwise() {
         return switch (this) {
+            case WEST -> SOUTH;
             case NORTH -> WEST;
             case EAST -> NORTH;
             case SOUTH -> EAST;
-            case WEST -> SOUTH;
             default -> throw new IllegalStateException("Unable to get CCW facing of " + this);
         };
     }
@@ -280,9 +280,9 @@ public enum Direction implements StringIdentifiable {
 
     public static Direction from(Axis axis, AxisDirection direction) {
         return switch (axis) {
-            case X -> direction == AxisDirection.POSITIVE ? SOUTH : NORTH;
+            case X -> direction == AxisDirection.POSITIVE ? EAST : WEST;
             case Y -> direction == AxisDirection.POSITIVE ? UP : DOWN;
-            case Z -> direction == AxisDirection.POSITIVE ? WEST : EAST;
+            case Z -> direction == AxisDirection.POSITIVE ? SOUTH : NORTH;
         };
     }
 
@@ -299,7 +299,7 @@ public enum Direction implements StringIdentifiable {
     }
 
     public static Direction getFacing(float x, float y, float z) {
-        Direction direction = NORTH;
+        Direction direction = WEST;
         float f = Float.MIN_VALUE;
         for (Direction direction2 : ALL) {
             float g = x * (float)direction2.vector.getX() + y * (float)direction2.vector.getY() + z * (float)direction2.vector.getZ();
@@ -492,7 +492,7 @@ public enum Direction implements StringIdentifiable {
     public enum Type implements Iterable<Direction>,
             Predicate<Direction>
     {
-        HORIZONTAL(new Direction[]{NORTH, EAST, SOUTH, WEST}, new Axis[]{Axis.X, Axis.Z}),
+        HORIZONTAL(new Direction[]{WEST, NORTH, EAST, SOUTH}, new Axis[]{Axis.X, Axis.Z}),
         VERTICAL(new Direction[]{UP, DOWN}, new Axis[]{Axis.Y});
 
         private final Direction[] facingArray;

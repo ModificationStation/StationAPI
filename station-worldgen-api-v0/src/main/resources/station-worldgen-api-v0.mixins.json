@@ -6,7 +6,6 @@
   "mixins": [
     "BiomeMixin",
     "BiomeSourceMixin",
-    "DimensionMixin",
     "NetherDimensionMixin",
     "NetherWorldSourceMixin",
     "OverworldDimensionMixin",

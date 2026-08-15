@@ -44,7 +44,7 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         //noinspection deprecation
         ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
         world.clearBlockResets(packet.x, packet.y, packet.z, packet.x, packet.y, packet.z);
-        world.setBlockStateWithMetadataWithNotify(packet.x, packet.y, packet.z, Block.STATE_IDS.get(packet.stateId), packet.blockMetadata);
+        world.setBlockState(packet.x, packet.y, packet.z, Block.STATE_IDS.get(packet.stateId), packet.blockMetadata);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
                 }
                 int stateId = packet.stateArray[i];
                 byte metadata = packet.blockMetadata[i];
-                chunk.setBlockStateWithMetadata(localX, y + localY, localZ, Block.STATE_IDS.get(stateId), metadata);
+                chunk.setBlockState(localX, y + localY, localZ, Block.STATE_IDS.get(stateId), metadata);
                 int
                         updateX = x + localX,
                         updateY = y + localY,

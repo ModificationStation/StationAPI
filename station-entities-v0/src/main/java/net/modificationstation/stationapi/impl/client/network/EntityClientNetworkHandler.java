@@ -52,64 +52,70 @@ public final class EntityClientNetworkHandler {
 
     private static void handleEntitySpawn(PlayerEntity player, MessagePacket message) {
         EntityWorldAndPosFactory entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
-        if (entityHandler != null) {
-            double
-                    x = message.ints[1] / 32D,
-                    y = message.ints[2] / 32D,
-                    z = message.ints[3] / 32D;
-            //noinspection deprecation
-            ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            ClientWorld world = networkHandler.getWorld();
-            Entity entity = entityHandler.create(world, x, y, z);
-            if (entity != null) {
-                entity.trackedPosX = message.ints[1];
-                entity.trackedPosY = message.ints[2];
-                entity.trackedPosZ = message.ints[3];
-                entity.yaw = 0.0F;
-                entity.pitch = 0.0F;
-                entity.id = message.ints[0];
-                world.forceEntity(message.ints[0], entity);
-                if (message.ints[4] > 0) {
-                    if (entity instanceof HasOwner hasOwner)
-                        hasOwner.setOwner(networkHandler.invokeGetEntity(message.ints[4]));
-                    entity.setVelocityClient((double) message.shorts[0] / 8000.0D, (double) message.shorts[1] / 8000.0D, (double) message.shorts[2] / 8000.0D);
-                }
-                if (message.bytes != null)
-                    entity.getDataTracker().writeUpdatedEntries(DataTracker.readEntries(new DataInputStream(new ByteArrayInputStream(message.bytes))));
-                if (entity instanceof StationSpawnDataProvider provider)
-                    provider.readFromMessage(message);
+
+        if (entityHandler == null) {
+            throw new RuntimeException("Got entity handler id " + message.strings[0] + ", but found no registered entity handler!");
+        }
+
+        double
+                x = message.ints[1] / 32D,
+                y = message.ints[2] / 32D,
+                z = message.ints[3] / 32D;
+        //noinspection deprecation
+        ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+        ClientWorld world = networkHandler.getWorld();
+        Entity entity = entityHandler.create(world, x, y, z);
+        if (entity != null) {
+            entity.trackedPosX = message.ints[1];
+            entity.trackedPosY = message.ints[2];
+            entity.trackedPosZ = message.ints[3];
+            entity.yaw = 0.0F;
+            entity.pitch = 0.0F;
+            entity.id = message.ints[0];
+            world.forceEntity(message.ints[0], entity);
+            if (message.ints[4] > 0) {
+                if (entity instanceof HasOwner hasOwner)
+                    hasOwner.setOwner(networkHandler.invokeGetEntity(message.ints[4]));
+                entity.setVelocityClient((double) message.shorts[0] / 8000.0D, (double) message.shorts[1] / 8000.0D, (double) message.shorts[2] / 8000.0D);
             }
+            if (message.bytes != null)
+                entity.getDataTracker().writeUpdatedEntries(DataTracker.readEntries(new DataInputStream(new ByteArrayInputStream(message.bytes))));
+            if (entity instanceof StationSpawnDataProvider provider)
+                provider.readFromMessage(message);
         }
     }
 
     private static void handleMobSpawn(PlayerEntity player, MessagePacket message) {
         Function<World, LivingEntity> mobHandler = MobHandlerRegistry.INSTANCE.get(of(message.strings[0]));
-        if (mobHandler != null) {
-            double
-                    x = message.ints[1] / 32D,
-                    y = message.ints[2] / 32D,
-                    z = message.ints[3] / 32D;
-            float yaw = (float)(message.bytes[0] * 360) / 256.0F;
-            float pitch = (float)(message.bytes[1] * 360) / 256.0F;
-            //noinspection deprecation
-            ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            ClientWorld world = networkHandler.getWorld();
-            LivingEntity mob = mobHandler.apply(world);
-            if (mob != null) {
-                mob.trackedPosX = message.ints[1];
-                mob.trackedPosY = message.ints[2];
-                mob.trackedPosZ = message.ints[3];
-                mob.id = message.ints[0];
-                mob.setPositionAndAngles(x, y, z, yaw, pitch);
-                mob.interpolateOnly = true;
-                world.forceEntity(message.ints[0], mob);
-                //noinspection unchecked
-                List<DataTrackerEntry> data = DataTracker.readEntries(new DataInputStream(new ByteArrayInputStream(Arrays.copyOfRange(message.bytes, 2, message.bytes.length))));
-                if (data != null)
-                    mob.getDataTracker().writeUpdatedEntries(data);
-                if (mob instanceof StationSpawnDataProvider provider)
-                    provider.readFromMessage(message);
-            }
+
+        if (mobHandler == null) {
+            throw new RuntimeException("Got mob handler id " + message.strings[0] + ", but found no registered entity handler!");
+        }
+
+        double
+                x = message.ints[1] / 32D,
+                y = message.ints[2] / 32D,
+                z = message.ints[3] / 32D;
+        float yaw = (float)(message.bytes[0] * 360) / 256.0F;
+        float pitch = (float)(message.bytes[1] * 360) / 256.0F;
+        //noinspection deprecation
+        ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+        ClientWorld world = networkHandler.getWorld();
+        LivingEntity mob = mobHandler.apply(world);
+        if (mob != null) {
+            mob.trackedPosX = message.ints[1];
+            mob.trackedPosY = message.ints[2];
+            mob.trackedPosZ = message.ints[3];
+            mob.id = message.ints[0];
+            mob.setPositionAndAngles(x, y, z, yaw, pitch);
+            mob.interpolateOnly = true;
+            world.forceEntity(message.ints[0], mob);
+            //noinspection unchecked
+            List<DataTrackerEntry> data = DataTracker.readEntries(new DataInputStream(new ByteArrayInputStream(Arrays.copyOfRange(message.bytes, 2, message.bytes.length))));
+            if (data != null)
+                mob.getDataTracker().writeUpdatedEntries(data);
+            if (mob instanceof StationSpawnDataProvider provider)
+                provider.readFromMessage(message);
         }
     }
 }

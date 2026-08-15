@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
@@ -8,9 +9,9 @@ import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.NativeImage;
 import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.SpriteDimensions;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Optional;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 public class UnstitchAtlasSource implements AtlasSource {
-    public static final Codec<UnstitchAtlasSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<UnstitchAtlasSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Identifier.CODEC.fieldOf("resource").forGetter(unstitchAtlasSource -> unstitchAtlasSource.resource),
             Codecs.nonEmptyList(Region.CODEC.listOf()).fieldOf("regions").forGetter(unstitchAtlasSource -> unstitchAtlasSource.regions),
             Codec.DOUBLE.optionalFieldOf("divisor_x", 1.0).forGetter(unstitchAtlasSource -> unstitchAtlasSource.divisorX),

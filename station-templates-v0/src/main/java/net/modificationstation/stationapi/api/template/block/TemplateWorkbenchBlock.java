@@ -8,8 +8,8 @@ public class TemplateWorkbenchBlock extends WorkbenchBlock implements BlockTempl
         this(BlockTemplate.getNextId());
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateWorkbenchBlock(int i) {
-        super(i);
+
+    public TemplateWorkbenchBlock(int id) {
+        super(id);
     }
 }

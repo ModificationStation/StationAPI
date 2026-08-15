@@ -29,7 +29,7 @@ public class ModdedItem extends TemplateItem implements CustomReachProvider, Cus
             MessagePacket message = new MessagePacket(Identifier.of(SLTest.NAMESPACE, "send_an_object"));
             hmmSho = new Random().nextInt();
             SLTest.LOGGER.info(String.valueOf(hmmSho));
-            message.objects = new Object[] { new TestNetworkData(hmmSho) };
+//            message.objects = new Object[] { new TestNetworkData(hmmSho) };
             PacketHelper.sendTo(player, message);
         }
         return super.use(item, level, player);

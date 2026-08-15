@@ -43,28 +43,28 @@ extends ItemPlacementContext {
     public Direction[] getPlacementDirections() {
         switch (this.facing) {
             default: {
-                return new Direction[]{Direction.DOWN, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP};
+                return new Direction[]{Direction.DOWN, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.UP};
             }
             case UP: {
-                return new Direction[]{Direction.DOWN, Direction.UP, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-            }
-            case NORTH: {
-                return new Direction[]{Direction.DOWN, Direction.NORTH, Direction.EAST, Direction.WEST, Direction.UP, Direction.SOUTH};
-            }
-            case SOUTH: {
-                return new Direction[]{Direction.DOWN, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.UP, Direction.NORTH};
+                return new Direction[]{Direction.DOWN, Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH};
             }
             case WEST: {
-                return new Direction[]{Direction.DOWN, Direction.WEST, Direction.SOUTH, Direction.UP, Direction.NORTH, Direction.EAST};
+                return new Direction[]{Direction.DOWN, Direction.WEST, Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.EAST};
             }
-            case EAST: 
+            case EAST: {
+                return new Direction[]{Direction.DOWN, Direction.EAST, Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.WEST};
+            }
+            case SOUTH: {
+                return new Direction[]{Direction.DOWN, Direction.SOUTH, Direction.EAST, Direction.UP, Direction.WEST, Direction.NORTH};
+            }
+            case NORTH:
         }
-        return new Direction[]{Direction.DOWN, Direction.EAST, Direction.SOUTH, Direction.UP, Direction.NORTH, Direction.WEST};
+        return new Direction[]{Direction.DOWN, Direction.NORTH, Direction.EAST, Direction.UP, Direction.WEST, Direction.SOUTH};
     }
 
     @Override
     public Direction getHorizontalPlayerFacing() {
-        return this.facing.getAxis() == Direction.Axis.Y ? Direction.NORTH : this.facing;
+        return this.facing.getAxis() == Direction.Axis.Y ? Direction.WEST : this.facing;
     }
 
     @Override

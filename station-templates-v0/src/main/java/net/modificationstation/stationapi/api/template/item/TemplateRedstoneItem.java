@@ -8,8 +8,8 @@ public class TemplateRedstoneItem extends RedstoneItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateRedstoneItem(int i) {
-        super(i);
+
+    public TemplateRedstoneItem(int id) {
+        super(id);
     }
 }

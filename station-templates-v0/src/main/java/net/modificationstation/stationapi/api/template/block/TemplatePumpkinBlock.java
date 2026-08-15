@@ -4,12 +4,12 @@ import net.minecraft.block.PumpkinBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplatePumpkinBlock extends PumpkinBlock implements BlockTemplate {
-    public TemplatePumpkinBlock(Identifier identifier, int j, boolean flag) {
-        this(BlockTemplate.getNextId(), j, flag);
+    public TemplatePumpkinBlock(Identifier identifier, int textureId, boolean lit) {
+        this(BlockTemplate.getNextId(), textureId, lit);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplatePumpkinBlock(int i, int j, boolean flag) {
-        super(i, j, flag);
+    public TemplatePumpkinBlock(int id, int textureId, boolean lit) {
+        super(id, textureId, lit);
     }
 }

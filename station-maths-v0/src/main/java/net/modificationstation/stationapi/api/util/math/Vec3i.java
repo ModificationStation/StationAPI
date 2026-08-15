@@ -218,7 +218,7 @@ public class Vec3i implements Comparable<Vec3i> {
      * @implNote This can return the same vector if {@code distance} equals {@code 0}.
      */
     public Vec3i north(int distance) {
-        return this.offset(Direction.NORTH, distance);
+        return this.offset(Direction.WEST, distance);
     }
 
     /**
@@ -234,7 +234,7 @@ public class Vec3i implements Comparable<Vec3i> {
      * @implNote This can return the same vector if {@code distance} equals {@code 0}.
      */
     public Vec3i south(int distance) {
-        return this.offset(Direction.SOUTH, distance);
+        return this.offset(Direction.EAST, distance);
     }
 
     /**
@@ -250,7 +250,7 @@ public class Vec3i implements Comparable<Vec3i> {
      * @implNote This can return the same vector if {@code distance} equals {@code 0}.
      */
     public Vec3i west(int distance) {
-        return this.offset(Direction.WEST, distance);
+        return this.offset(Direction.SOUTH, distance);
     }
 
     /**
@@ -266,7 +266,7 @@ public class Vec3i implements Comparable<Vec3i> {
      * @implNote This can return the same vector if {@code distance} equals {@code 0}.
      */
     public Vec3i east(int distance) {
-        return this.offset(Direction.EAST, distance);
+        return this.offset(Direction.NORTH, distance);
     }
 
     /**

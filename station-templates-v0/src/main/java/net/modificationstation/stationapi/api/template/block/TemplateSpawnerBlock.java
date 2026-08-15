@@ -4,12 +4,12 @@ import net.minecraft.block.SpawnerBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateSpawnerBlock extends SpawnerBlock implements BlockTemplate {
-    public TemplateSpawnerBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateSpawnerBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateSpawnerBlock(int i, int j) {
-        super(i, j);
+    public TemplateSpawnerBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }
