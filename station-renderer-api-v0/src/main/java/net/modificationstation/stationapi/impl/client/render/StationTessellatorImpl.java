@@ -120,8 +120,7 @@ public class StationTessellatorImpl implements StationTessellator {
             LOGGER.info("Tessellator is nearing its maximum capacity. Increasing the buffer size from {} to {}", bufferSize, newBufferSize);
             access.stationapi$setBufferSize(newBufferSize);
             access.stationapi$setBuffer(Arrays.copyOf(access.stationapi$getBuffer(), newBufferSize));
-            // long arithmetic so the byte count can never overflow a signed int.
-            ByteBuffer newBuffer = GlAllocationUtils.allocateByteBuffer((int) ((long) newBufferSize * 4));
+            ByteBuffer newBuffer = GlAllocationUtils.allocateByteBuffer(newBufferSize * 4);
             access.stationapi$setByteBuffer(newBuffer);
             access.stationapi$setIntBuffer(newBuffer.asIntBuffer());
             access.stationapi$setFloatBuffer(newBuffer.asFloatBuffer());
