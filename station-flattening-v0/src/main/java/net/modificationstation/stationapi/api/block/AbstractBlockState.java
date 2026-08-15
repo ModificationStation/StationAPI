@@ -115,6 +115,14 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
         return getBlock().getRegistryEntry().isIn(tag, context);
     }
 
+    public boolean isIn (TagKey<Block> tag, World world, int x, int y, int z) {
+        return isIn(tag, BlockTagContext.of(world, x, y, z));
+    }
+
+    public boolean isIn(TagKey<Block> tag, World world, int x, int y, int z, Predicate<AbstractBlockState> predicate) {
+        return isIn(tag, BlockTagContext.of(world, x, y, z)) && predicate.test(this);
+    }
+
     /**
      * @deprecated Use {@link #isIn(RegistryEntryList, BlockTagContext)} instead.
      * Relying on list checks without a {@link BlockTagContext} can lead to broken behavior if the underlying entries
