@@ -33,6 +33,11 @@ public class FlattenedChunk extends Chunk {
     public final short lastBlock;
     private final short[] stationHeightmap = new short[256];
 
+    /**
+     * short cache will only be able to address 32767 IDs
+     * If the block registry next id is larger than that, it will be disabled
+     */
+    private static final boolean canUseShortBlockIdCache = BlockRegistry.INSTANCE.getNextId() < 32767;
     public final short[] blockIdCache;
     public final int bottomY;
 
@@ -48,8 +53,7 @@ public class FlattenedChunk extends Chunk {
         }
 
         bottomY = world.getBottomY();
-        // short cache will only be able to address 32767 IDs, above that it gets turned off
-        if (BlockRegistry.INSTANCE.getNextId() < 32767) {
+        if (canUseShortBlockIdCache) {
             blockIdCache = new short[16 * 16 * world.getHeight()];
             Arrays.fill(blockIdCache, (short) -1);
         } else {

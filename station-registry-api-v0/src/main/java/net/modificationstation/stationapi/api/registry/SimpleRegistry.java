@@ -327,6 +327,10 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         return this.keyToEntry.size();
     }
 
+    public int getNextId() {
+        return this.nextId;
+    }
+
     @Override
     public Lifecycle getEntryLifecycle(T entry) {
         return this.entryToLifecycle.get(entry);
