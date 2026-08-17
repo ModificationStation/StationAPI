@@ -8,8 +8,8 @@ public class TemplateRedstoneOreBlock extends RedstoneOreBlock implements BlockT
         this(BlockTemplate.getNextId(), j, isLit);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateRedstoneOreBlock(int i, int j, boolean isLit) {
-        super(i, j, isLit);
+
+    public TemplateRedstoneOreBlock(int id, int textureId, boolean isLit) {
+        super(id, textureId, isLit);
     }
 }

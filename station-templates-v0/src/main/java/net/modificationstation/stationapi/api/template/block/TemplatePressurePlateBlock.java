@@ -6,12 +6,12 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplatePressurePlateBlock extends PressurePlateBlock implements BlockTemplate {
-    public TemplatePressurePlateBlock(Identifier identifier, int j, PressurePlateActivationRule arg, Material arg1) {
-        this(BlockTemplate.getNextId(), j, arg, arg1);
+    public TemplatePressurePlateBlock(Identifier identifier, int textureId, PressurePlateActivationRule activationRule, Material material) {
+        this(BlockTemplate.getNextId(), textureId, activationRule, material);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplatePressurePlateBlock(int i, int j, PressurePlateActivationRule arg, Material arg1) {
-        super(i, j, arg, arg1);
+
+    public TemplatePressurePlateBlock(int id, int textureId, PressurePlateActivationRule activationRule, Material material) {
+        super(id, textureId, activationRule, material);
     }
 }

@@ -8,8 +8,8 @@ public class TemplateBucketItem extends BucketItem implements ItemTemplate {
         this(ItemTemplate.getNextId(), j);
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateBucketItem(int i, int j) {
-        super(i, j);
+
+    public TemplateBucketItem(int id, int fluidBlockId) {
+        super(id, fluidBlockId);
     }
 }

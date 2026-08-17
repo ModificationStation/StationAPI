@@ -5,12 +5,12 @@ import net.minecraft.block.StairsBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateStairsBlock extends StairsBlock implements BlockTemplate {
-    public TemplateStairsBlock(Identifier identifier, Block arg) {
-        this(BlockTemplate.getNextId(), arg);
+    public TemplateStairsBlock(Identifier identifier, Block block) {
+        this(BlockTemplate.getNextId(), block);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateStairsBlock(int i, Block arg) {
-        super(i, arg);
+
+    public TemplateStairsBlock(int id, Block block) {
+        super(id, block);
     }
 }

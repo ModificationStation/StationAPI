@@ -4,12 +4,12 @@ import net.minecraft.block.PlantBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplatePlantBlock extends PlantBlock implements BlockTemplate {
-    public TemplatePlantBlock(Identifier identifier, int texture) {
-        this(BlockTemplate.getNextId(), texture);
+    public TemplatePlantBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplatePlantBlock(int id, int texture) {
-        super(id, texture);
+    public TemplatePlantBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

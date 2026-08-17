@@ -1,6 +1,7 @@
 {
   "values": [
     "sltest:test_block",
-    "sltest:variation_block"
+    "sltest:variation_block",
+    "minecraft:wool@1"
   ]
 }

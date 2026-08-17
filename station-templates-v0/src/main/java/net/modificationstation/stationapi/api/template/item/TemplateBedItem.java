@@ -9,7 +9,7 @@ public class TemplateBedItem extends BedItem implements ItemTemplate {
         ItemTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateBedItem(int i) {
-        super(i);
+    public TemplateBedItem(int id) {
+        super(id);
     }
 }
