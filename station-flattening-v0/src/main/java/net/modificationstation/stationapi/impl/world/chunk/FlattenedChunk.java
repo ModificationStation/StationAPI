@@ -17,6 +17,7 @@ import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.world.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.world.MetaSetEvent;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import net.modificationstation.stationapi.mixin.flattening.ChunkAccessor;
 
@@ -46,9 +47,14 @@ public class FlattenedChunk extends Chunk {
             this.entities[i] = new ArrayList<>();
         }
 
-        blockIdCache = new short[16 * 16 * world.getHeight()];
         bottomY = world.getBottomY();
-        Arrays.fill(blockIdCache, (short) -1);
+        // short cache will only be able to address 32767 IDs, above that it gets turned off
+        if (BlockRegistry.INSTANCE.getNextId() < 32767) {
+            blockIdCache = new short[16 * 16 * world.getHeight()];
+            Arrays.fill(blockIdCache, (short) -1);
+        } else {
+            blockIdCache = null;
+        }
     }
 
     public void fromLegacy(byte[] tiles) {
