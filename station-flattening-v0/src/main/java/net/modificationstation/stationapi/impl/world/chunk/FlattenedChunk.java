@@ -33,9 +33,6 @@ public class FlattenedChunk extends Chunk {
     public final short lastBlock;
     private final short[] stationHeightmap = new short[256];
 
-    public final short[] blockIdCache;
-    public final int bottomY;
-
     public FlattenedChunk(World world, int xPos, int zPos) {
         super(world, xPos, zPos);
         int countSections = world.countVerticalSections();
@@ -46,10 +43,6 @@ public class FlattenedChunk extends Chunk {
         for(short i = 0; i < entities.length; i++) {
             this.entities[i] = new ArrayList<>();
         }
-
-        blockIdCache = new short[16 * 16 * world.getHeight()];
-        bottomY = world.getBottomY();
-        Arrays.fill(blockIdCache, (short) -1);
     }
 
     public void fromLegacy(byte[] tiles) {
@@ -108,7 +101,7 @@ public class FlattenedChunk extends Chunk {
         return y >= getShortHeight(relX, relZ);
     }
 
-    protected ChunkSection getSection(int y) {
+    private ChunkSection getSection(int y) {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
@@ -139,9 +132,6 @@ public class FlattenedChunk extends Chunk {
             }
             sections[index] = section;
         }
-
-        section.blockIdCache = blockIdCache;
-        section.worldBottomY = bottomY;
         return section;
     }
 
@@ -326,22 +316,7 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public int getBlockId(int x, int y, int z) {
-        if (blockIdCache == null) {
-            return getBlockState(x, y, z).block.id;
-        }
-        
-        int key = x | (z << 4) | ((y - bottomY) << 8);
-
-        if (key < 0 || key >= blockIdCache.length) {
-            System.err.println("x = " + x + ", y = " + y + ", z = " + z);
-            return 0;
-        }
-
-        if (blockIdCache[key] == -1) {
-            blockIdCache[key] = (short) getBlockState(x, y, z).block.id;
-        }
-
-        return blockIdCache[key];
+        return getBlockState(x, y, z).block.id;
     }
 
     @Override

@@ -32,9 +32,6 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         world.clearBlockResets(fromX, world.getBottomY(), fromZ, fromX + 15, world.getTopY() - 1, fromZ + 15);
         Chunk chunk = world.getChunk(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
-            if (flatteningChunk.blockIdCache != null) {
-                Arrays.fill(flatteningChunk.blockIdCache, (short) -1);
-            }
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionsData);
             for (int i = 0; i < world.countVerticalSections(); i++)
                 flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(i) << 4, true).readDataPacket(buf);
@@ -93,9 +90,6 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         world.clearBlockResets(fromX, fromY, fromZ, fromX + 15, fromY + 15, fromZ + 15);
         Chunk chunk = world.getChunk(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
-            if (flatteningChunk.blockIdCache != null) {
-                Arrays.fill(flatteningChunk.blockIdCache, (short) -1);
-            }
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionData);
             flatteningChunk.getOrCreateSection(fromY, true).readDataPacket(buf);
         }
