@@ -71,6 +71,12 @@ public class StationFlatteningItemStackSchema extends Schema {
         return dynamic == null ? "minecraft:air" : dynamic.get("Name").asString("");
     }
 
+    /**
+     * Reversed direction converter which turns an identifier into a numeric ID
+     * @param dynamic Dynamic with an identifier inside
+     * @return numeric ID
+     * @param <T> Type of the dynamic
+     */
     public static <T> int lookupOldBlockId(Dynamic<T> dynamic) {
         return BLOCK_TO_OLD_ID.getInt(dynamic.get("Name").asString(""));
     }
