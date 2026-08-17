@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- *
+ * Defines conversion rules for different parts of the chunk data
+ * <p>
+ * Includes registries for Vanilla entities and block entities
  */
 public class McRegionSchemaB1_7_3 extends Schema {
     public McRegionSchemaB1_7_3(int versionKey, Schema parent) {
