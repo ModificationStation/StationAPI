@@ -14,7 +14,6 @@ import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHandler {
 

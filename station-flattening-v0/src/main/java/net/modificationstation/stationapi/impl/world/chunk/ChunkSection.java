@@ -25,7 +25,7 @@ public class ChunkSection {
     private final NibbleArray metadataArray = new NibbleArray(4096);
     private final NibbleArray skyLightArray = new NibbleArray(4096);
     private final NibbleArray blockLightArray = new NibbleArray(4096);
-    
+
     public ChunkSection(int chunkPos, PalettedContainer<BlockState> blockStateContainer) {
         this.yOffset = (short) ChunkSection.blockCoordFromChunkCoord(chunkPos);
         this.blockStateContainer = blockStateContainer;
