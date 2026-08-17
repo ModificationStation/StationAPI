@@ -15,6 +15,7 @@ import net.modificationstation.stationapi.api.util.collection.Int2ObjectBiMap;
 import net.modificationstation.stationapi.api.util.collection.PackedIntegerArray;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema;
+import net.modificationstation.stationapi.api.vanillafix.util.MetaDependentIdConversion;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -97,7 +98,11 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                     // Preparation for conversion. References are maintained for faster key comparison
                     // See "transform" method at the bottom of this file for actual conversion
                     section.setBlock(x, y, z, StationFlatteningItemStackSchema.lookupState(block, metadata));
-                    section.setMetadata(x, y, z, metadata);
+                    int newMetadata = StationFlatteningItemStackSchema.lookupMetadata(block, metadata);
+                    if (newMetadata == MetaDependentIdConversion.UNSPECIFIED_META) {
+                        newMetadata = metadata;
+                    }
+                    section.setMetadata(x, y, z, newMetadata);
                 }
             }
 

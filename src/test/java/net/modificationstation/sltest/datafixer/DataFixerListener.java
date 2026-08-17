@@ -22,7 +22,7 @@ public class DataFixerListener {
         putState(99, "sltest:farlands_block", Util.make(new NbtCompound(), tag -> tag.putString("facing", "north")));
         putState(100, "sltest:freezer");
         putState(101, "sltest:altar");
-        putStateMetaRule(17, 2, "minecraft:wool");
+        putStateMetaRule(17, 2, 10, "minecraft:wool");
         putItem(360, "sltest:test_item");
         putItem(361, "sltest:test_pickaxe");
         putItem(362, "sltest:nbt_item");

@@ -11,9 +11,12 @@ import net.modificationstation.stationapi.api.nbt.NbtOps;
  * Contains a default tag for unspecified metadata rules
  */
 public class MetaDependentIdConversion {
+    public static final int UNSPECIFIED_META = -1;
+
     @Getter
     private final Dynamic<?> defaultTag;
     private final Dynamic<?>[] metaDependentTags = new Dynamic[16];
+    private final Integer[] outputMetas = new Integer[16];
 
     /**
      * @param defaultTag Tag to be used for unspecified metadata rules
@@ -26,10 +29,12 @@ public class MetaDependentIdConversion {
      * Adds a meta rule
      * @param meta Metadata of the rule
      * @param metaDependentTag Rule to be added
+     * @param outputMeta New metadata of the converted block
      */
-    public void addMetaDependentTag(int meta, NbtCompound metaDependentTag) {
+    public void addMetaDependentTag(int meta, NbtCompound metaDependentTag, int outputMeta) {
         if (meta < metaDependentTags.length) {
             metaDependentTags[meta] = toDynamic(metaDependentTag);
+            outputMetas[meta] = outputMeta;
         }
     }
 
@@ -40,7 +45,7 @@ public class MetaDependentIdConversion {
      */
     public void addMetaDependentTagInterval(MetaIntervalToTag interval, NbtCompound intervalTag) {
         for (int meta = interval.start(); meta < interval.end(); meta++) {
-            addMetaDependentTag(meta, intervalTag);
+            addMetaDependentTag(meta, intervalTag, interval.outputMeta());
         }
     }
 
@@ -55,6 +60,14 @@ public class MetaDependentIdConversion {
             return defaultTag;
         }
         return tag;
+    }
+
+    public int getOutputMeta(int meta) {
+        Integer outputMeta = null;
+        if (meta < outputMetas.length) {
+            outputMeta = outputMetas[meta];
+        }
+        return outputMeta == null ? UNSPECIFIED_META : outputMeta;
     }
 
     private Dynamic<?> toDynamic(NbtCompound tag) {

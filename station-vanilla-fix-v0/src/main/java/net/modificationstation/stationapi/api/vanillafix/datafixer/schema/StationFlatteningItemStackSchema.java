@@ -49,16 +49,16 @@ public class StationFlatteningItemStackSchema extends Schema {
         putItem(oldId, id);
     }
 
-    public static void putStateMetaRule(int oldId, int meta, String id) {
-        putStateMetaRule(oldId, meta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)));
+    public static void putStateMetaRule(int oldId, int meta, int outputMeta, String id) {
+        putStateMetaRule(oldId, meta, outputMeta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)));
     }
 
-    public static void putStateMetaRule(int oldId, int meta, NbtCompound tag) {
+    public static void putStateMetaRule(int oldId, int meta, int outputMeta, NbtCompound tag) {
         MetaDependentIdConversion rule;
         if (oldId >= 0 && oldId < OLD_ID_TO_BLOCKSTATE.length) {
             rule = OLD_ID_TO_BLOCKSTATE[oldId];
             if (rule != null) {
-                rule.addMetaDependentTag(meta, tag);
+                rule.addMetaDependentTag(meta, tag, outputMeta);
                 OLD_ID_TO_BLOCKSTATE[oldId] = rule;
             }
         }
@@ -76,6 +76,14 @@ public class StationFlatteningItemStackSchema extends Schema {
             rule = OLD_ID_TO_BLOCKSTATE[stateId];
         }
         return rule == null ? OLD_ID_TO_BLOCKSTATE[0].getDefaultTag() : rule.getTagForMeta(metadata);
+    }
+
+    public static int lookupMetadata(int stateId, int metadata) {
+        MetaDependentIdConversion rule = null;
+        if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {
+            rule = OLD_ID_TO_BLOCKSTATE[stateId];
+        }
+        return rule == null ? MetaDependentIdConversion.UNSPECIFIED_META : rule.getOutputMeta(metadata);
     }
 
     /**
