@@ -55,11 +55,11 @@ public class StationFlatteningItemStackSchema extends Schema {
      * <em>Must be used after the putState method<em/>
      * @param oldId Numeric block ID to add the rule to
      * @param meta Old metadata
-     * @param outputMeta New metadata
      * @param id New identifier (including the namespace)
+     * @param outputMeta New metadata
      */
-    public static void putStateMetaRule(int oldId, int meta, int outputMeta, String id) {
-        putStateMetaRule(oldId, meta, outputMeta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)));
+    public static void putStateMetaRule(int oldId, int meta, String id, int outputMeta) {
+        putStateMetaRule(oldId, meta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)), outputMeta);
     }
 
     /**
@@ -68,10 +68,10 @@ public class StationFlatteningItemStackSchema extends Schema {
      * <em>Must be used after the putState method<em/>
      * @param oldId Numeric block ID to add the rule to
      * @param meta Old metadata
-     * @param outputMeta New metadata
      * @param tag Tag with the identifier and block state rules
+     * @param outputMeta New metadata
      */
-    public static void putStateMetaRule(int oldId, int meta, int outputMeta, NbtCompound tag) {
+    public static void putStateMetaRule(int oldId, int meta, NbtCompound tag, int outputMeta) {
         MetaDependentIdConversion rule;
         if (oldId >= 0 && oldId < OLD_ID_TO_BLOCKSTATE.length) {
             rule = OLD_ID_TO_BLOCKSTATE[oldId];
