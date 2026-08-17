@@ -17,10 +17,12 @@ import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.world.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.world.MetaSetEvent;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import net.modificationstation.stationapi.mixin.flattening.ChunkAccessor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FlattenedChunk extends Chunk {
@@ -31,6 +33,14 @@ public class FlattenedChunk extends Chunk {
     public final short lastBlock;
     private final short[] stationHeightmap = new short[256];
 
+    /**
+     * short cache will only be able to address 32767 IDs
+     * If the block registry next id is larger than that, it will be disabled
+     */
+    private static final boolean canUseShortBlockIdCache = BlockRegistry.INSTANCE.getNextId() < 32767;
+    public final short[] blockIdCache;
+    public final int bottomY;
+
     public FlattenedChunk(World world, int xPos, int zPos) {
         super(world, xPos, zPos);
         int countSections = world.countVerticalSections();
@@ -40,6 +50,14 @@ public class FlattenedChunk extends Chunk {
         entities = new List[countSections];
         for(short i = 0; i < entities.length; i++) {
             this.entities[i] = new ArrayList<>();
+        }
+
+        bottomY = world.getBottomY();
+        if (canUseShortBlockIdCache) {
+            blockIdCache = new short[16 * 16 * world.getHeight()];
+            Arrays.fill(blockIdCache, (short) -1);
+        } else {
+            blockIdCache = null;
         }
     }
 
@@ -99,10 +117,11 @@ public class FlattenedChunk extends Chunk {
         return y >= getShortHeight(relX, relZ);
     }
 
-    private ChunkSection getSection(int y) {
+    protected ChunkSection getSection(int y) {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
+        
         return sections[world.sectionCoordToIndex(y >> 4)];
     }
 
@@ -129,6 +148,10 @@ public class FlattenedChunk extends Chunk {
             }
             sections[index] = section;
         }
+
+        section.blockIdCache = blockIdCache;
+        section.worldBottomY = bottomY;
+        
         return section;
     }
 
@@ -313,7 +336,24 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public int getBlockId(int x, int y, int z) {
-        return getBlockState(x, y, z).getBlock().id;
+        if (blockIdCache == null) {
+            // TODO: Change to .block field access once various things gets merged
+            return getBlockState(x, y, z).getBlock().id;
+        }
+
+        int key = x | (z << 4) | ((y - bottomY) << 8);
+
+        if (key < 0 || key >= blockIdCache.length) {
+            System.err.println("x = " + x + ", y = " + y + ", z = " + z);
+            return 0;
+        }
+
+        if (blockIdCache[key] == -1) {
+            // TODO: Change to .block field access once various things gets merged
+            blockIdCache[key] = (short) getBlockState(x, y, z).getBlock().id;
+        }
+
+        return blockIdCache[key];
     }
 
     @Override
