@@ -49,10 +49,28 @@ public class StationFlatteningItemStackSchema extends Schema {
         putItem(oldId, id);
     }
 
+    /**
+     * Creates a metadata specific conversion rule for a block
+     * <p>
+     * <em>Must be used after the putState method<em/>
+     * @param oldId Numeric block ID to add the rule to
+     * @param meta Old metadata
+     * @param outputMeta New metadata
+     * @param id New identifier (including the namespace)
+     */
     public static void putStateMetaRule(int oldId, int meta, int outputMeta, String id) {
         putStateMetaRule(oldId, meta, outputMeta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)));
     }
 
+    /**
+     * Creates a metadata specific conversion rule for a block
+     * <p>
+     * <em>Must be used after the putState method<em/>
+     * @param oldId Numeric block ID to add the rule to
+     * @param meta Old metadata
+     * @param outputMeta New metadata
+     * @param tag Tag with the identifier and block state rules
+     */
     public static void putStateMetaRule(int oldId, int meta, int outputMeta, NbtCompound tag) {
         MetaDependentIdConversion rule;
         if (oldId >= 0 && oldId < OLD_ID_TO_BLOCKSTATE.length) {
@@ -78,6 +96,12 @@ public class StationFlatteningItemStackSchema extends Schema {
         return rule == null ? OLD_ID_TO_BLOCKSTATE[0].getDefaultTag() : rule.getTagForMeta(metadata);
     }
 
+    /**
+     * Replaces an old metadata with a new one for the given block
+     * @param stateId Numeric ID of the block
+     * @param metadata Old metadata
+     * @return New metadata or -1 if not specified
+     */
     public static int lookupMetadata(int stateId, int metadata) {
         MetaDependentIdConversion rule = null;
         if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {

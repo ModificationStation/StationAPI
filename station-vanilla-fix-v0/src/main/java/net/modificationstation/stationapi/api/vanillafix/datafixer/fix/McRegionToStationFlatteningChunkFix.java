@@ -98,6 +98,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                     // Preparation for conversion. References are maintained for faster key comparison
                     // See "transform" method at the bottom of this file for actual conversion
                     section.setBlock(x, y, z, StationFlatteningItemStackSchema.lookupState(block, metadata));
+                    // Replace old metadata with new one if specified
                     int newMetadata = StationFlatteningItemStackSchema.lookupMetadata(block, metadata);
                     if (newMetadata == MetaDependentIdConversion.UNSPECIFIED_META) {
                         newMetadata = metadata;

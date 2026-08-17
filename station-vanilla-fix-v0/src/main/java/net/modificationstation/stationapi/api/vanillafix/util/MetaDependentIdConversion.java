@@ -39,17 +39,6 @@ public class MetaDependentIdConversion {
     }
 
     /**
-     * Adds the same meta rule across an entire interval
-     * @param interval Interval to determine metadata values of the rule
-     * @param intervalTag Rule to be added
-     */
-    public void addMetaDependentTagInterval(MetaIntervalToTag interval, NbtCompound intervalTag) {
-        for (int meta = interval.start(); meta < interval.end(); meta++) {
-            addMetaDependentTag(meta, intervalTag, interval.outputMeta());
-        }
-    }
-
-    /**
      * Provides a conversion rule for a given metadata value
      * @param meta Metadata to check the rule for
      * @return Specific rule or default if unspecified
@@ -62,6 +51,11 @@ public class MetaDependentIdConversion {
         return tag;
     }
 
+    /**
+     * Replaces an old metadata value with a new one
+     * @param meta Old metadata to be replaced
+     * @return New metadata or -1 if not specified
+     */
     public int getOutputMeta(int meta) {
         Integer outputMeta = null;
         if (meta < outputMetas.length) {
