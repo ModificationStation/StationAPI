@@ -8,8 +8,7 @@ import net.modificationstation.stationapi.api.util.Util;
 
 import java.lang.invoke.MethodHandles;
 
-import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema.putItem;
-import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema.putState;
+import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema.*;
 
 public class DataFixerListener {
     static {
@@ -23,6 +22,7 @@ public class DataFixerListener {
         putState(99, "sltest:farlands_block", Util.make(new NbtCompound(), tag -> tag.putString("facing", "north")));
         putState(100, "sltest:freezer");
         putState(101, "sltest:altar");
+        putStateMetaRule(17, 2, "minecraft:wool");
         putItem(360, "sltest:test_item");
         putItem(361, "sltest:test_pickaxe");
         putItem(362, "sltest:nbt_item");

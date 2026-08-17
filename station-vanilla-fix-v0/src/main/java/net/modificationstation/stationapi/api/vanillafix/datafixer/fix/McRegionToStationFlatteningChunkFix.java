@@ -96,7 +96,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                     Section section = sections[sectionY];
                     // Preparation for conversion. References are maintained for faster key comparison
                     // See "transform" method at the bottom of this file for actual conversion
-                    section.setBlock(x, y, z, StationFlatteningItemStackSchema.lookupState(block));
+                    section.setBlock(x, y, z, StationFlatteningItemStackSchema.lookupState(block, metadata));
                     section.setMetadata(x, y, z, metadata);
                 }
             }
@@ -162,7 +162,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
         public Section(Dynamic<?> section) {
             this.section = section;
             y = section.get("y").asInt(0);
-            Dynamic<?> air = StationFlatteningItemStackSchema.lookupState(0); // same applies
+            Dynamic<?> air = StationFlatteningItemStackSchema.lookupState(0, 0); // same applies
             seenStates.add(air);
             paletteData.add(air);
             paletteMap.add(air);

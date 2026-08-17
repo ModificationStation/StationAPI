@@ -49,17 +49,33 @@ public class StationFlatteningItemStackSchema extends Schema {
         putItem(oldId, id);
     }
 
+    public static void putStateMetaRule(int oldId, int meta, String id) {
+        putStateMetaRule(oldId, meta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)));
+    }
+
+    public static void putStateMetaRule(int oldId, int meta, NbtCompound tag) {
+        MetaDependentIdConversion rule;
+        if (oldId >= 0 && oldId < OLD_ID_TO_BLOCKSTATE.length) {
+            rule = OLD_ID_TO_BLOCKSTATE[oldId];
+            if (rule != null) {
+                rule.addMetaDependentTag(meta, tag);
+                OLD_ID_TO_BLOCKSTATE[oldId] = rule;
+            }
+        }
+    }
+
     /**
      * Takes a numeric block ID and returns a block entry for the datafixer
      * @param stateId Numeric ID of the block
+     * @param metadata Metadata of the block
      * @return Dynamic which contains the new ID
      */
-    public static Dynamic<?> lookupState(int stateId) {
+    public static Dynamic<?> lookupState(int stateId, int metadata) {
         MetaDependentIdConversion rule = null;
         if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {
             rule = OLD_ID_TO_BLOCKSTATE[stateId];
         }
-        return rule == null ? OLD_ID_TO_BLOCKSTATE[0].getDefaultTag() : rule.getDefaultTag();
+        return rule == null ? OLD_ID_TO_BLOCKSTATE[0].getDefaultTag() : rule.getTagForMeta(metadata);
     }
 
     /**
