@@ -1,3 +1,0 @@
-classTweaker v2 named
-
-transitive-inject-interface net/minecraft/world/chunk/ChunkCache net/modificationstation/stationapi/api/vanillafix/world/chunk/StationChunkCache

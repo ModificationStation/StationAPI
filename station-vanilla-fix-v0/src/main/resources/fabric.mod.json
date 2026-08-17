@@ -33,7 +33,6 @@
       "net.modificationstation.stationapi.impl.vanillafix.client.color.block.VanillaBlockColorProviders"
     ]
   },
-  "accessWidener": "station-vanilla-fix-v0.classtweaker",
   "mixins": [
     "station-vanilla-fix-v0.mixins.json"
   ],
