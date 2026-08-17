@@ -7,8 +7,8 @@ import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
-import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.vanillafix.util.MetaDependentIdConversion;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
 public class StationFlatteningItemStackSchema extends Schema {
-    private static final Dynamic<?>[] OLD_ID_TO_BLOCKSTATE = new Dynamic[256];
+    private static final MetaDependentIdConversion[] OLD_ID_TO_BLOCKSTATE = new MetaDependentIdConversion[256];
     private static final Object2IntOpenHashMap<String> BLOCK_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(256), map -> map.defaultReturnValue(0));
     private static final String[] OLD_ID_TO_ITEM = new String[32000];
     private static final Object2IntOpenHashMap<String> ITEM_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(512), map -> map.defaultReturnValue(0));
@@ -45,8 +45,7 @@ public class StationFlatteningItemStackSchema extends Schema {
     public static void putState(int oldId, NbtCompound tag) {
         String id = tag.getString("Name");
         BLOCK_TO_OLD_ID.put(id, oldId);
-        Dynamic<?> dynamic = new Dynamic<>(NbtOps.INSTANCE, tag);
-        OLD_ID_TO_BLOCKSTATE[oldId] = dynamic;
+        OLD_ID_TO_BLOCKSTATE[oldId] = new MetaDependentIdConversion(tag);
         putItem(oldId, id);
     }
 
@@ -56,19 +55,11 @@ public class StationFlatteningItemStackSchema extends Schema {
      * @return Dynamic which contains the new ID
      */
     public static Dynamic<?> lookupState(int stateId) {
-        Dynamic<?> dynamic = null;
+        MetaDependentIdConversion rule = null;
         if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {
-            dynamic = OLD_ID_TO_BLOCKSTATE[stateId];
+            rule = OLD_ID_TO_BLOCKSTATE[stateId];
         }
-        return dynamic == null ? OLD_ID_TO_BLOCKSTATE[0] : dynamic;
-    }
-
-    public static String lookupBlockId(int id) {
-        if (id < 0 || id >= OLD_ID_TO_BLOCKSTATE.length) {
-            return "minecraft:air";
-        }
-        Dynamic<?> dynamic = OLD_ID_TO_BLOCKSTATE[id];
-        return dynamic == null ? "minecraft:air" : dynamic.get("Name").asString("");
+        return rule == null ? OLD_ID_TO_BLOCKSTATE[0].getDefaultTag() : rule.getDefaultTag();
     }
 
     /**
