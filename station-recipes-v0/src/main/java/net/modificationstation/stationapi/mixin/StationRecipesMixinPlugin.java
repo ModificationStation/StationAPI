@@ -44,9 +44,8 @@ public class StationRecipesMixinPlugin implements IMixinConfigPlugin {
             return null;
         }
 
-        if (FabricLoader.getInstance().isModLoaded("alwaysmoreitems")) {
-            StationAPI.LOGGER.info("AlwaysMoreItems detected in development environment, adding mixins to make it work");
-            return AMI_MIXINS;
+        if (!FabricLoader.getInstance().isModLoaded("alwaysmoreitems")) {
+            return null;
         }
 
         boolean enableAmiCompat = false;
@@ -62,7 +61,7 @@ public class StationRecipesMixinPlugin implements IMixinConfigPlugin {
             return null;
         }
 
-        StationAPI.LOGGER.info("AlwaysMoreItems force enabled in development environment, adding mixins to make it work");
+        StationAPI.LOGGER.info("AlwaysMoreItems enabled in development environment, adding mixins to make it work");
 
         return AMI_MIXINS;
     }
