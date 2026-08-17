@@ -28,10 +28,20 @@ public class StationFlatteningItemStackSchema extends Schema {
         }));
     }
 
+    /**
+     * Assigns a numeric block ID to its new identifier
+     * @param oldId Numeric block ID to be converted
+     * @param id New identifier (including the namespace)
+     */
     public static void putState(int oldId, String id) {
         putState(oldId, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)));
     }
 
+    /**
+     * Assigns a numeric block ID to an NBT compound with the new identifier and block state rules
+     * @param oldId Numeric block ID to be converted
+     * @param tag Tag with the identifier and block state rules
+     */
     public static void putState(int oldId, NbtCompound tag) {
         String id = tag.getString("Name");
         BLOCK_TO_OLD_ID.put(id, oldId);
@@ -40,6 +50,11 @@ public class StationFlatteningItemStackSchema extends Schema {
         putItem(oldId, id);
     }
 
+    /**
+     * Takes a numeric block ID and returns a block entry for the datafixer
+     * @param stateId Numeric ID of the block
+     * @return Dynamic which contains the new ID
+     */
     public static Dynamic<?> lookupState(int stateId) {
         Dynamic<?> dynamic = null;
         if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {
