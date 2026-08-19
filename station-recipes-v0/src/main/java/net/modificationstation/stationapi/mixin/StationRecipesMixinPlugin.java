@@ -11,6 +11,13 @@ import java.util.List;
 import java.util.Set;
 
 public class StationRecipesMixinPlugin implements IMixinConfigPlugin {
+    private static final ArrayList<String> AMI_MIXINS = new ArrayList<>();
+
+    static {
+        AMI_MIXINS.add("dev.StationShapedRecipeMixin");
+        AMI_MIXINS.add("dev.StationShapelessRecipeMixin");
+    }
+
     @Override
     public void onLoad(String mixinPackage) {
 
@@ -54,12 +61,9 @@ public class StationRecipesMixinPlugin implements IMixinConfigPlugin {
             return null;
         }
 
-        StationAPI.LOGGER.info("AlwaysMoreItems detected in development environment, adding mixins to make it work");
+        StationAPI.LOGGER.info("AlwaysMoreItems enabled in development environment, adding mixins to make it work");
 
-        ArrayList<String> mixins = new ArrayList<>();
-        mixins.add("dev.StationShapedRecipeMixin");
-        mixins.add("dev.StationShapelessRecipeMixin");
-        return mixins;
+        return AMI_MIXINS;
     }
 
     @Override

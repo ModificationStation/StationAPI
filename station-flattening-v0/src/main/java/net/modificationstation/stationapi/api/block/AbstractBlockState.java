@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.block.context.BlockTagContext;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList;
 import net.modificationstation.stationapi.api.state.State;
@@ -53,9 +54,10 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
      * Returns the light level emitted by this block state.
      */
     public int getLuminance() {
-        return luminance == -1 ?
-                luminance = ((StationFlatteningBlockInternal) block).stationapi_getLuminanceProvider().applyAsInt(asBlockState()) :
-                luminance;
+        return luminance == -1
+                ? luminance = ((StationFlatteningBlockInternal) block).stationapi_getLuminanceProvider()
+                        .applyAsInt(asBlockState())
+                : luminance;
     }
 
     public boolean isAir() {
@@ -86,20 +88,62 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
         return this.block.canReplace(this.asBlockState(), context);
     }
 
-    public boolean isIn(TagKey<Block> tag) {
-        return block.getRegistryEntry().isIn(tag);
-    }
-
+    /**
+     * @deprecated Use {@link #isIn(TagKey, BlockTagContext, Predicate)} instead.
+     * Relying on tag checks without a {@link BlockTagContext} can lead to broken behavior if the tag contains conditions
+     * that require contextual information (such as the block's world position, metadata, or the actor interacting with it).
+     */
+    @Deprecated
     public boolean isIn(TagKey<Block> tag, Predicate<AbstractBlockState> predicate) {
-        return this.isIn(tag) && predicate.test(this);
+        return isIn(tag) && predicate.test(this);
     }
 
+    /**
+     * @deprecated Use {@link #isIn(TagKey, BlockTagContext)} instead.
+     * Relying on tag checks without a {@link BlockTagContext} can lead to broken behavior if the tag contains conditions
+     * that require contextual information (such as the block's world position, metadata, or the actor interacting with it).
+     */
+    @Deprecated
+    public boolean isIn(TagKey<Block> tag) {
+        return isIn(tag, BlockTagContext.DEFAULT);
+    }
+
+    public boolean isIn(TagKey<Block> tag, BlockTagContext context, Predicate<AbstractBlockState> predicate) {
+        return isIn(tag, context) && predicate.test(this);
+    }
+
+    public boolean isIn(TagKey<Block> tag, BlockTagContext context) {
+        return block.getRegistryEntry().isIn(tag, context);
+    }
+
+    public boolean isIn (TagKey<Block> tag, World world, int x, int y, int z) {
+        return isIn(tag, BlockTagContext.of(world, x, y, z));
+    }
+
+    public boolean isIn(TagKey<Block> tag, World world, int x, int y, int z, Predicate<AbstractBlockState> predicate) {
+        return isIn(tag, BlockTagContext.of(world, x, y, z)) && predicate.test(this);
+    }
+
+    /**
+     * @deprecated Use {@link #isIn(RegistryEntryList, BlockTagContext)} instead.
+     * Relying on list checks without a {@link BlockTagContext} can lead to broken behavior if the underlying entries
+     * have contextual conditions.
+     */
+    @Deprecated
     public boolean isIn(RegistryEntryList<Block> blocks) {
-        return blocks.contains(block.getRegistryEntry());
+        return isIn(blocks, BlockTagContext.DEFAULT);
+    }
+
+    public boolean isIn(RegistryEntryList<Block> blocks, BlockTagContext context) {
+        return blocks.contains(block.getRegistryEntry(), context);
     }
 
     public Stream<TagKey<Block>> streamTags() {
-        return block.getRegistryEntry().streamTags();
+        return streamTags(BlockTagContext.BYPASSED);
+    }
+
+    public Stream<TagKey<Block>> streamTags(BlockTagContext context) {
+        return block.getRegistryEntry().streamTags(context);
     }
 
     public boolean isOf(Block block) {
