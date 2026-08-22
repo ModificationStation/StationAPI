@@ -5,8 +5,10 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModificationEvent;
+import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeRegionsProvider;
@@ -19,7 +21,7 @@ import java.util.Map;
 public class BiomeAPI {
     private static Map<Identifier, BiomeProvider> overworldProviders = new Reference2ObjectOpenHashMap<>(16);
     private static Map<Identifier, BiomeProvider> netherProviders = new Reference2ObjectOpenHashMap<>(16);
-    private static final Object2BooleanMap<World> MODIFICATIONS_APPLIED = new Object2BooleanOpenHashMap<>(16);
+    private static final Object2BooleanMap<Identifier> MODIFICATIONS_APPLIED = new Object2BooleanOpenHashMap<>(16);
 
     private static BiomeRegionsProvider overworldProvider;
     private static BiomeRegionsProvider netherProvider;
@@ -127,9 +129,12 @@ public class BiomeAPI {
 
         overworldProvider.setSeed(seed);
         netherProvider.setSeed(seed);
-        
-        if (!MODIFICATIONS_APPLIED.getBoolean(world)) {
-            MODIFICATIONS_APPLIED.put(world, true);
+    }
+
+    public static void modifyBiomes(World world) {
+        Identifier dimId = DimensionRegistry.INSTANCE.getIdByLegacyId(world.dimension.id).orElseThrow();
+        if (!MODIFICATIONS_APPLIED.getBoolean(dimId)) {
+            MODIFICATIONS_APPLIED.put(dimId, true); // World objects have the same hash, somehow, plus dimensions are the thing that control biomes
             world.dimension.getBiomes().forEach(biome -> {
                 StationAPI.EVENT_BUS.post(BiomeModificationEvent.builder().biome(biome).world(world).build());
             });
