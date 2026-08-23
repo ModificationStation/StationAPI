@@ -1,8 +1,0 @@
-fix: fix: remove duplicate cacti tag
-
-- remove duplicate tag station-vanilla-fix-v0\src\main\resources\data\c\stationapi\tags\blocks\cacti.json
-- remove duplicate tag station-vanilla-fix-v0\src\main\resources\data\c\stationapi\tags\items\cacti.json
-
-Fixes #281
-
-Signed-off-by: Vedant Madane <6527493+VedantMadane@users.noreply.github.com>
