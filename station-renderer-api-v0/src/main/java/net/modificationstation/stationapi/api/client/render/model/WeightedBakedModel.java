@@ -19,11 +19,11 @@ import java.util.Random;
 @Environment(EnvType.CLIENT)
 public class WeightedBakedModel implements BakedModel {
    private final int totalWeight;
-   private final List<WeightedBakedModel.Entry> models;
+   private final List<Entry> models;
    private final BakedModel defaultModel;
 
-   public WeightedBakedModel(List<WeightedBakedModel.Entry> models) {
-      this.models = models;
+   public WeightedBakedModel(List<Entry> models) {
+      this.models = List.copyOf(models);
       this.totalWeight = WeightedPicker.getWeightSum(models);
       this.defaultModel = models.get(0).model;
    }
@@ -31,6 +31,10 @@ public class WeightedBakedModel implements BakedModel {
    @Override
    public ImmutableList<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
       return Objects.requireNonNull(WeightedPicker.getAt(this.models, Math.abs((int) random.nextLong()) % this.totalWeight)).model.getQuads(state, face, random);
+   }
+   
+   public Entry pickModel(Random random) {
+      return WeightedPicker.getAt(this.models, Math.abs((int) random.nextLong()) % this.totalWeight);
    }
 
    public boolean useAmbientOcclusion() {
@@ -61,13 +65,29 @@ public class WeightedBakedModel implements BakedModel {
       return this.defaultModel.getOverrides();
    }
 
+   public int getTotalWeight() {
+      return totalWeight;
+   }
+
+   public List<Entry> getModels() {
+      return models;
+   }
+
+   public BakedModel getDefaultModel() {
+      return defaultModel;
+   }
+
    @Environment(EnvType.CLIENT)
-   static class Entry extends WeightedPicker.Entry {
+   public static class Entry extends WeightedPicker.Entry {
       protected final BakedModel model;
 
       public Entry(BakedModel model, int weight) {
          super(weight);
          this.model = model;
+      }
+
+      public BakedModel getModel() {
+         return model;
       }
    }
 
