@@ -8,15 +8,17 @@ import net.modificationstation.stationapi.api.nbt.NbtOps;
 /**
  * Provides advanced conversion rules which depend on metadata
  * <p>
- * Contains a default tag for unspecified metadata rules
+ * Contains a default tag for unspecified metadata rules and arrays which are null by default to save memory
  */
 public class MetaDependentIdConversion {
+    private static final int META_COUNT = 16;
     public static final int UNSPECIFIED_META = -1;
 
     @Getter
     private final Dynamic<?> defaultTag;
-    private final Dynamic<?>[] metaDependentTags = new Dynamic[16];
-    private final Integer[] outputMetas = new Integer[16];
+
+    private Dynamic<?>[] metaDependentTags = null;
+    private Integer[] outputMetas = null;
 
     /**
      * @param defaultTag Tag to be used for unspecified metadata rules
@@ -26,12 +28,16 @@ public class MetaDependentIdConversion {
     }
 
     /**
-     * Adds a meta rule
+     * Adds a meta rule and initializes arrays if necessary
      * @param meta Metadata of the rule
      * @param metaDependentTag Rule to be added
      * @param outputMeta New metadata of the converted block
      */
     public void addMetaDependentTag(int meta, NbtCompound metaDependentTag, int outputMeta) {
+        if (metaDependentTags == null || outputMetas == null) {
+            metaDependentTags = new Dynamic[META_COUNT];
+            outputMetas = new Integer[META_COUNT];
+        }
         if (meta < metaDependentTags.length) {
             metaDependentTags[meta] = toDynamic(metaDependentTag);
             outputMetas[meta] = outputMeta;
@@ -44,6 +50,9 @@ public class MetaDependentIdConversion {
      * @return Specific rule or default if unspecified
      */
     public Dynamic<?> getTagForMeta(int meta) {
+        if (metaDependentTags == null) {
+            return defaultTag;
+        }
         Dynamic<?> tag = metaDependentTags[meta];
         if (tag == null) {
             return defaultTag;
@@ -58,6 +67,9 @@ public class MetaDependentIdConversion {
      */
     public int getOutputMeta(int meta) {
         Integer outputMeta = null;
+        if (outputMetas == null) {
+            return UNSPECIFIED_META;
+        }
         if (meta < outputMetas.length) {
             outputMeta = outputMetas[meta];
         }
