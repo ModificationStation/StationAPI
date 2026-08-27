@@ -57,7 +57,8 @@ public class StationFlatteningItemStackSchema extends Schema {
      * @param meta Old metadata
      * @param id New identifier (including the namespace)
      * @param outputMeta New metadata, or {@link MetaDependentIdConversion#UNSPECIFIED_META} to keep the old one
-     * @throws IllegalArgumentException if outputMeta is out of range
+     * @throws IllegalArgumentException if oldId has no state mapping,
+     *                                  or if oldId, meta or outputMeta is out of range
      */
     public static void putStateMetaRule(int oldId, int meta, String id, int outputMeta) {
         putStateMetaRule(oldId, meta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)), outputMeta);
@@ -71,17 +72,23 @@ public class StationFlatteningItemStackSchema extends Schema {
      * @param meta Old metadata
      * @param tag Tag with the identifier and block state rules
      * @param outputMeta New metadata, or {@link MetaDependentIdConversion#UNSPECIFIED_META} to keep the old one
-     * @throws IllegalArgumentException if outputMeta is out of range
+     * @throws IllegalArgumentException if oldId has no state mapping,
+     *                                  or if oldId, meta or outputMeta is out of range
      */
     public static void putStateMetaRule(int oldId, int meta, NbtCompound tag, int outputMeta) {
-        MetaDependentIdConversion rule;
-        if (oldId >= 0 && oldId < OLD_ID_TO_BLOCKSTATE.length) {
-            rule = OLD_ID_TO_BLOCKSTATE[oldId];
-            if (rule != null) {
-                rule.addMetaDependentTag(meta, tag, outputMeta);
-                OLD_ID_TO_BLOCKSTATE[oldId] = rule;
-            }
+        if (oldId < 0 || oldId >= OLD_ID_TO_BLOCKSTATE.length) {
+            throw new IllegalArgumentException(
+                    "Block ID " + oldId + " is out of range, it must be between 0 and " +
+                    (OLD_ID_TO_BLOCKSTATE.length - 1)
+            );
         }
+        MetaDependentIdConversion rule = OLD_ID_TO_BLOCKSTATE[oldId];
+        if (rule == null) {
+            throw new IllegalArgumentException(
+                    "Block ID " + oldId + " has no state mapping, call putState for it before adding metadata rules"
+            );
+        }
+        rule.addMetaDependentTag(meta, tag, outputMeta);
     }
 
     /**
