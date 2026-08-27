@@ -56,7 +56,8 @@ public class StationFlatteningItemStackSchema extends Schema {
      * @param oldId Numeric block ID to add the rule to
      * @param meta Old metadata
      * @param id New identifier (including the namespace)
-     * @param outputMeta New metadata
+     * @param outputMeta New metadata, or {@link MetaDependentIdConversion#UNSPECIFIED_META} to keep the old one
+     * @throws IllegalArgumentException if outputMeta is out of range
      */
     public static void putStateMetaRule(int oldId, int meta, String id, int outputMeta) {
         putStateMetaRule(oldId, meta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)), outputMeta);
@@ -69,7 +70,8 @@ public class StationFlatteningItemStackSchema extends Schema {
      * @param oldId Numeric block ID to add the rule to
      * @param meta Old metadata
      * @param tag Tag with the identifier and block state rules
-     * @param outputMeta New metadata
+     * @param outputMeta New metadata, or {@link MetaDependentIdConversion#UNSPECIFIED_META} to keep the old one
+     * @throws IllegalArgumentException if outputMeta is out of range
      */
     public static void putStateMetaRule(int oldId, int meta, NbtCompound tag, int outputMeta) {
         MetaDependentIdConversion rule;

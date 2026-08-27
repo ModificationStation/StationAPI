@@ -33,9 +33,18 @@ public class MetaDependentIdConversion {
      * Adds a meta rule and initializes arrays if necessary
      * @param meta Metadata of the rule
      * @param metaDependentTag Rule to be added
-     * @param outputMeta New metadata of the converted block
+     * @param outputMeta New metadata of the converted block,
+     *                   or {@link #UNSPECIFIED_META} to keep the original metadata
+     * @throws IllegalArgumentException if outputMeta is neither {@link #UNSPECIFIED_META}
+     *                                  nor a valid metadata value
      */
     public void addMetaDependentTag(int meta, NbtCompound metaDependentTag, int outputMeta) {
+        if (outputMeta != UNSPECIFIED_META && (outputMeta < 0 || outputMeta >= META_COUNT)) {
+            throw new IllegalArgumentException(
+                    "Output metadata " + outputMeta + " is out of range, it must be between 0 and " +
+                    (META_COUNT - 1) + ", or " + UNSPECIFIED_META + " to keep the original metadata"
+            );
+        }
         if (metaDependentTags == null || outputMetas == null) {
             metaDependentTags = new Dynamic[META_COUNT];
             outputMetas = new int[META_COUNT];
