@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.api.worldgen;
 
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.Dimension;
@@ -21,7 +19,7 @@ import java.util.Map;
 public class BiomeAPI {
     private static Map<Identifier, BiomeProvider> overworldProviders = new Reference2ObjectOpenHashMap<>(16);
     private static Map<Identifier, BiomeProvider> netherProviders = new Reference2ObjectOpenHashMap<>(16);
-    private static final Object2BooleanMap<Identifier> MODIFICATIONS_APPLIED = new Object2BooleanOpenHashMap<>(16);
+    private static final Reference2BooleanFunction<Identifier> MODIFICATIONS_APPLIED = new Reference2BooleanOpenHashMap<>(16);
 
     private static BiomeRegionsProvider overworldProvider;
     private static BiomeRegionsProvider netherProvider;
