@@ -5,6 +5,8 @@ import lombok.Getter;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
 
+import java.util.Arrays;
+
 /**
  * Provides advanced conversion rules which depend on metadata
  * <p>
@@ -18,7 +20,7 @@ public class MetaDependentIdConversion {
     private final Dynamic<?> defaultTag;
 
     private Dynamic<?>[] metaDependentTags = null;
-    private Integer[] outputMetas = null;
+    private int[] outputMetas = null;
 
     /**
      * @param defaultTag Tag to be used for unspecified metadata rules
@@ -36,7 +38,8 @@ public class MetaDependentIdConversion {
     public void addMetaDependentTag(int meta, NbtCompound metaDependentTag, int outputMeta) {
         if (metaDependentTags == null || outputMetas == null) {
             metaDependentTags = new Dynamic[META_COUNT];
-            outputMetas = new Integer[META_COUNT];
+            outputMetas = new int[META_COUNT];
+            Arrays.fill(outputMetas, UNSPECIFIED_META);
         }
         if (meta < metaDependentTags.length) {
             metaDependentTags[meta] = toDynamic(metaDependentTag);
@@ -66,14 +69,14 @@ public class MetaDependentIdConversion {
      * @return New metadata or -1 if not specified
      */
     public int getOutputMeta(int meta) {
-        Integer outputMeta = null;
+        int outputMeta = UNSPECIFIED_META;
         if (outputMetas == null) {
             return UNSPECIFIED_META;
         }
         if (meta < outputMetas.length) {
             outputMeta = outputMetas[meta];
         }
-        return outputMeta == null ? UNSPECIFIED_META : outputMeta;
+        return outputMeta;
     }
 
     private Dynamic<?> toDynamic(NbtCompound tag) {
