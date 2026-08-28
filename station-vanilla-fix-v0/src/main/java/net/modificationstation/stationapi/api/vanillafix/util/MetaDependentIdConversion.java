@@ -17,7 +17,7 @@ public class MetaDependentIdConversion {
     public static final int UNSPECIFIED_META = -1;
 
     @Getter
-    private final Dynamic<?> defaultTag;
+    private Dynamic<?> defaultTag;
 
     private Dynamic<?>[] metaDependentTags = null;
     private int[] outputMetas = null;
@@ -26,6 +26,16 @@ public class MetaDependentIdConversion {
      * @param defaultTag Tag to be used for unspecified metadata rules
      */
     public MetaDependentIdConversion(NbtCompound defaultTag) {
+        this.defaultTag = toDynamic(defaultTag);
+    }
+
+    /**
+     * Replaces the tag used for metadata values that have no rule of their own
+     * <p>
+     * Rules added earlier are kept, as each of them carries its own tag
+     * @param defaultTag New tag to be used for unspecified metadata rules
+     */
+    public void setDefaultTag(NbtCompound defaultTag) {
         this.defaultTag = toDynamic(defaultTag);
     }
 

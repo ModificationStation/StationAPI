@@ -39,13 +39,27 @@ public class StationFlatteningItemStackSchema extends Schema {
 
     /**
      * Assigns a numeric block ID to an NBT compound with the new identifier and block state rules
+     * <p>
+     * Reassigning an ID keeps any metadata rules already added for it, as each rule carries its own tag
      * @param oldId Numeric block ID to be converted
      * @param tag Tag with the identifier and block state rules
+     * @throws IllegalArgumentException if oldId is out of range
      */
     public static void putState(int oldId, NbtCompound tag) {
+        if (oldId < 0 || oldId >= OLD_ID_TO_BLOCKSTATE.length) {
+            throw new IllegalArgumentException(
+                    "Block ID " + oldId + " is out of range, it must be between 0 and " +
+                    (OLD_ID_TO_BLOCKSTATE.length - 1)
+            );
+        }
         String id = tag.getString("Name");
         BLOCK_TO_OLD_ID.put(id, oldId);
-        OLD_ID_TO_BLOCKSTATE[oldId] = new MetaDependentIdConversion(tag);
+        MetaDependentIdConversion rule = OLD_ID_TO_BLOCKSTATE[oldId];
+        if (rule == null) {
+            OLD_ID_TO_BLOCKSTATE[oldId] = new MetaDependentIdConversion(tag);
+        } else {
+            rule.setDefaultTag(tag);
+        }
         putItem(oldId, id);
     }
 
