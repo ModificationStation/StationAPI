@@ -10,13 +10,15 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.context.Condition;
 import net.modificationstation.stationapi.api.util.context.ConditionType;
+import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -108,6 +110,23 @@ public class TagEntry {
         this.conditions = List.copyOf(conditions);
     }
 
+    private TagEntry(Identifier id, boolean tag, boolean required, List<Condition<?>> conditions) {
+        this.id = id;
+        this.tag = tag;
+        this.required = required;
+        this.conditions = List.copyOf(conditions);
+    }
+
+    /**
+     * {@return this entry, or a copy of it with the given requiredness}
+     *
+     * <p>Used to make removals optional, so that removing something a data pack never added
+     * doesn't fail the whole tag.
+     */
+    public TagEntry withRequired(boolean required) {
+        return required == this.required ? this : new TagEntry(this.id, this.tag, required, this.conditions);
+    }
+
     private Codecs.TagEntryId getIdForCodec() {
         return new Codecs.TagEntryId(this.id, this.tag);
     }
@@ -128,27 +147,34 @@ public class TagEntry {
         return new TagEntry(id, true, false);
     }
 
+    /**
+     * Resolves this entry into the values it refers to, along with the context each value
+     * is contributed in.
+     *
+     * <p>A tag reference resolves against the referenced tag's <em>final</em> membership, so an
+     * entry the referenced tag removed is simply not there to be seen. The caller decides what to
+     * do with each resolved value, which is what keeps {@code values} and {@code remove} symmetric:
+     * they run the same resolution and differ only in the action they pass in.
+     *
+     * @param getter        lookup for direct values and for already resolved tags
+     * @param valueConsumer receives each resolved value and the predicate guarding it
+     * @return whether this entry resolved, or was optional
+     */
     public <T> boolean resolve(
             ValueGetter<T> getter,
-            Consumer<TagMatchGroup<T>> matchGroupConsumer
+            BiConsumer<T, Predicate<Context>> valueConsumer
     ) {
+        Predicate<Context> own = TagConditions.of(this.conditions);
         if (this.tag) {
-            Collection<TagMatchGroup<T>> refTag = getter.tag(this.id);
+            Map<T, Predicate<Context>> refTag = getter.tag(this.id);
             if (refTag == null) return !this.required;
 
-            for (TagMatchGroup<T> refMatchGroup : refTag) {
-                List<Condition<?>> mergedConditions = new ArrayList<>(refMatchGroup.conditions());
-
-                if (!this.conditions.isEmpty()) mergedConditions.addAll(this.conditions);
-
-                matchGroupConsumer.accept(new TagMatchGroup<>(refMatchGroup.baseItems(), mergedConditions, false));
-            }
-
+            refTag.forEach((value, predicate) -> valueConsumer.accept(value, TagConditions.and(predicate, own)));
         } else {
             T value = getter.direct(this.id);
             if (value == null) return !this.required;
 
-            matchGroupConsumer.accept(new TagMatchGroup<>(List.of(value), this.conditions, false));
+            valueConsumer.accept(value, own);
         }
         return true;
     }
@@ -184,7 +210,14 @@ public class TagEntry {
     public interface ValueGetter<T> {
         @Nullable T direct(Identifier id);
 
-        @Nullable Collection<TagMatchGroup<T>> tag(Identifier id);
+        /**
+         * {@return the already resolved membership of the given tag, or {@code null} if it is
+         * unknown}
+         *
+         * <p>Tags resolve in dependency order, so this returns the referenced tag's final
+         * contents, with its own removals already applied.
+         */
+        @Nullable Map<T, Predicate<Context>> tag(Identifier id);
     }
 }
 

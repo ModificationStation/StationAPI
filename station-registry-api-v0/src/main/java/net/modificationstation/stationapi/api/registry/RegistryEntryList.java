@@ -2,15 +2,15 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Either;
 import net.modificationstation.stationapi.api.tag.TagKey;
-import net.modificationstation.stationapi.api.tag.TagMatchGroup;
 import net.modificationstation.stationapi.api.tag.context.TagEvaluationContext;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.api.util.context.Condition;
+import net.modificationstation.stationapi.api.util.context.Context;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -161,16 +161,20 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         private final RegistryEntryOwner<T> owner;
         private final TagKey<T> tag;
         private List<RegistryEntry<T>> allEntries = List.of();
-        private List<TagMatchGroup<RegistryEntry<T>>> matchGroups = List.of();
+        private Map<RegistryEntry<T>, Predicate<Context>> membership = Map.of();
 
         Named(RegistryEntryOwner<T> owner, TagKey<T> tag) {
             this.owner = owner;
             this.tag = tag;
         }
 
-        void copyOf(Collection<TagMatchGroup<RegistryEntry<T>>> matchGroups) {
-            this.matchGroups = List.copyOf(matchGroups);
-            this.allEntries = this.matchGroups.stream().flatMap(c -> c.baseItems().stream()).distinct().toList();
+        /**
+         * @param membership the tag's final membership, in insertion order. Entries a data pack
+         *                   removed are absent, so they can't leak into iteration or {@link #size}.
+         */
+        void copyOf(Map<RegistryEntry<T>, Predicate<Context>> membership) {
+            this.membership = Map.copyOf(membership);
+            this.allEntries = List.copyOf(membership.keySet());
         }
 
         public TagKey<T> getTag() {
@@ -185,15 +189,8 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         @Override
         public Stream<RegistryEntry<T>> stream(TagEvaluationContext context) {
             return context.ignoreTagConditions()
-                    ? this.getEntries().stream()
-                    : this.matchGroups.stream()
-                    .filter(matchGroup -> {
-                        for (Condition<?> condition : matchGroup.conditions())
-                            if (!condition.test(context)) return false;
-                        return true;
-                    })
-                    .flatMap(matchGroup -> matchGroup.baseItems().stream())
-                    .distinct();
+                    ? this.allEntries.stream()
+                    : this.allEntries.stream().filter(entry -> this.membership.get(entry).test(context));
         }
 
         @Override
@@ -217,9 +214,7 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
 
         public String toString() {
-            return "NamedSet(" + this.tag + ")["
-                    + this.allEntries + (matchGroups.isEmpty() ? "" : ", matchGroups=" + matchGroups.size())
-                    + "]";
+            return "NamedSet(" + this.tag + ")[" + this.allEntries + "]";
         }
 
         @Override

@@ -9,14 +9,15 @@ import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloa
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
@@ -66,7 +67,7 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
 
     private static <T> void repopulateTags(DynamicRegistryManager dynamicRegistryManager, TagManagerLoader.RegistryTags<T> tags) {
         RegistryKey<? extends Registry<T>> registryKey = tags.key();
-        Map<TagKey<T>, Collection<TagMatchGroup<RegistryEntry<T>>>> map = tags.tags().entrySet().stream().collect(Collectors.toUnmodifiableMap(entry -> TagKey.of(registryKey, entry.getKey()), entry -> entry.getValue()));
+        Map<TagKey<T>, Map<RegistryEntry<T>, Predicate<Context>>> map = tags.tags().entrySet().stream().collect(Collectors.toUnmodifiableMap(entry -> TagKey.of(registryKey, entry.getKey()), entry -> entry.getValue()));
         dynamicRegistryManager.get(registryKey).populateTags(map);
     }
 
@@ -86,6 +87,6 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
         return TAGS;
     }
 
-    public record RegistryTags<T>(RegistryKey<? extends Registry<T>> key, Map<Identifier, Collection<TagMatchGroup<RegistryEntry<T>>>> tags) { }
+    public record RegistryTags<T>(RegistryKey<? extends Registry<T>> key, Map<Identifier, Map<RegistryEntry<T>, Predicate<Context>>> tags) { }
 }
 

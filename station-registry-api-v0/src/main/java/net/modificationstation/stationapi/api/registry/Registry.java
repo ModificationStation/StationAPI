@@ -7,7 +7,6 @@ import com.mojang.serialization.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
-import net.modificationstation.stationapi.api.tag.TagMatchGroup;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
@@ -443,7 +442,7 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
 
     void clearTags();
 
-    void populateTags(Map<TagKey<T>, Collection<TagMatchGroup<RegistryEntry<T>>>> var1);
+    void populateTags(Map<TagKey<T>, Map<RegistryEntry<T>, Predicate<Context>>> var1);
 
     default IndexedIterable<RegistryEntry<T>> getIndexedEntries() {
         return new IndexedIterable<>() {

@@ -16,7 +16,6 @@ import net.modificationstation.stationapi.api.registry.RegistryEntry.Reference;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList.Named;
 import net.modificationstation.stationapi.api.registry.RegistryWrapper.Impl;
 import net.modificationstation.stationapi.api.tag.TagKey;
-import net.modificationstation.stationapi.api.tag.TagMatchGroup;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.context.Condition;
@@ -472,46 +471,29 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public void populateTags(@UnknownNullability Map<TagKey<T>, Collection<TagMatchGroup<RegistryEntry<T>>>> tagEntries) {
+    public void populateTags(@UnknownNullability Map<TagKey<T>, Map<RegistryEntry<T>, Predicate<Context>>> tagEntries) {
         Map<Reference<T>, Map<TagKey<T>, Predicate<Context>>> map = new IdentityHashMap<>();
 
         keyToEntry.values().forEach(entry -> map.put(
                 entry, new Reference2ReferenceOpenHashMap<>())
         );
 
-        tagEntries.forEach((tag, resolvedTag) -> {
-            for (TagMatchGroup<RegistryEntry<T>> matchGroup : resolvedTag) {
-                boolean isUnconditional = matchGroup.conditions().isEmpty();
-                Predicate<Context> predicate = isUnconditional
-                        ? ctx -> true
-                        : ctx -> {
-                            for (Condition<?> condition : matchGroup.conditions())
-                                if (!condition.test(ctx)) return false;
-                            return true;
-                        };
+        // Membership is already final by the time it gets here: adds, removes and their conditions
+        // were folded together per tag in TagGroupLoader, so this just installs the result.
+        tagEntries.forEach((tag, membership) -> membership.forEach((entry, predicate) -> {
+            if (!entry.ownerEquals(getReadOnlyWrapper()))
+                throw new IllegalStateException(
+                        "Can't create named set " + tag + " containing value "
+                        + entry + " from outside registry " + this
+                );
 
-                for (RegistryEntry<T> entry : matchGroup.baseItems()) {
-                    if (!entry.ownerEquals(getReadOnlyWrapper()))
-                        throw new IllegalStateException(
-                                "Can't create named set " + tag + " containing value "
-                                + entry + " from outside registry " + this
-                        );
+            if (!(entry instanceof Reference<T> reference))
+                throw new IllegalStateException(
+                        "Found direct holder " + entry + " value in tag " + tag
+                );
 
-                    if (!(entry instanceof Reference<T> reference))
-                        throw new IllegalStateException(
-                                "Found direct holder " + entry + " value in tag " + tag
-                        );
-
-                    Map<TagKey<T>, Predicate<Context>> tags = map.get(reference);
-                    if (matchGroup.remove()) {
-                        Predicate<Context> oldPred = tags.get(tag);
-                        if (oldPred != null) if (isUnconditional) tags.remove(tag);
-                        else tags.put(tag, oldPred.and(predicate.negate()));
-                    } else if (isUnconditional) tags.put(tag, ctx -> true);
-                    else tags.compute(tag, (k, oldPred) -> oldPred == null ? predicate : oldPred.or(predicate));
-                }
-            }
-        });
+            map.get(reference).put(tag, predicate);
+        }));
         Set<TagKey<T>> set = Sets.difference(this.tagToEntryList.keySet(), tagEntries.keySet());
         if (!set.isEmpty())
             LOGGER.warn("Not all defined tags for registry {} are present in data pack: {}", this.getKey(), set.stream().map(tag -> tag.id().toString()).sorted().collect(Collectors.joining(", ")));
@@ -519,9 +501,9 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         Reference2ReferenceMap<TagKey<T>, Named<T>> map2 = new Reference2ReferenceOpenHashMap<>(this.tagToEntryList);
 
         tagEntries.forEach(
-                (tag, resolvedTag) -> map2.computeIfAbsent(
+                (tag, membership) -> map2.computeIfAbsent(
                         tag, this::createNamedEntryList
-                ).copyOf(resolvedTag)
+                ).copyOf(membership)
         );
 
         map.forEach(Reference::setTags);
@@ -530,7 +512,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
 
     @Override
     public void clearTags() {
-        this.tagToEntryList.values().forEach(entryList -> entryList.copyOf(List.of()));
+        this.tagToEntryList.values().forEach(entryList -> entryList.copyOf(Map.of()));
         this.keyToEntry.values().forEach(entry -> entry.setTags(Map.of()));
     }
 
