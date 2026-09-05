@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(SeedsItem.class)
-public class SeedsItemMixin {
+class SeedsItemMixin {
     @WrapOperation(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I"))
     public int allowPlacingOnFarmlandTag(World world, int x, int y, int z, Operation<Integer> original) {
         BlockState state = world.getBlockState(x,y, z);
