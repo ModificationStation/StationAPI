@@ -6,8 +6,11 @@
   "mixins": [
     "BlockItemMixin",
     "BlockMixin",
+    "CropBlockMixin",
+    "FarmlandBlockMixin",
     "FireBlockMixin",
     "LeavesBlockMixin",
+    "PlantBlockMixin",
     "SecondaryBlockItemMixin"
   ],
   "injectors": {

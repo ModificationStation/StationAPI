@@ -1,5 +1,8 @@
 {
   "values": [
-    "minecraft:cobblestone_stairs"
+    {
+      "id": "#c:stairs/cobblestone/normal",
+      "required": false
+    }
   ]
 }

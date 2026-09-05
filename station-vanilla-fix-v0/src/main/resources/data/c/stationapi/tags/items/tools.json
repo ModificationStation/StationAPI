@@ -19,6 +19,22 @@
     {
       "id": "#c:tools/swords",
       "required": false
+    },
+    {
+      "id": "#c:tools/igniters",
+      "required": false
+    },
+    {
+      "id": "#c:tools/fishing_rods",
+      "required": false
+    },
+    {
+      "id": "#c:tools/bows",
+      "required": false
+    },
+    {
+      "id": "#c:tools/shears",
+      "required": false
     }
   ]
 }

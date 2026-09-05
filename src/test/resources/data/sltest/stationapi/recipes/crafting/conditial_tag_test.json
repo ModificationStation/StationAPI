@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "pwl",
+    "pwl",
+    "pwl"
+  ],
+  "key":
+  {
+    "p":
+    {
+      "tag": "c:dyes/pink"
+    },
+    "w":
+    {
+      "tag": "c:dyes/white"
+    },
+    "l":
+    {
+      "tag": "c:dyes/light_blue"
+    }
+  },
+  "result":
+  {
+    "item": "sltest:test_item",
+    "count": 67
+  }
+}

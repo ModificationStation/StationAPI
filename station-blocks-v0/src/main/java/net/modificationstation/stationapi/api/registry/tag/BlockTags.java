@@ -94,6 +94,8 @@ public final class BlockTags {
             WOODEN_TRAPDOORS = of("c:trapdoors/wooden"),
             OAK_TRAPDOORS = of("c:trapdoors/wooden/oak"),
             WOOLS = of("c:wools"),
+            FARMLANDS = of("c:farmlands"),
+            NORMAL_FARMLANDS = of("c:farmlands/normal"),
 
             INFINIBURN = of("infiniburn"),
             MINEABLE_AXE = of("mineable/axe"),

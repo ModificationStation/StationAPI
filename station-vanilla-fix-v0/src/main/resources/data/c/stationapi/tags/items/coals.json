@@ -1,5 +1,12 @@
 {
   "values": [
-    "minecraft:coal"
+    {
+      "id": "#c:coals/normal",
+      "required": false
+    },
+    {
+      "id": "#c:coals/charcoal",
+      "required": false
+    }
   ]
 }
