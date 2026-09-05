@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SeedsItem.class)
 class SeedsItemMixin {
     @WrapOperation(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I"))
-    public int allowPlacingOnFarmlandTag(World world, int x, int y, int z, Operation<Integer> original) {
+    private int stationapi_allowPlacingOnFarmlandTag(World world, int x, int y, int z, Operation<Integer> original) {
         BlockState state = world.getBlockState(x,y, z);
         if (state.isIn(BlockTags.FARMLANDS, BlockTagContext.of(world, x, y, z))) {
             return Block.FARMLAND.id;

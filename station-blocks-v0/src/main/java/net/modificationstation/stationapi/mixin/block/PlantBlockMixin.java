@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(PlantBlock.class)
 class PlantBlockMixin {
     @WrapOperation(method = "canPlaceAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PlantBlock;canPlantOnTop(I)Z"))
-    protected boolean injectCanPlantOnTopCanPlaceAt(PlantBlock plantBlock, int id, Operation<Boolean> original, @Local(argsOnly = true, ordinal = 0) World world, @Local(argsOnly = true, ordinal = 0) int x, @Local(argsOnly = true, ordinal = 1) int y, @Local(argsOnly = true, ordinal = 2) int z) {
+    protected boolean stationapi_injectCanPlantOnTopCanPlaceAt(PlantBlock plantBlock, int id, Operation<Boolean> original, @Local(argsOnly = true, ordinal = 0) World world, @Local(argsOnly = true, ordinal = 0) int x, @Local(argsOnly = true, ordinal = 1) int y, @Local(argsOnly = true, ordinal = 2) int z) {
         return original.call(plantBlock, id);
     }
 
     @WrapOperation(method = "canGrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PlantBlock;canPlantOnTop(I)Z"))
-    protected boolean injectCanPlantOnTopCanGrow(PlantBlock plantBlock, int id, Operation<Boolean> original, @Local(argsOnly = true, ordinal = 0) World world, @Local(argsOnly = true, ordinal = 0) int x, @Local(argsOnly = true, ordinal = 1) int y, @Local(argsOnly = true, ordinal = 2) int z) {
+    protected boolean stationapi_injectCanPlantOnTopCanGrow(PlantBlock plantBlock, int id, Operation<Boolean> original, @Local(argsOnly = true, ordinal = 0) World world, @Local(argsOnly = true, ordinal = 0) int x, @Local(argsOnly = true, ordinal = 1) int y, @Local(argsOnly = true, ordinal = 2) int z) {
         return original.call(plantBlock, id);
     }
 }

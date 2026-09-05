@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(CropBlock.class)
 class CropBlockMixin extends PlantBlockMixin {
     @Override
-    protected boolean injectCanPlantOnTopCanPlaceAt(PlantBlock plantBlock, int id, Operation<Boolean> original, World world, int x, int y, int z) {
+    protected boolean stationapi_injectCanPlantOnTopCanPlaceAt(PlantBlock plantBlock, int id, Operation<Boolean> original, World world, int x, int y, int z) {
         BlockState state = world.getBlockState(x, y - 1, z);
         if (state.isIn(BlockTags.FARMLANDS, BlockTagContext.of(world, x, y - 1, z))) {
             return true;
@@ -26,7 +26,7 @@ class CropBlockMixin extends PlantBlockMixin {
     }
 
     @Override
-    protected boolean injectCanPlantOnTopCanGrow(PlantBlock plantBlock, int id, Operation<Boolean> original, World world, int x, int y, int z) {
+    protected boolean stationapi_injectCanPlantOnTopCanGrow(PlantBlock plantBlock, int id, Operation<Boolean> original, World world, int x, int y, int z) {
         BlockState state = world.getBlockState(x, y - 1, z);
         if (state.isIn(BlockTags.FARMLANDS, BlockTagContext.of(world, x, y - 1, z))) {
             return true;
@@ -37,7 +37,7 @@ class CropBlockMixin extends PlantBlockMixin {
 
 
     @WrapOperation(method = "getAvailableMoisture", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I", ordinal = 8))
-    private int getCustomFarmlandMoisturable(World world, int x, int y, int z, Operation<Integer> original) {
+    private int stationapi_getCustomFarmlandMoisturable(World world, int x, int y, int z, Operation<Integer> original) {
         int result = original.call(world, x, y, z);
 
         if (result != Block.FARMLAND.id) {
@@ -51,7 +51,7 @@ class CropBlockMixin extends PlantBlockMixin {
     }
 
     @WrapOperation(method = "getAvailableMoisture", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockMeta(III)I"))
-    private int getCustomFarmlandWet(World world, int x, int y, int z, Operation<Integer> original) {
+    private int stationapi_getCustomFarmlandWet(World world, int x, int y, int z, Operation<Integer> original) {
         Block block = Block.BLOCKS[world.getBlockId(x, y, z)];
 
         if (block != Block.FARMLAND && block instanceof CustomFarmlandBlock customFarmlandBlock) {
