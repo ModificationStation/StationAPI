@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "TilePosAccessor",
-    "TilePosMixin"
+    "BlockPosMixin"
   ],
   "injectors": {
     "defaultRequire": 1

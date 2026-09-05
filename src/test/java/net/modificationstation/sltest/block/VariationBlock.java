@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.CustomFarmlandBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.EnumProperty;
@@ -14,8 +15,7 @@ import net.modificationstation.stationapi.api.util.StringIdentifiable;
 
 import java.util.List;
 
-public class VariationBlock extends TemplateBlock {
-
+public class VariationBlock extends TemplateBlock implements CustomFarmlandBlock {
     public enum Variant implements StringIdentifiable {
         IDLE,
         PASSIVE,
@@ -45,5 +45,10 @@ public class VariationBlock extends TemplateBlock {
             case PASSIVE -> ItemListener.variationBlockPassive;
             case ACTIVE -> ItemListener.variationBlockActive;
         }));
+    }
+
+    @Override
+    public boolean isWet(World world, int x, int y, int z) {
+        return true;
     }
 }

@@ -5,12 +5,12 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateStillLiquidBlock extends StillLiquidBlock implements BlockTemplate {
-    public TemplateStillLiquidBlock(Identifier identifier, Material arg) {
-        this(BlockTemplate.getNextId(), arg);
+    public TemplateStillLiquidBlock(Identifier identifier, Material material) {
+        this(BlockTemplate.getNextId(), material);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateStillLiquidBlock(int i, Material arg) {
-        super(i, arg);
+
+    public TemplateStillLiquidBlock(int id, Material material) {
+        super(id, material);
     }
 }

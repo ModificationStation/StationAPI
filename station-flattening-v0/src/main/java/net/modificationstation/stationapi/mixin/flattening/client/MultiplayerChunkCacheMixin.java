@@ -1,12 +1,9 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.chunk.MultiplayerChunkCache;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.impl.world.StationClientWorld;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;

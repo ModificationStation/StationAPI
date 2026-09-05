@@ -15,11 +15,11 @@ public abstract class TemplateBlockWithEntity extends BlockWithEntity implements
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateBlockWithEntity(int i, Material arg) {
-        super(i, arg);
+    public TemplateBlockWithEntity(int id, Material material) {
+        super(id, material);
     }
 
-    public TemplateBlockWithEntity(int i, int j, Material arg) {
-        super(i, j, arg);
+    public TemplateBlockWithEntity(int id, int textureId, Material material) {
+        super(id, textureId, material);
     }
 }

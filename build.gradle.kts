@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.9-SNAPSHOT"
-    id("babric-loom-extension") version "1.9.2"
+    id("fabric-loom") version "1.16.3"
+    id("babric-loom-extension") version "1.17.2"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -19,8 +19,9 @@ allprojects {
     apply(plugin = "fabric-loom")
     apply(plugin = "babric-loom-extension")
 
-    java.sourceCompatibility = JavaVersion.VERSION_17
-    java.targetCompatibility = JavaVersion.VERSION_17
+    java {
+        withSourcesJar()
+    }
 
     repositories {
         maven(url = "https://maven.minecraftforge.net/")
@@ -47,15 +48,13 @@ allprojects {
         }
     }
 
-    @Suppress("UnstableApiUsage")
     configurations {
-        create("transitiveImplementation")
-
-        // Required cause loom 0.14 for some reason doesn't remove asm-all 4.1. Ew.
-        all {
-            exclude(group = "org.ow2.asm", module = "asm-debug-all")
-            exclude(group = "org.ow2.asm", module = "asm-all")
-            exclude(group = "babric")
+        listOf("transitiveImplementation", "modImplementation").forEach { name ->
+            named(name) {
+                exclude(group = "org.ow2.asm", module = "asm-debug-all")
+                exclude(group = "org.ow2.asm", module = "asm-all")
+                exclude(group = "babric", module = "fabric-loader")
+            }
         }
     }
 
@@ -74,15 +73,15 @@ allprojects {
 
         modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
-        "transitiveImplementation"(implementation("org.apache.commons:commons-lang3:3.12.0") as Dependency)
-        "transitiveImplementation"(implementation("commons-io:commons-io:2.11.0") as Dependency)
-        "transitiveImplementation"(implementation("net.jodah:typetools:${project.properties["typetools_version"]}") as Dependency)
-        "transitiveImplementation"(implementation("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}") as Dependency)
-        "transitiveImplementation"(implementation("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}") as Dependency)
-        "transitiveImplementation"(implementation("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}") as Dependency)
-        "transitiveImplementation"(implementation("com.mojang:datafixerupper:${project.properties["dfu_version"]}") as Dependency)
-        "transitiveImplementation"(implementation("maven.modrinth:spasm:${project.properties["spasm_version"]}") as Dependency)
-        "transitiveImplementation"(implementation("me.carleslc:Simple-Yaml:1.8.4") as Dependency)
+        transitiveImplementation(implementation("org.apache.commons:commons-lang3:3.12.0") as Dependency)
+        transitiveImplementation(implementation("commons-io:commons-io:2.11.0") as Dependency)
+        transitiveImplementation(implementation("net.jodah:typetools:${project.properties["typetools_version"]}") as Dependency)
+        transitiveImplementation(implementation("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}") as Dependency)
+        transitiveImplementation(implementation("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}") as Dependency)
+        transitiveImplementation(implementation("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}") as Dependency)
+        transitiveImplementation(implementation("com.mojang:datafixerupper:${project.properties["dfu_version"]}") as Dependency)
+        transitiveImplementation(implementation("maven.modrinth:spasm:${project.properties["spasm_version"]}") as Dependency)
+        transitiveImplementation(implementation("me.carleslc:Simple-Yaml:1.8.4") as Dependency)
 
         // not a runtime dependency unless we use something outside its events.
         modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}")
@@ -97,8 +96,13 @@ allprojects {
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         implementation("org.jetbrains:annotations:23.0.0")
 
-        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}")
+        modLocalRuntime("net.danygames2014:modmenu:${project.properties["modmenu_version"]}")
         modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
+            isTransitive = false
+        }
+
+        // The "enableAmiCompat" program argument needs to be present in order to apply a dev-only patch for AMI to work
+        modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
             isTransitive = false
         }
 
@@ -129,13 +133,6 @@ allprojects {
         }
     }
 
-    java {
-        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-        // if it is present.
-        // If you remove this line, sources will not be generated.
-        withSourcesJar()
-    }
-
     // Include license inside of the mod jar
     configure<Jar>("jar") {
         from(rootProject.file("LICENSE")) {
@@ -147,6 +144,7 @@ allprojects {
     // this fixes some edge cases with special characters not displaying correctly
     // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
     tasks.withType<JavaCompile> {
+        options.release = 17
         options.encoding = "UTF-8"
     }
 
@@ -193,6 +191,15 @@ allprojects {
             }
         }
     }
+
+    tasks.withType<JavaCompile>().configureEach {
+        options.release = 17
+    }
+
+    tasks.register<Delete>("purgeBuildFolder") {
+        group = "stapi"
+        delete(layout.buildDirectory)
+    }
 }
 
 //Subprojects will set these themselves
@@ -202,12 +209,13 @@ base.archivesName.set(project.properties["archives_base_name"] as String)
 version = (if (project.hasProperty("override_version")) (project.properties["override_version"] as String).substring(0, 7) else project.properties["mod_version"])!!
 
 subprojects {
+    version = rootProject.version
+
     // This makes the older pre-releases easier to clean up.
     group = if (rootProject.hasProperty("override_version")) {
-        (project.properties["maven_group"] as String) + ".StationAPI.${(project.properties["override_version"] as String).substring(0, 7)}"
-    }
-    else {
-        (project.properties["maven_group"] as String) + ".StationAPI.submodule.${project.properties["archivesBaseName"]}"
+        (rootProject.properties["maven_group"] as String) + ".StationAPI.${(rootProject.properties["override_version"] as String).substring(0, 7)}"
+    } else {
+        (rootProject.properties["maven_group"] as String) + ".StationAPI.submodule.$name"
     }
 
     configurations {
@@ -290,6 +298,10 @@ loom {
             source("test")
             server()
         }
+
+        configureEach {
+            programArgs("enableAmiCompat")
+        }
     }
 }
 
@@ -302,4 +314,9 @@ tasks.register<Jar>("testJar") {
 // Gradle I swear to fuck stop trying to do bullshit to the maven - calm
 tasks.withType<GenerateModuleMetadata> {
     enabled = false
+}
+
+// Gradle 9 fails the build if there are no tests, but we are using the test package for a test mod
+tasks.withType<Test> {
+    failOnNoDiscoveredTests = false
 }

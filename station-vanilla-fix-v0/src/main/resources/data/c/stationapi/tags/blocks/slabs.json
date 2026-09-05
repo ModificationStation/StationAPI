@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "#c:slabs/stone",
+      "required": false
+    },
+    {
+      "id": "#c:slabs/sandstone",
+      "required": false
+    },
+    {
+      "id": "#c:slabs/wooden",
+      "required": false
+    },
+    {
+      "id": "#c:slabs/cobblestone",
+      "required": false
+    }
+  ]
+}

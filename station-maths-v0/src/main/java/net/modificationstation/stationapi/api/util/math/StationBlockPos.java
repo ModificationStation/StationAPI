@@ -41,12 +41,12 @@ public interface StationBlockPos {
         return new BlockPos(floor(x), floor(y), floor(z));
     }
 
-    static BlockPos create(Vec3d pos) {
-        return create(pos.x, pos.y, pos.z);
-    }
-
     static BlockPos create(Position pos) {
         return create(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    static BlockPos create(Vec3d pos) {
+        return create(pos.x, pos.y, pos.z);
     }
 
     static BlockPos create(Vec3i pos) {
@@ -336,23 +336,55 @@ public interface StationBlockPos {
         return asLong(getX(), getY(), getZ());
     }
 
-    default BlockPos add(double d, double e, double f) {
+    default BlockPos add(double x, double y, double z) {
         return Util.assertImpl();
     }
 
-    default BlockPos add(int i, int j, int k) {
+    default BlockPos add(int x, int y, int z) {
         return Util.assertImpl();
+    }
+
+    default BlockPos add(BlockPos blockPos) {
+        return add(blockPos.x, blockPos.y, blockPos.z);
+    }
+
+    default BlockPos add(Position position) {
+        return add(position.getX(), position.getY(), position.getZ());
+    }
+
+    default BlockPos add(Vec3d vec3d) {
+        return add(vec3d.x, vec3d.y, vec3d.z);
     }
 
     default BlockPos add(Vec3i vec3i) {
         return add(vec3i.getX(), vec3i.getY(), vec3i.getZ());
     }
 
+    default BlockPos subtract(double x, double y, double z) {
+        return add(-x, -y, -z);
+    }
+
+    default BlockPos subtract(int x, int y, int z) {
+        return add(-x, -y, -z);
+    }
+
+    default BlockPos subtract(BlockPos blockPos) {
+        return add(-blockPos.x, -blockPos.y, -blockPos.z);
+    }
+
+    default BlockPos subtract(Position position) {
+        return add(-position.getX(), -position.getY(), -position.getZ());
+    }
+
+    default BlockPos subtract(Vec3d vec3d) {
+        return add(-vec3d.x, -vec3d.y, -vec3d.z);
+    }
+
     default BlockPos subtract(Vec3i vec3i) {
         return add(-vec3i.getX(), -vec3i.getY(), -vec3i.getZ());
     }
 
-    default BlockPos multiply(int i) {
+    default BlockPos multiply(int multiplier) {
         return Util.assertImpl();
     }
 

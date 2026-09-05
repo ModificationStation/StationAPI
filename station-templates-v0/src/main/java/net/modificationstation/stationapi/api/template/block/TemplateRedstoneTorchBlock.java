@@ -4,12 +4,12 @@ import net.minecraft.block.RedstoneTorchBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateRedstoneTorchBlock extends RedstoneTorchBlock implements BlockTemplate {
-    public TemplateRedstoneTorchBlock(Identifier identifier, int j, boolean flag) {
-        this(BlockTemplate.getNextId(), j, flag);
+    public TemplateRedstoneTorchBlock(Identifier identifier, int textureId, boolean lit) {
+        this(BlockTemplate.getNextId(), textureId, lit);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateRedstoneTorchBlock(int i, int j, boolean flag) {
-        super(i, j, flag);
+
+    public TemplateRedstoneTorchBlock(int id, int textureId, boolean lit) {
+        super(id, textureId, lit);
     }
 }

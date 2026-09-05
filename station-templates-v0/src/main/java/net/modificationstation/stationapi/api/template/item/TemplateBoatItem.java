@@ -8,8 +8,8 @@ public class TemplateBoatItem extends BoatItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateBoatItem(int i) {
-        super(i);
+
+    public TemplateBoatItem(int id) {
+        super(id);
     }
 }

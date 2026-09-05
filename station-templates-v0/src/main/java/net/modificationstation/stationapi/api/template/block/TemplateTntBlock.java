@@ -4,12 +4,12 @@ import net.minecraft.block.TntBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateTntBlock extends TntBlock implements BlockTemplate {
-    public TemplateTntBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateTntBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateTntBlock(int i, int j) {
-        super(i, j);
+
+    public TemplateTntBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

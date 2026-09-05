@@ -1,11 +1,14 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Either;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.context.TagEvaluationContext;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.context.Context;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -22,11 +25,27 @@ public interface RegistryEntry<T> {
 
     boolean matches(Predicate<RegistryKey<T>> predicate);
 
-    boolean isIn(TagKey<T> tag);
+    /**
+     * @deprecated Use {@link #isIn(TagKey, TagEvaluationContext)} instead.
+     * <p>This method implicitly uses {@link TagEvaluationContext#DEFAULT}, meaning it will only evaluate to {@code true}
+     * for unconditional tag references.
+     */
+    @Deprecated
+    default boolean isIn(TagKey<T> tag) {
+        return isIn(tag, TagEvaluationContext.DEFAULT);
+    }
 
-    Stream<TagKey<T>> streamTags();
+    boolean isIn(TagKey<T> tag, TagEvaluationContext context);
+
+    default Stream<TagKey<T>> streamTags() {
+        return streamTags(TagEvaluationContext.BYPASSED);
+    }
+
+    Stream<TagKey<T>> streamTags(TagEvaluationContext context);
 
     Set<TagKey<T>> getTags();
+    
+    Set<TagKey<T>> getTags(TagEvaluationContext context);
 
     Either<RegistryKey<T>, T> getKeyOrValue();
 
@@ -57,7 +76,7 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public boolean isIn(TagKey<T> tag) {
+        public boolean isIn(TagKey<T> tag, TagEvaluationContext context) {
             return false;
         }
 
@@ -92,7 +111,7 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public Stream<TagKey<T>> streamTags() {
+        public Stream<TagKey<T>> streamTags(TagEvaluationContext context) {
             return Stream.of();
         }
 
@@ -100,11 +119,16 @@ public interface RegistryEntry<T> {
         public Set<TagKey<T>> getTags() {
             return Set.of();
         }
+
+        @Override
+        public Set<TagKey<T>> getTags(TagEvaluationContext context) {
+            return Set.of();
+        }
     }
 
     abstract class Reference<ENTRY> implements RegistryEntry<ENTRY> {
         final RegistryEntryOwner<ENTRY> owner;
-        private Set<TagKey<ENTRY>> tags = Set.of();
+        private volatile Map<TagKey<ENTRY>, Predicate<Context>> tags = Map.of();
 
         private Reference(RegistryEntryOwner<ENTRY> owner) {
             this.owner = owner;
@@ -123,8 +147,11 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public boolean isIn(TagKey<ENTRY> tag) {
-            return tags.contains(tag);
+        public boolean isIn(TagKey<ENTRY> tag, TagEvaluationContext context) {
+            Predicate<Context> predicate = tags.get(tag);
+            if (predicate == null) return false;
+            if (context.ignoreTagConditions()) return true;
+            return predicate.test(context);
         }
 
         @Override
@@ -156,17 +183,37 @@ public interface RegistryEntry<T> {
 
         abstract void setValue(ENTRY value);
 
-        void setTags(Collection<TagKey<ENTRY>> tags) {
-            this.tags = Set.copyOf(tags);
+        void setTags(Map<TagKey<ENTRY>, Predicate<Context>> tags) {
+            this.tags = Map.copyOf(tags);
         }
 
         @Override
-        public Stream<TagKey<ENTRY>> streamTags() {
-            return this.tags.stream();
+        public Stream<TagKey<ENTRY>> streamTags(TagEvaluationContext context) {
+            return context.ignoreTagConditions()
+                    ? this.tags.keySet().stream()
+                    : this.tags.entrySet().stream()
+                    .filter(entry -> entry.getValue().test(context))
+                    .map(Map.Entry::getKey);
         }
 
         @Override
+        @Deprecated
         public Set<TagKey<ENTRY>> getTags() {
+            return Set.copyOf(this.tags.keySet());
+        }
+
+        @Override
+        public Set<TagKey<ENTRY>> getTags(TagEvaluationContext context) {
+            if (context.ignoreTagConditions()) {
+                return Set.copyOf(this.tags.keySet());
+            }
+            
+            Set<TagKey<ENTRY>> tags = new ObjectOpenHashSet<>();
+            for (Map.Entry<TagKey<ENTRY>, Predicate<Context>> entry : this.tags.entrySet()) {
+                if (entry.getValue().test(context)) {
+                    tags.add(entry.getKey());
+                }
+            }
             return tags;
         }
 

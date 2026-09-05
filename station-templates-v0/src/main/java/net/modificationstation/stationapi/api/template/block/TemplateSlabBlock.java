@@ -4,12 +4,12 @@ import net.minecraft.block.SlabBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateSlabBlock extends SlabBlock implements BlockTemplate {
-    public TemplateSlabBlock(Identifier identifier, boolean flag) {
-        this(BlockTemplate.getNextId(), flag);
+    public TemplateSlabBlock(Identifier identifier, boolean doubleSlab) {
+        this(BlockTemplate.getNextId(), doubleSlab);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSlabBlock(int i, boolean flag) {
-        super(i, flag);
+
+    public TemplateSlabBlock(int id, boolean doubleSlab) {
+        super(id, doubleSlab);
     }
 }

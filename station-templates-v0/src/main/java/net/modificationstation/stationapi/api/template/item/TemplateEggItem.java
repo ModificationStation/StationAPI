@@ -9,7 +9,7 @@ public class TemplateEggItem extends EggItem implements ItemTemplate {
         ItemTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateEggItem(int i) {
-        super(i);
+    public TemplateEggItem(int id) {
+        super(id);
     }
 }

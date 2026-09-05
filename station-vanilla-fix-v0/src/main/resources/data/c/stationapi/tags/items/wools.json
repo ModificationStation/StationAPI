@@ -1,5 +1,68 @@
 {
   "values": [
-    "minecraft:wool"
+    {
+      "id": "#c:wools/white",
+      "required": false
+    },
+    {
+      "id": "#c:wools/orange",
+      "required": false
+    },
+    {
+      "id": "#c:wools/magenta",
+      "required": false
+    },
+    {
+      "id": "#c:wools/light_blue",
+      "required": false
+    },
+    {
+      "id": "#c:wools/yellow",
+      "required": false
+    },
+    {
+      "id": "#c:wools/lime",
+      "required": false
+    },
+    {
+      "id": "#c:wools/pink",
+      "required": false
+    },
+    {
+      "id": "#c:wools/gray",
+      "required": false
+    },
+    {
+      "id": "#c:wools/light_gray",
+      "required": false
+    },
+    {
+      "id": "#c:wools/cyan",
+      "required": false
+    },
+    {
+      "id": "#c:wools/purple",
+      "required": false
+    },
+    {
+      "id": "#c:wools/blue",
+      "required": false
+    },
+    {
+      "id": "#c:wools/brown",
+      "required": false
+    },
+    {
+      "id": "#c:wools/green",
+      "required": false
+    },
+    {
+      "id": "#c:wools/red",
+      "required": false
+    },
+    {
+      "id": "#c:wools/black",
+      "required": false
+    }
   ]
 }
