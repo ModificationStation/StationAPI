@@ -17,43 +17,43 @@ import org.spongepowered.asm.mixin.injection.At;
 class CropBlockMixin extends PlantBlockMixin {
     @Override
     protected boolean injectCanPlantOnTopCanPlaceAt(PlantBlock plantBlock, int id, Operation<Boolean> original, World world, int x, int y, int z) {
-        BlockState state = world.getBlockState(x,y - 1, z);
-        if (state.isIn(BlockTags.FARMLANDS, BlockTagContext.of(world, x, y -1, z))) {
+        BlockState state = world.getBlockState(x, y - 1, z);
+        if (state.isIn(BlockTags.FARMLANDS, BlockTagContext.of(world, x, y - 1, z))) {
             return true;
         }
-        
+
         return original.call(plantBlock, id);
     }
 
     @Override
     protected boolean injectCanPlantOnTopCanGrow(PlantBlock plantBlock, int id, Operation<Boolean> original, World world, int x, int y, int z) {
-        BlockState state = world.getBlockState(x,y - 1, z);
-        if (state.isIn(BlockTags.FARMLANDS, BlockTagContext.of(world, x, y -1, z))) {
+        BlockState state = world.getBlockState(x, y - 1, z);
+        if (state.isIn(BlockTags.FARMLANDS, BlockTagContext.of(world, x, y - 1, z))) {
             return true;
         }
 
         return original.call(plantBlock, id);
     }
-    
-    
+
+
     @WrapOperation(method = "getAvailableMoisture", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I", ordinal = 8))
     private int getCustomFarmlandMoisture(World world, int x, int y, int z, Operation<Integer> original) {
         int result = original.call(world, x, y, z);
-        
+
         if (result != Block.FARMLAND.id) {
-            BlockState state = world.getBlockState(x,y, z);
+            BlockState state = world.getBlockState(x, y, z);
             if (state.isIn(BlockTags.FARMLANDS, BlockTagContext.of(world, x, y, z))) {
                 return Block.FARMLAND.id;
             }
         }
-        
+
         return result;
     }
-    
+
     @WrapOperation(method = "getAvailableMoisture", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockMeta(III)I"))
     private int getCustomFarmlandWet(World world, int x, int y, int z, Operation<Integer> original) {
-        Block block = Block.BLOCKS[world.getBlockId(x,y,z)];
-        
+        Block block = Block.BLOCKS[world.getBlockId(x, y, z)];
+
         if (block != Block.FARMLAND && block instanceof CustomFarmlandBlock customFarmlandBlock) {
             return customFarmlandBlock.isWet(world, x, y, z) ? 7 : 0;
         }
