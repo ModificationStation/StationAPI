@@ -1,5 +1,16 @@
 {
   "values": [
-    "minecraft:leaves"
+    {
+      "id": "#c:leaves/oak",
+      "required": false
+    },
+    {
+      "id": "#c:leaves/spruce",
+      "required": false
+    },
+    {
+      "id": "#c:leaves/birch",
+      "required": false
+    }
   ]
 }

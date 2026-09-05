@@ -41,7 +41,8 @@
       "net.modificationstation.sltest.option.OptionListener",
       "net.modificationstation.sltest.keyboard.KeyboardListener",
       "net.modificationstation.sltest.texture.TextureListener",
-      "net.modificationstation.sltest.render.entity.EntityRendererListener"
+      "net.modificationstation.sltest.render.entity.EntityRendererListener",
+      "net.modificationstation.sltest.tooltip.TooltipEventListener"
     ],
     "main": [
       "net.modificationstation.sltest.MainTest"

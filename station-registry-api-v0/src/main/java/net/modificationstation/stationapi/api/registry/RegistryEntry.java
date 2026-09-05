@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Either;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.tag.context.TagEvaluationContext;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -43,6 +44,8 @@ public interface RegistryEntry<T> {
     Stream<TagKey<T>> streamTags(TagEvaluationContext context);
 
     Set<TagKey<T>> getTags();
+    
+    Set<TagKey<T>> getTags(TagEvaluationContext context);
 
     Either<RegistryKey<T>, T> getKeyOrValue();
 
@@ -114,6 +117,11 @@ public interface RegistryEntry<T> {
 
         @Override
         public Set<TagKey<T>> getTags() {
+            return Set.of();
+        }
+
+        @Override
+        public Set<TagKey<T>> getTags(TagEvaluationContext context) {
             return Set.of();
         }
     }
@@ -192,6 +200,21 @@ public interface RegistryEntry<T> {
         @Deprecated
         public Set<TagKey<ENTRY>> getTags() {
             return Set.copyOf(this.tags.keySet());
+        }
+
+        @Override
+        public Set<TagKey<ENTRY>> getTags(TagEvaluationContext context) {
+            if (context.ignoreTagConditions()) {
+                return Set.copyOf(this.tags.keySet());
+            }
+            
+            Set<TagKey<ENTRY>> tags = new ObjectOpenHashSet<>();
+            for (Map.Entry<TagKey<ENTRY>, Predicate<Context>> entry : this.tags.entrySet()) {
+                if (entry.getValue().test(context)) {
+                    tags.add(entry.getKey());
+                }
+            }
+            return tags;
         }
 
         public String toString() {

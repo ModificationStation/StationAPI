@@ -31,6 +31,12 @@ public interface BlockTagContext extends BlockContext, TagEvaluationContext {
         return (BlockTagContextDelegate) () -> data;
     }
 
+    static BlockTagContext of(int meta) {
+        Context data = Context.of(BlockContext.BLOCK_METADATA_KEY, meta);
+        interface BlockTagContextDelegate extends BlockTagContext, Delegate {}
+        return (BlockTagContextDelegate) () -> data;
+    }
+    
     static BlockTagContext of(Context context) {
         if (context instanceof BlockTagContext b) return b;
         interface BlockTagContextDelegate extends BlockTagContext, Delegate {}

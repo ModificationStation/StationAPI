@@ -1,12 +1,5 @@
 {
   "values": [
-    {
-      "id": "#c:signs/wooden/oak/standing",
-      "required": false
-    },
-    {
-      "id": "#c:signs/wooden/oak/wall",
-      "required": false
-    }
+    "minecraft:oak_sign"
   ]
 }
