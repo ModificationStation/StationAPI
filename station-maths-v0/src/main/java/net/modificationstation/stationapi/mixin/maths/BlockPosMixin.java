@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(BlockPos.class)
-public class TilePosMixin implements StationBlockPos {
+public class BlockPosMixin implements StationBlockPos {
     @Shadow @Final public int x;
 
     @Shadow @Final public int y;
@@ -56,12 +56,12 @@ public class TilePosMixin implements StationBlockPos {
     }
 
     @Override
-    public BlockPos multiply(int i) {
-        return switch (i) {
+    public BlockPos multiply(int multiplier) {
+        return switch (multiplier) {
             case 1 -> //noinspection DataFlowIssue
                     (BlockPos) (Object) this;
             case 0 -> ORIGIN;
-            default -> new BlockPos(getX() * i, getY() * i, getZ() * i);
+            default -> new BlockPos(getX() * multiplier, getY() * multiplier, getZ() * multiplier);
         };
     }
 

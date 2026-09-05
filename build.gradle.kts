@@ -144,6 +144,7 @@ allprojects {
     // this fixes some edge cases with special characters not displaying correctly
     // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
     tasks.withType<JavaCompile> {
+        options.release = 17
         options.encoding = "UTF-8"
     }
 

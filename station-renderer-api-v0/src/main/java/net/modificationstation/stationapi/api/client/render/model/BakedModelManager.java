@@ -12,8 +12,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
+import net.modificationstation.stationapi.api.client.event.render.model.ModelsUploadedEvent;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -129,7 +131,7 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
     private static CompletableFuture<Map<Identifier, List<ModelLoader.SourceTrackedData>>> reloadBlockStates(ResourceManager resourceManager, Executor executor) {
         return CompletableFuture.supplyAsync(() -> ModelLoader.BLOCK_STATES_FINDER.findAllResources(resourceManager), executor).thenCompose(blockStates2 -> {
             List<CompletableFuture<Pair<Identifier, List<ModelLoader.SourceTrackedData>>>> list = new ArrayList<>(blockStates2.size());
-            for (Map.Entry<Identifier, List<Resource>> entry : blockStates2.entrySet())
+            for (Map.Entry<Identifier, List<Resource>> entry : blockStates2.entrySet()) {
                 list.add(CompletableFuture.supplyAsync(() -> {
                     List<Resource> resources = entry.getValue();
                     List<ModelLoader.SourceTrackedData> list2 = new ArrayList<>(resources.size());
@@ -141,6 +143,7 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
                         }
                     return Pair.of(entry.getKey(), list2);
                 }, executor));
+            }
             return Util.combineSafe(list).thenApply(blockStates -> blockStates.stream().filter(Objects::nonNull).collect(Collectors.toUnmodifiableMap(Pair::getFirst, Pair::getSecond)));
         });
     }
@@ -183,6 +186,8 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
         this.missingModel = bakingResult.missingModel;
         profiler.swap("cache");
         this.blockModelCache.setModels(bakingResult.modelCache);
+        profiler.swap("models_uploaded_event");
+        StationAPI.EVENT_BUS.post(new ModelsUploadedEvent());
         profiler.pop();
         profiler.endTick();
     }
