@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.block.CustomFarmlandBlock;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(FarmlandBlock.class)
-public class FarmlandBlockMixin implements CustomFarmlandBlock {
+class FarmlandBlockMixin implements CustomFarmlandBlock {
 
     @Override
     public boolean isWet(World world, int x, int y, int z) {
