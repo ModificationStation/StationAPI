@@ -37,7 +37,7 @@ class CropBlockMixin extends PlantBlockMixin {
 
 
     @WrapOperation(method = "getAvailableMoisture", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I", ordinal = 8))
-    private int getCustomFarmlandMoisture(World world, int x, int y, int z, Operation<Integer> original) {
+    private int getCustomFarmlandMoisturable(World world, int x, int y, int z, Operation<Integer> original) {
         int result = original.call(world, x, y, z);
 
         if (result != Block.FARMLAND.id) {
