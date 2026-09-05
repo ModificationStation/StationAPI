@@ -196,9 +196,9 @@ allprojects {
         options.release = 17
     }
 
-    tasks.register("purgeBuildFolder") {
+    tasks.register<Delete>("purgeBuildFolder") {
         group = "stapi"
-        project.file("build").deleteRecursively()
+        delete(layout.buildDirectory)
     }
 }
 
