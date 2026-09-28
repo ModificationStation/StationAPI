@@ -1,25 +1,33 @@
 package net.modificationstation.stationapi.mixin.vanillafix;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkCache;
+import net.minecraft.world.chunk.ChunkSource;
+import net.minecraft.world.chunk.storage.ChunkStorage;
 import net.modificationstation.stationapi.api.vanillafix.world.chunk.StationChunkCache;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings({"unchecked", "AddedMixinMembersNamePattern", "rawtypes"})
 @Mixin(ChunkCache.class)
-public class ChunkCacheMixin implements StationChunkCache {
+public abstract class ChunkCacheMixin implements StationChunkCache {
     @Shadow
     private World world;
 
@@ -28,9 +36,49 @@ public class ChunkCacheMixin implements StationChunkCache {
 
     @Shadow
     private List chunks;
+
+    @Shadow
+    private Map chunkByPos;
+
+    @Shadow
+    public abstract Chunk loadChunk(int chunkX, int chunkZ);
+
     @Unique
     private int nextChunkToUnload;
+    
+    @Unique
+    private Int2ObjectMap<Chunk> stationapi$chunksByPos;
 
+    // Boxing Elimination
+    @Inject(
+            method = "<init>",
+            at = @At("RETURN")
+    )
+    private void getMap(World world, ChunkStorage storage, ChunkSource generator, CallbackInfo ci) {
+        stationapi$chunksByPos = new Int2ObjectOpenHashMap<>(1024);
+        this.chunkByPos = stationapi$chunksByPos;
+    }
+
+    /**
+     * @reason Redirecting {@code serverChunkCache.containsKey(Vec2i.hash(chunkX, chunkZ))} still boxes the integer, adding unnecessary memory usage.
+     * @author mine_diver
+     */
+    @Overwrite
+    public boolean isChunkLoaded(int chunkX, int chunkZ) {
+        return stationapi$chunksByPos.containsKey(ChunkPos.hashCode(chunkX, chunkZ));
+    }
+
+    /**
+     * @reason This is the only way to avoid integer boxing here.
+     * @author mine_diver
+     */
+    @Overwrite
+    public Chunk getChunk(int chunkX, int chunkZ) {
+        Chunk var3 = stationapi$chunksByPos.get(ChunkPos.hashCode(chunkX, chunkZ));
+        return var3 == null ? loadChunk(chunkX, chunkZ) : var3;
+    }
+    
+    // Chunk Dropping
     @Override
     public void unloadChunk(int chunkX, int chunkZ) {
         Vec3i worldSpawn = this.world.getSpawnPos();
@@ -40,7 +88,7 @@ public class ChunkCacheMixin implements StationChunkCache {
 
         if (distanceToSpawnX < -spawnChunkRadius || distanceToSpawnX > spawnChunkRadius || distanceToSpawnZ < -spawnChunkRadius || distanceToSpawnZ > spawnChunkRadius) {
             this.chunksToUnload.add(ChunkPos.hashCode(chunkX, chunkZ));
-            System.err.println("Unloading chunk: " + chunkX + ", " + chunkZ);
+            //System.err.println("Unloading chunk: " + chunkX + ", " + chunkZ);
         }
     }
 
@@ -59,5 +107,10 @@ public class ChunkCacheMixin implements StationChunkCache {
                 this.unloadChunk(chunk.x, chunk.z);
             }
         }
+    }
+    
+    @ModifyExpressionValue(method = "tick", at = @At(value = "CONSTANT", args = "intValue=100"))
+    public int thanksNotch(int original) {
+        return this.chunksToUnload.size();
     }
 }
