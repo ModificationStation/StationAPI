@@ -2,10 +2,15 @@ package net.modificationstation.stationapi.impl.resource.loader;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceLinkedOpenHashMap;
 import net.fabricmc.loader.api.ModContainer;
+import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.event.resource.RuntimeResourcesEvent;
 import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.impl.resource.ModNioResourcePack;
+import net.modificationstation.stationapi.impl.resource.ModResourcePack;
 import net.modificationstation.stationapi.impl.resource.ResourcePackProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +72,30 @@ public class ResourceManagerHelperImpl implements ResourceManagerHelper {
      */
     public static boolean registerBuiltinResourcePack(Identifier id, String subPath, ModContainer container, ResourcePackActivationType activationType) {
         return registerBuiltinResourcePack(id, subPath, container, id.namespace + "/" + id.path, activationType);
+    }
+
+    /**
+     * Fires {@link RuntimeResourcesEvent} for the given resource type and appends every non-empty
+     * pack it collected to {@code packs}.
+     *
+     * <p>Called before mod packs are sorted, so runtime packs take part in the usual
+     * {@code station-resource-loader-v0:<type>_priority} ordering. A mod supplying both files and
+     * runtime resources ends up with its runtime pack after its file pack, letting generated
+     * content override the mod's own files.
+     *
+     * @param packs the mod resource pack list to append to
+     * @param type  the type of resource being collected
+     */
+    public static void appendRuntimeResourcePacks(List<ModResourcePack> packs, ResourceType type) {
+        Map<Namespace, RuntimeResourcePack> runtimePacks = new Reference2ReferenceLinkedOpenHashMap<>();
+        StationAPI.EVENT_BUS.post(switch (type) {
+            case CLIENT_RESOURCES -> RuntimeResourcesEvent.Assets.builder().type(type).packs(runtimePacks).build();
+            case SERVER_DATA -> RuntimeResourcesEvent.Data.builder().type(type).packs(runtimePacks).build();
+        });
+
+        for (RuntimeResourcePack pack : runtimePacks.values())
+            if (pack.isEmpty()) LOGGER.debug("Discarding empty runtime resource pack {}", pack.getName());
+            else packs.add(pack);
     }
 
     public static void registerBuiltinResourcePacks(ResourceType resourceType, Consumer<ResourcePackProfile> consumer) {

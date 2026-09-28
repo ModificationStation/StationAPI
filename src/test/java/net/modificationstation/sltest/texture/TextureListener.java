@@ -31,10 +31,10 @@ public class TextureListener {
 
         altarTextures[Direction.DOWN.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_bottom")).index;
         altarTextures[Direction.UP.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_top")).index;
-        altarTextures[Direction.EAST.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_east")).index;
-        altarTextures[Direction.WEST.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_west")).index;
-        altarTextures[Direction.NORTH.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_north")).index;
-        altarTextures[Direction.SOUTH.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_south")).index;
+        altarTextures[Direction.NORTH.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_east")).index;
+        altarTextures[Direction.SOUTH.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_west")).index;
+        altarTextures[Direction.WEST.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_north")).index;
+        altarTextures[Direction.EAST.ordinal()] = terrain.addTexture(of(NAMESPACE, "blocks/altar_south")).index;
 
         ItemListener.testNBTItem.setTexture(of(NAMESPACE, "items/nbtItem"));
         ItemListener.testItem.setTexture(of(NAMESPACE, "items/highres"));

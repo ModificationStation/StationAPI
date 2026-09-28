@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "#c:buckets/empty",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/water",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/lava",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/milk",
+      "required": false
+    }
+  ]
+}

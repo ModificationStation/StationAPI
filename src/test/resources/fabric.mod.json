@@ -33,14 +33,17 @@
       "net.modificationstation.sltest.worldgen.TestWorldgenListener",
       "net.modificationstation.sltest.bonemeal.BonemealListener",
       "net.modificationstation.sltest.dispenser.DispenserListener",
-      "net.modificationstation.sltest.effect.TestEffectListener"
+      "net.modificationstation.sltest.effect.TestEffectListener",
+      "net.modificationstation.sltest.packet.PacketListener"
     ],
     "stationapi:event_bus_client": [
       "net.modificationstation.sltest.gui.GuiListener",
       "net.modificationstation.sltest.option.OptionListener",
       "net.modificationstation.sltest.keyboard.KeyboardListener",
       "net.modificationstation.sltest.texture.TextureListener",
-      "net.modificationstation.sltest.render.entity.EntityRendererListener"
+      "net.modificationstation.sltest.render.entity.EntityRendererListener",
+      "net.modificationstation.sltest.render.ModelLoadingListener",
+      "net.modificationstation.sltest.tooltip.TooltipEventListener"
     ],
     "main": [
       "net.modificationstation.sltest.MainTest"

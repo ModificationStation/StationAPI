@@ -4,12 +4,12 @@ import net.minecraft.block.SandBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateSandBlock extends SandBlock implements BlockTemplate {
-    public TemplateSandBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateSandBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSandBlock(int i, int j) {
-        super(i, j);
+
+    public TemplateSandBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

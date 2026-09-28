@@ -32,6 +32,6 @@ public final class PlacementStateImpl {
                         event.side.getId(), Vec3d.createCached(event.x, event.y, event.z)
                 )
         ));
-        if (placementState != event.block.getDefaultState()) event.placeFunction = () -> event.world.setBlockStateWithMetadataWithNotify(event.x, event.y, event.z, placementState, event.meta) != null;
+        if (placementState != event.block.getDefaultState()) event.placeFunction = () -> event.world.setBlockState(event.x, event.y, event.z, placementState, event.meta) != null;
     }
 }

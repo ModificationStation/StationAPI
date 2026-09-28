@@ -130,7 +130,7 @@ public interface EntryLoader {
 
         public <E> void add(DynamicRegistryManager registryManager, RegistryKey<E> key, Encoder<E> encoder, int rawId, E entry, Lifecycle lifecycle) {
             DataResult<JsonElement> dataResult = encoder.encodeStart(RegistryOps.of(JsonOps.INSTANCE, registryManager), entry);
-            Optional<DataResult.PartialResult<JsonElement>> optional = dataResult.error();
+            Optional<DataResult.Error<JsonElement>> optional = dataResult.error();
             if (optional.isPresent()) {
                 LOGGER.error("Error adding element: {}", optional.get().message());
             } else {

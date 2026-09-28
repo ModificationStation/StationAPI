@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.google.common.collect.*;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
@@ -17,12 +18,18 @@ import net.modificationstation.stationapi.api.registry.RegistryWrapper.Impl;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.context.Condition;
+import net.modificationstation.stationapi.api.util.context.ConditionType;
+import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.impl.registry.sync.RemapStateImpl;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,6 +38,9 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.util.Namespace.MINECRAFT;
 
 public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry, ListenableRegistry {
+
+
+
     final RegistryKey<? extends Registry<T>> key;
     private final ReferenceList<Reference<T>> rawIdToEntry = new ReferenceArrayList<>(256);
     private final Reference2IntMap<T> entryToRawId = Util.make(new Reference2IntOpenHashMap<>(), map -> map.defaultReturnValue(-1));
@@ -40,6 +50,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     private final Reference2ReferenceMap<T, Lifecycle> entryToLifecycle = new Reference2ReferenceOpenHashMap<>();
     private Lifecycle lifecycle;
     private volatile Reference2ReferenceMap<TagKey<T>, Named<T>> tagToEntryList = new Reference2ReferenceOpenHashMap<>();
+    private final Reference2ReferenceMap<Identifier, ConditionType<?>> tagConditionTypes = new Reference2ReferenceOpenHashMap<>();
     private boolean frozen;
     @Nullable
     private Reference2ReferenceMap<T, Reference<T>> intrusiveValueToEntry;
@@ -49,6 +60,17 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     private final Impl<T> wrapper;
     private Reference2IntMap<Identifier> prevIndexedEntries;
     private BiMap<Identifier, Reference<T>> prevEntries;
+
+    private final Codec<Condition<?>> tagConditionCodec = Identifier.CODEC.dispatch(
+            "type",
+            condition -> condition.type().id(),
+            id -> {
+                ConditionType<?> type = tagConditionTypes.get(id);
+                if (type == null)
+                    throw new IllegalArgumentException("Unknown condition type: " + id + " in registry " + getKey());
+                return type.conditionCodec();
+            }
+    );
 
     private @Nullable MutableEventBus eventBus;
 
@@ -159,8 +181,8 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
                 throw new AssertionError("Missing intrusive holder for " + registryKey + ":" + value);
 
             reference.setRegistryKey(registryKey);
-            if (reference.hasRawId()) {
-                int reservedRawId = reference.reservedRawId();
+            if (reference instanceof Reference.IntrusiveReserved<?> reserved) {
+                int reservedRawId = reserved.reservedRawId();
                 if (checkReservation && reservedRawId != rawId)
                     throw new RuntimeException("Attempted to register a reserved entry with raw ID " + reservedRawId + " under a different raw ID " + rawId + "!");
                 rawId = reservedRawId;
@@ -194,8 +216,23 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         this.keyToEntry.put(registryKey, reference);
         this.idToEntry.put(registryKey.getValue(), reference);
         this.valueToEntry.put(value, reference);
-        this.rawIdToEntry.size(Math.max(this.rawIdToEntry.size(), rawId + 1));
-        this.rawIdToEntry.set(rawId, reference);
+
+        int size = rawIdToEntry.size();
+        if (rawId == size) {
+            // If we're appending a new element, use add() to allow ReferenceArrayList to efficiently grow the capacity
+            // by at least 50% if necessary, and avoid memory leaks by resizing on each insertion.
+            rawIdToEntry.add(reference);
+        } else if (rawId > size) {
+            // Grow the array to the required size first by adding nulls. Calls grow() internally, growing it by at
+            // least 50%. More efficient than addElements, which takes an array and only uses size(), potentially
+            // incurring unnecessary additional array copies internally.
+            rawIdToEntry.addAll(Collections.nCopies(rawId - size, null));
+            rawIdToEntry.add(reference); // This may also call grow() internally, but ideally shouldn't.
+        } else {
+            // Otherwise, just use set() to change the existing value in the registry directly.
+            rawIdToEntry.set(rawId, reference);
+        }
+
         this.entryToRawId.put(value, rawId);
         if (this.nextId <= rawId) this.nextId = rawId + 1;
 
@@ -300,7 +337,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public @NotNull Iterator<T> iterator() {
         return Iterators.transform(this.getEntries().iterator(), RegistryEntry::value);
     }
 
@@ -414,18 +451,18 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     public Reference<T> createEntry(T value) {
         assertIntrusive();
         assertNotFrozen();
-        //noinspection unchecked,deprecation,DataFlowIssue
+        //noinspection unchecked,DataFlowIssue
         return intrusiveValueToEntry.computeIfAbsent(value, valuex -> Reference.intrusive(getReadOnlyWrapper(), (T) valuex));
     }
 
     @Override
-    public Reference<T> createReservedEntry(int rawId, T value) {
+    public Reference.IntrusiveReserved<T> createReservedEntry(int rawId, T value) {
         assertIntrusive();
         assertNotFrozen();
         final int newRawId = rawId < 0 ? nextId : rawId;
         if (this.nextId <= newRawId) this.nextId = newRawId + 1;
         //noinspection unchecked,DataFlowIssue
-        return intrusiveValueToEntry.computeIfAbsent(value, valuex -> Reference.intrusive(getReadOnlyWrapper(), newRawId, (T) valuex));
+        return (Reference.IntrusiveReserved<T>) intrusiveValueToEntry.computeIfAbsent(value, valuex -> Reference.intrusive(getReadOnlyWrapper(), (T) valuex, newRawId));
     }
 
     @Override
@@ -434,36 +471,49 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public void populateTags(Map<TagKey<T>, List<RegistryEntry<T>>> tagEntries) {
-        Map<Reference<T>, List<TagKey<T>>> map = new IdentityHashMap<>();
-        keyToEntry.values().forEach(entry -> map.put(entry, new ArrayList<>()));
-        tagEntries.forEach((tag, entries) -> {
+    public void populateTags(@UnknownNullability Map<TagKey<T>, Map<RegistryEntry<T>, Predicate<Context>>> tagEntries) {
+        Map<Reference<T>, Map<TagKey<T>, Predicate<Context>>> map = new IdentityHashMap<>();
 
-            for (RegistryEntry<T> entry : entries) {
-                if (!entry.ownerEquals(getReadOnlyWrapper()))
-                    throw new IllegalStateException("Can't create named set " + tag + " containing value " + entry + " from outside registry " + this);
+        keyToEntry.values().forEach(entry -> map.put(
+                entry, new Reference2ReferenceOpenHashMap<>())
+        );
 
-                if (!(entry instanceof Reference<T> reference))
-                    throw new IllegalStateException("Found direct holder " + entry + " value in tag " + tag);
+        // Membership is already final by the time it gets here: adds, removes and their conditions
+        // were folded together per tag in TagGroupLoader, so this just installs the result.
+        tagEntries.forEach((tag, membership) -> membership.forEach((entry, predicate) -> {
+            if (!entry.ownerEquals(getReadOnlyWrapper()))
+                throw new IllegalStateException(
+                        "Can't create named set " + tag + " containing value "
+                        + entry + " from outside registry " + this
+                );
 
-                map.get(reference).add(tag);
-            }
+            if (!(entry instanceof Reference<T> reference))
+                throw new IllegalStateException(
+                        "Found direct holder " + entry + " value in tag " + tag
+                );
 
-        });
+            map.get(reference).put(tag, predicate);
+        }));
         Set<TagKey<T>> set = Sets.difference(this.tagToEntryList.keySet(), tagEntries.keySet());
         if (!set.isEmpty())
             LOGGER.warn("Not all defined tags for registry {} are present in data pack: {}", this.getKey(), set.stream().map(tag -> tag.id().toString()).sorted().collect(Collectors.joining(", ")));
 
         Reference2ReferenceMap<TagKey<T>, Named<T>> map2 = new Reference2ReferenceOpenHashMap<>(this.tagToEntryList);
-        tagEntries.forEach((tag, entries) -> map2.computeIfAbsent(tag, this::createNamedEntryList).copyOf(entries));
+
+        tagEntries.forEach(
+                (tag, membership) -> map2.computeIfAbsent(
+                        tag, this::createNamedEntryList
+                ).copyOf(membership)
+        );
+
         map.forEach(Reference::setTags);
         this.tagToEntryList = map2;
     }
 
     @Override
     public void clearTags() {
-        this.tagToEntryList.values().forEach(entryList -> entryList.copyOf(List.of()));
-        this.keyToEntry.values().forEach(entry -> entry.setTags(Set.of()));
+        this.tagToEntryList.values().forEach(entryList -> entryList.copyOf(Map.of()));
+        this.keyToEntry.values().forEach(entry -> entry.setTags(Map.of()));
     }
 
     @Override
@@ -615,8 +665,22 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             }
 
             // Add the new object, increment nextId to match.
-            rawIdToEntry.size(Math.max(this.rawIdToEntry.size(), id + 1));
-            rawIdToEntry.set(id, object);
+            int size = rawIdToEntry.size();
+            if (id == size) {
+                // If we're appending a new element, use add() to allow ReferenceArrayList to efficiently grow the
+                // capacity by at least 50% if necessary, and avoid memory leaks by resizing on each insertion.
+                rawIdToEntry.add(object);
+            } else if (id > size) {
+                // Grow the array to the required size first by adding nulls. Calls grow() internally, growing it by at
+                // least 50%. More efficient than addElements, which takes an array and only uses size(), potentially
+                // incurring unnecessary additional array copies internally.
+                rawIdToEntry.addAll(Collections.nCopies(id - size, null));
+                rawIdToEntry.add(object); // This may also call grow() internally, but ideally shouldn't.
+            } else {
+                // Otherwise, just use set() to change the existing value in the registry directly.
+                rawIdToEntry.set(id, object);
+            }
+
             entryToRawId.put(object.value(), id);
             if (nextId <= id) nextId = id + 1;
         }
@@ -655,5 +719,20 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             prevIndexedEntries = null;
             prevEntries = null;
         }
+    }
+
+    @Override
+    public <DATA> void registerTagCondition(ConditionType<DATA> conditionType) {
+        tagConditionTypes.put(conditionType.id(), conditionType);
+    }
+
+    @Override
+    public Codec<Condition<?>> getTagConditionCodec() {
+        return tagConditionCodec;
+    }
+
+    @Override
+    public Iterable<ConditionType<?>> getTagConditionTypes() {
+        return Collections.unmodifiableCollection(tagConditionTypes.values());
     }
 }

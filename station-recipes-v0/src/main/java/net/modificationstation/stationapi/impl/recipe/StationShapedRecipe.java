@@ -53,7 +53,7 @@ public class StationShapedRecipe implements CraftingRecipe {
                             ItemStack item = itemOpt.get();
                             boolean ignoreDamage = item.getDamage() == -1;
                             if (ignoreDamage) item.setDamage(itemToTest.getDamage());
-                            boolean equals = item.isItemEqual(itemToTest);
+                            boolean equals = areItemsEqual(item, itemToTest);
                             if (ignoreDamage) item.setDamage(-1);
                             if (!equals) return false;
                         }
@@ -61,6 +61,10 @@ public class StationShapedRecipe implements CraftingRecipe {
                 }
             }
         return true;
+    }
+
+    public boolean areItemsEqual(ItemStack stack, ItemStack other) {
+        return stack.isItemEqual(other);
     }
 
     @Override

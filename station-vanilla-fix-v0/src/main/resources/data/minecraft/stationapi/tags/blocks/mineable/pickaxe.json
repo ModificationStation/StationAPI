@@ -32,6 +32,6 @@
     "piston",
     "sticky_piston",
     "piston_head",
-    "#rails"
+    "#c:rails"
   ]
 }

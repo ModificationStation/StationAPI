@@ -11,7 +11,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
@@ -104,6 +103,7 @@ public class FlattenedChunk extends Chunk {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
+
         return sections[world.sectionCoordToIndex(y >> 4)];
     }
 
@@ -314,12 +314,12 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public int getBlockId(int x, int y, int z) {
-        return getBlockState(x, y, z).getBlock().id;
+        return getBlockState(x, y, z).block.id;
     }
 
     @Override
     public boolean setBlock(int x, int y, int z, int blockId, int meta) {
-        return setBlockStateWithMetadata(x, y, z, Block.BLOCKS[blockId].getDefaultState(), meta) != null;
+        return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState(), meta) != null;
     }
 
     @Override
@@ -361,7 +361,7 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
-    public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState state, int meta) {
+    public BlockState setBlockState(int x, int y, int z, BlockState state, int meta) {
         int worldX = this.x << 4 | x;
         int worldZ = this.z << 4 | z;
         BlockSetEvent event =
@@ -381,7 +381,7 @@ public class FlattenedChunk extends Chunk {
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state && sameMeta) return null;
 
-        Block oldBlock = oldState.getBlock();
+        Block oldBlock = oldState.block;
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
                         .block(oldBlock)
@@ -396,7 +396,7 @@ public class FlattenedChunk extends Chunk {
         section.setMeta(x, y & 15, z, meta);
 
         if (!this.world.dimension.hasCeiling) {
-            if (Block.BLOCKS_LIGHT_OPACITY[state.getBlock().id] != 0) {
+            if (Block.BLOCKS_LIGHT_OPACITY[state.block.id] != 0) {
                 if (y >= var6)
                     this.updateHeightMap(x, y + 1, z);
             } else if (y == var6 - 1)
@@ -408,7 +408,7 @@ public class FlattenedChunk extends Chunk {
         this.world.queueLightUpdate(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
         ((ChunkAccessor) this).invokeLightGaps(x, z);
         section.setMeta(x, y & 15, z, meta);
-        state.getBlock().onBlockPlaced(this.world, worldX, y, worldZ, oldState);
+        state.block.onBlockPlaced(this.world, worldX, y, worldZ, oldState);
 
         this.dirty = true;
         return oldState;
@@ -433,7 +433,7 @@ public class FlattenedChunk extends Chunk {
         if (oldState == state) return null;
 
         short topY = getShortHeight(x, z);
-        Block oldBlock = oldState.getBlock();
+        Block oldBlock = oldState.block;
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
                         .block(oldBlock)
@@ -445,7 +445,7 @@ public class FlattenedChunk extends Chunk {
         section.setBlockState(x, y & 15, z, state);
         oldState.onStateReplaced(world, CACHED_BLOCK_POS.get().set(worldX, y, worldZ), state);
         section.setMeta(x, y & 15, z, 0);
-        if (Block.BLOCKS_LIGHT_OPACITY[state.getBlock().id] != 0) {
+        if (Block.BLOCKS_LIGHT_OPACITY[state.block.id] != 0) {
             if (y >= topY)
                 this.updateHeightMap(x, y + 1, z);
         } else if (y == topY - 1)
@@ -454,7 +454,7 @@ public class FlattenedChunk extends Chunk {
         this.world.queueLightUpdate(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
         ((ChunkAccessor) this).invokeLightGaps(x, z);
         if (!this.world.isRemote) {
-            state.getBlock().onBlockPlaced(this.world, worldX, y, worldZ, oldState);
+            state.block.onBlockPlaced(this.world, worldX, y, worldZ, oldState);
         }
 
         this.dirty = true;

@@ -12,5 +12,6 @@ public interface ItemTemplate {
 
     static void onConstructor(Item item, Identifier id) {
         Registry.register(ItemRegistry.INSTANCE, item.id, id, item);
+        item.setTranslationKey(id.namespace, id.path);
     }
 }

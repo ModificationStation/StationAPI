@@ -87,7 +87,7 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
             )
     )
     private boolean stationapi_useBlockState(World instance, int x, int y, int z, int blockId, int metadata) {
-        boolean result = super.setBlockStateWithMetadata(x, y, z, Block.STATE_IDS.get(((ClientBlockChange) stationapi_clientBlockChange).stateId), metadata) != null;
+        boolean result = super.setBlockStateWithoutNotifyingNeighbors(x, y, z, Block.STATE_IDS.get(((ClientBlockChange) stationapi_clientBlockChange).stateId), metadata) != null;
         stationapi_clientBlockChange = null;
         return result;
     }
@@ -97,7 +97,7 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
         BlockState n = this.getBlockState(x, y, z);
         int n2 = this.getBlockMeta(x, y, z);
-        BlockState result = super.setBlockState(x, y, z, blockState);
+        BlockState result = super.setBlockStateWithoutNotifyingNeighbors(x, y, z, blockState);
         if (result != null) {
             //noinspection unchecked,DataFlowIssue
             this.blockResets.add(new ClientBlockChange((ClientWorld) (Object) this, x, y, z, n, n2));

@@ -53,8 +53,8 @@ public class ItemModelGenerator {
         int[] frames = contents.getDistinctFrameCount().toArray();
 
         Map<Direction, ModelElementFace> map = new EnumMap<>(Direction.class);
-        map.put(Direction.WEST, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { 0.0F, 0.0F, 16.0F, 16.0F }, 0, animationFrameDelta)));
-        map.put(Direction.EAST, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { 16.0F, 0.0F, 0.0F, 16.0F }, 0, animationFrameDelta)));
+        map.put(Direction.SOUTH, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { 0.0F, 0.0F, 16.0F, 16.0F }, 0, animationFrameDelta)));
+        map.put(Direction.NORTH, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { 16.0F, 0.0F, 0.0F, 16.0F }, 0, animationFrameDelta)));
         elements.add(new ModelElement(new Vec3f(0.0F, 0.0F, 7.5F), new Vec3f(16.0F, 16.0F, 8.5F), map, null, true));
 
         int first1 = -1;
@@ -107,21 +107,21 @@ public class ItemModelGenerator {
                     }
                 } else {
                     if (first1 != -1) {
-                        elements.add(createVerticalOutlineElement(Direction.SOUTH, layer, key, first1, last1, x, height, animationFrameDelta, xFactor, yFactor));
+                        elements.add(createVerticalOutlineElement(Direction.EAST, layer, key, first1, last1, x, height, animationFrameDelta, xFactor, yFactor));
                         first1 = -1;
                     }
                     if (first2 != -1) {
-                        elements.add(createVerticalOutlineElement(Direction.NORTH, layer, key, first2, last2, x, height, animationFrameDelta, xFactor, yFactor));
+                        elements.add(createVerticalOutlineElement(Direction.WEST, layer, key, first2, last2, x, height, animationFrameDelta, xFactor, yFactor));
                         first2 = -1;
                     }
                 }
 
             if (first1 != -1) {
-                elements.add(createVerticalOutlineElement(Direction.SOUTH, layer, key, first1, last1, x, height, animationFrameDelta, xFactor, yFactor));
+                elements.add(createVerticalOutlineElement(Direction.EAST, layer, key, first1, last1, x, height, animationFrameDelta, xFactor, yFactor));
                 first1 = -1;
             }
             if (first2 != -1) {
-                elements.add(createVerticalOutlineElement(Direction.NORTH, layer, key, first2, last2, x, height, animationFrameDelta, xFactor, yFactor));
+                elements.add(createVerticalOutlineElement(Direction.WEST, layer, key, first2, last2, x, height, animationFrameDelta, xFactor, yFactor));
                 first2 = -1;
             }
         }
@@ -186,8 +186,8 @@ public class ItemModelGenerator {
     enum Side {
         UP(Direction.UP, 0, -1),
         DOWN(Direction.DOWN, 0, 1),
-        LEFT(Direction.SOUTH, -1, 0),
-        RIGHT(Direction.NORTH, 1, 0);
+        LEFT(Direction.EAST, -1, 0),
+        RIGHT(Direction.WEST, 1, 0);
 
         private final Direction direction;
         private final int offsetX;

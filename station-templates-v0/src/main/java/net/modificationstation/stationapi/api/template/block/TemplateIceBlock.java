@@ -4,12 +4,12 @@ import net.minecraft.block.IceBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateIceBlock extends IceBlock implements BlockTemplate {
-    public TemplateIceBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateIceBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateIceBlock(int i, int j) {
-        super(i, j);
+    public TemplateIceBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#c:doors/wooden",
+      "required": false
+    },
+    {
+      "id": "#c:doors/iron",
+      "required": false
+    }
+  ]
+}

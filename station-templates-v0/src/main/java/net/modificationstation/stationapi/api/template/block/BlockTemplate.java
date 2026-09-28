@@ -12,5 +12,6 @@ public interface BlockTemplate {
 
     static void onConstructor(Block block, Identifier id) {
         Registry.register(BlockRegistry.INSTANCE, block.id, id, block);
+        block.setTranslationKey(id.namespace, id.path);
     }
 }

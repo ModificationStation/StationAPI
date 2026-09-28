@@ -27,13 +27,13 @@ class DyeItemMixin {
         if (state.getBlock().onBonemealUse(world, x, y, z, state)) {
             world.setBlocksDirty(x, y, z, x, y, z);
             info.setReturnValue(true);
-            item.count--;
+            if (!world.isRemote) item.count--;
             return;
         }
         if (BonemealAPI.generate(world, x, y, z, state, side)) {
             world.setBlocksDirty(x - 8, y - 8, z - 8, x + 8, y + 8, z + 8);
             info.setReturnValue(true);
-            item.count--;
+            if (!world.isRemote) item.count--;
         }
     }
 }

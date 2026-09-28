@@ -3,15 +3,16 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.client.texture.NativeImage;
 import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.SpriteDimensions;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.ColorHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,7 @@ import java.util.function.IntUnaryOperator;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 public class PalettedPermutationsAtlasSource implements AtlasSource {
-    public static final Codec<PalettedPermutationsAtlasSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.list(Identifier.CODEC).fieldOf("textures").forGetter(palettedPermutationsAtlasSource -> palettedPermutationsAtlasSource.textures), Identifier.CODEC.fieldOf("palette_key").forGetter(palettedPermutationsAtlasSource -> palettedPermutationsAtlasSource.paletteKey), Codec.unboundedMap(Codec.STRING, Identifier.CODEC).fieldOf("permutations").forGetter(palettedPermutationsAtlasSource -> palettedPermutationsAtlasSource.permutations)).apply(instance, PalettedPermutationsAtlasSource::new));
+    public static final MapCodec<PalettedPermutationsAtlasSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.list(Identifier.CODEC).fieldOf("textures").forGetter(palettedPermutationsAtlasSource -> palettedPermutationsAtlasSource.textures), Identifier.CODEC.fieldOf("palette_key").forGetter(palettedPermutationsAtlasSource -> palettedPermutationsAtlasSource.paletteKey), Codec.unboundedMap(Codec.STRING, Identifier.CODEC).fieldOf("permutations").forGetter(palettedPermutationsAtlasSource -> palettedPermutationsAtlasSource.permutations)).apply(instance, PalettedPermutationsAtlasSource::new));
     private final List<Identifier> textures;
     private final Map<String, Identifier> permutations;
     private final Identifier paletteKey;

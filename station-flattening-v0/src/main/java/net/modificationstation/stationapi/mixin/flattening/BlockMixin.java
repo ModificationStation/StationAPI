@@ -82,7 +82,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     @Shadow public abstract void onBreak(World world, int x, int y, int z);
 
     @Unique
-    private RegistryEntry.Reference<Block> stationapi_registryEntry;
+    private RegistryEntry.Reference.IntrusiveReserved<Block> stationapi_registryEntry;
 
     @Override
     @Unique
@@ -338,7 +338,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
         return index < ItemRegistry.ID_SHIFT ? array[index] : null;
     }
 
-    @Unique private ToIntFunction<BlockState> stationapi_luminance = state -> Block.BLOCKS_LIGHT_LUMINANCE[state.getBlock().id];
+    @Unique private ToIntFunction<BlockState> stationapi_luminance = state -> Block.BLOCKS_LIGHT_LUMINANCE[state.block.id];
 
     @Override
     @Unique

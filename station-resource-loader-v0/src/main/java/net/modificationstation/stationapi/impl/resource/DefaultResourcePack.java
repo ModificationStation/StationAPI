@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.impl.resource;
 
+import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import lombok.val;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -51,24 +52,30 @@ public class DefaultResourcePack implements ResourcePack {
 
     @Override
     public @Nullable InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        return PathUtil.split(id.path).get().map(segments -> {
+        var result = PathUtil.split(id.path);
+
+        if (result.isSuccess()) {
+            var segments = result.getOrThrow();
             String string = id.namespace.toString();
             if (NAMESPACE_PATHS.containsKey(type)) for (Path path : NAMESPACE_PATHS.get(type)) {
                 Path path2 = PathUtil.getPath(path.resolve(string), segments);
                 if (!Files.exists(path2) || !DirectoryResourcePack.isValidPath(path2)) continue;
                 return InputSupplier.create(path2);
             }
-            return null;
-        }, result -> {
-            LOGGER.error("Invalid path {}: {}", id, result.message());
-            return null;
-        });
+        } else {
+            LOGGER.error("Invalid path {}: {}", id, result.error().map(DataResult.Error::message));
+        }
+
+        return null;
     }
 
     @Override
     public void findResources(ResourceType type, Namespace namespace, String prefix, ResultConsumer consumer) {
         val atRoot = prefix.startsWith("/");
-        PathUtil.split(atRoot ? prefix.substring(1) : prefix).get().ifLeft(segments -> {
+        var result = PathUtil.split(atRoot ? prefix.substring(1) : prefix);
+
+        if (result.isSuccess()) {
+            var segments = result.getOrThrow();
             final List<Path> paths;
             if (namespace == Namespace.MINECRAFT && atRoot) {
                 paths = ROOT_PATHS;
@@ -88,7 +95,9 @@ public class DefaultResourcePack implements ResourcePack {
                     map.forEach(consumer);
                 }
             }
-        }).ifRight(result -> LOGGER.error("Invalid path {}: {}", prefix, result.message()));
+        } else {
+            LOGGER.error("Invalid path {}: {}", prefix, result.error().map(DataResult.Error::message));
+        }
     }
 
     private static void collectIdentifiers(ResultConsumer consumer, Namespace namespace, Path root, List<String> prefixSegments, boolean atRoot) {

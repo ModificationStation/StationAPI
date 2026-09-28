@@ -8,7 +8,7 @@ public class TemplateDispenserBlock extends DispenserBlock implements BlockTempl
         this(BlockTemplate.getNextId());
         BlockTemplate.onConstructor(this, identifier);
     }
-    
+
     public TemplateDispenserBlock(int id) {
         super(id);
     }

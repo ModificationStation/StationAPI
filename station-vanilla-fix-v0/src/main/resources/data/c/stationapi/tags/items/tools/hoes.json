@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:tools/hoes/wooden",
+      "required": false
+    },
+    {
+      "id": "#c:tools/hoes/stone",
+      "required": false
+    },
+    {
+      "id": "#c:tools/hoes/iron",
+      "required": false
+    },
+    {
+      "id": "#c:tools/hoes/gold",
+      "required": false
+    },
+    {
+      "id": "#c:tools/hoes/diamond",
+      "required": false
+    }
+  ]
+}

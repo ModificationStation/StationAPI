@@ -33,7 +33,7 @@ abstract class ItemMixin implements StationFlatteningItem {
     @Shadow @Final public int id;
 
     @Unique
-    private RegistryEntry.Reference<Item> stationapi_registryEntry;
+    private RegistryEntry.Reference.IntrusiveReserved<Item> stationapi_registryEntry;
 
     @Override
     @Unique
@@ -91,10 +91,9 @@ abstract class ItemMixin implements StationFlatteningItem {
             method = "<init>",
             index = 1,
             at = @At(
-                    value = "CONSTANT",
-                    args = "intValue=64",
-                    shift = At.Shift.BY,
-                    by = -2
+                    value = "INVOKE",
+                    target = "Ljava/lang/Object;<init>()V",
+                    shift = At.Shift.AFTER
             ),
             argsOnly = true
     )

@@ -6,6 +6,10 @@ import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
+import net.modificationstation.stationapi.api.registry.PacketTypeRegistry;
+import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 /**
  * Event that fires after vanilla packets are registered.
@@ -33,15 +37,25 @@ public class PacketRegisterEvent extends Event implements PacketRegister {
      *
      * <p>Uses {@link PacketRegisterEvent#register} field to process the registration.
      *
-     * @param packetId the packet ID that you want to use for the packet.
-     *                 The ID is written as a byte, meaning it can be any number in the 0-255 (inclusive) range,
-     *                 except for already taken packet IDs.
+     * @param packetId           the packet ID that you want to use for the packet.
+     *                           The ID is written as a byte, meaning it can be any number in the 0-255 (inclusive) range,
+     *                           except for already taken packet IDs.
      * @param receivableOnClient whether this packet is supposed to be received on the client side.
      * @param receivableOnServer whether this packet is supposed to be received on the server side.
-     * @param packetClass the packet's class that extends {@link Packet} or a sub class of it.
+     * @param packetClass        the packet's class that extends {@link Packet} or a sub class of it.
      */
     @Override
     public final void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends Packet> packetClass) {
         register.register(packetId, receivableOnClient, receivableOnServer, packetClass);
+    }
+
+    /**
+     * Registers the given {@link PacketType}
+     *
+     * @param id         The identifier of the packet
+     * @param packetType The packet type of the packet
+     */
+    public final void register(Identifier id, PacketType<? extends Packet> packetType) {
+        Registry.register(PacketTypeRegistry.INSTANCE, id, packetType);
     }
 }

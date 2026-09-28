@@ -7,8 +7,8 @@ import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
-import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.vanillafix.util.MetaDependentIdConversion;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
 public class StationFlatteningItemStackSchema extends Schema {
-    private static final Dynamic<?>[] OLD_ID_TO_BLOCKSTATE = new Dynamic[256];
+    private static final MetaDependentIdConversion[] OLD_ID_TO_BLOCKSTATE = new MetaDependentIdConversion[256];
     private static final Object2IntOpenHashMap<String> BLOCK_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(256), map -> map.defaultReturnValue(0));
     private static final String[] OLD_ID_TO_ITEM = new String[32000];
     private static final Object2IntOpenHashMap<String> ITEM_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(512), map -> map.defaultReturnValue(0));
@@ -28,34 +28,117 @@ public class StationFlatteningItemStackSchema extends Schema {
         }));
     }
 
+    /**
+     * Assigns a numeric block ID to its new identifier
+     * @param oldId Numeric block ID to be converted
+     * @param id New identifier (including the namespace)
+     */
     public static void putState(int oldId, String id) {
         putState(oldId, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)));
     }
 
+    /**
+     * Assigns a numeric block ID to an NBT compound with the new identifier and block state rules
+     * <p>
+     * Reassigning an ID keeps any metadata rules already added for it, as each rule carries its own tag
+     * @param oldId Numeric block ID to be converted
+     * @param tag Tag with the identifier and block state rules
+     * @throws IllegalArgumentException if oldId is out of range
+     */
     public static void putState(int oldId, NbtCompound tag) {
+        if (oldId < 0 || oldId >= OLD_ID_TO_BLOCKSTATE.length) {
+            throw new IllegalArgumentException(
+                    "Block ID " + oldId + " is out of range, it must be between 0 and " +
+                    (OLD_ID_TO_BLOCKSTATE.length - 1)
+            );
+        }
         String id = tag.getString("Name");
         BLOCK_TO_OLD_ID.put(id, oldId);
-        Dynamic<?> dynamic = new Dynamic<>(NbtOps.INSTANCE, tag);
-        OLD_ID_TO_BLOCKSTATE[oldId] = dynamic;
+        MetaDependentIdConversion rule = OLD_ID_TO_BLOCKSTATE[oldId];
+        if (rule == null) {
+            OLD_ID_TO_BLOCKSTATE[oldId] = new MetaDependentIdConversion(tag);
+        } else {
+            rule.setDefaultTag(tag);
+        }
         putItem(oldId, id);
     }
 
-    public static Dynamic<?> lookupState(int stateId) {
-        Dynamic<?> dynamic = null;
+    /**
+     * Creates a metadata specific conversion rule for a block
+     * <p>
+     * <em>Must be used after the putState method<em/>
+     * @param oldId Numeric block ID to add the rule to
+     * @param meta Old metadata
+     * @param id New identifier (including the namespace)
+     * @param outputMeta New metadata, or {@link MetaDependentIdConversion#UNSPECIFIED_META} to keep the old one
+     * @throws IllegalArgumentException if oldId has no state mapping,
+     *                                  or if oldId, meta or outputMeta is out of range
+     */
+    public static void putStateMetaRule(int oldId, int meta, String id, int outputMeta) {
+        putStateMetaRule(oldId, meta, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)), outputMeta);
+    }
+
+    /**
+     * Creates a metadata specific conversion rule for a block
+     * <p>
+     * <em>Must be used after the putState method<em/>
+     * @param oldId Numeric block ID to add the rule to
+     * @param meta Old metadata
+     * @param tag Tag with the identifier and block state rules
+     * @param outputMeta New metadata, or {@link MetaDependentIdConversion#UNSPECIFIED_META} to keep the old one
+     * @throws IllegalArgumentException if oldId has no state mapping,
+     *                                  or if oldId, meta or outputMeta is out of range
+     */
+    public static void putStateMetaRule(int oldId, int meta, NbtCompound tag, int outputMeta) {
+        if (oldId < 0 || oldId >= OLD_ID_TO_BLOCKSTATE.length) {
+            throw new IllegalArgumentException(
+                    "Block ID " + oldId + " is out of range, it must be between 0 and " +
+                    (OLD_ID_TO_BLOCKSTATE.length - 1)
+            );
+        }
+        MetaDependentIdConversion rule = OLD_ID_TO_BLOCKSTATE[oldId];
+        if (rule == null) {
+            throw new IllegalArgumentException(
+                    "Block ID " + oldId + " has no state mapping, call putState for it before adding metadata rules"
+            );
+        }
+        rule.addMetaDependentTag(meta, tag, outputMeta);
+    }
+
+    /**
+     * Takes a numeric block ID and returns a block entry for the datafixer
+     * @param stateId Numeric ID of the block
+     * @param metadata Metadata of the block
+     * @return Dynamic which contains the new ID
+     */
+    public static Dynamic<?> lookupState(int stateId, int metadata) {
+        MetaDependentIdConversion rule = null;
         if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {
-            dynamic = OLD_ID_TO_BLOCKSTATE[stateId];
+            rule = OLD_ID_TO_BLOCKSTATE[stateId];
         }
-        return dynamic == null ? OLD_ID_TO_BLOCKSTATE[0] : dynamic;
+        return rule == null ? OLD_ID_TO_BLOCKSTATE[0].getDefaultTag() : rule.getTagForMeta(metadata);
     }
 
-    public static String lookupBlockId(int id) {
-        if (id < 0 || id >= OLD_ID_TO_BLOCKSTATE.length) {
-            return "minecraft:air";
+    /**
+     * Replaces an old metadata with a new one for the given block
+     * @param stateId Numeric ID of the block
+     * @param metadata Old metadata
+     * @return New metadata or -1 if not specified
+     */
+    public static int lookupMetadata(int stateId, int metadata) {
+        MetaDependentIdConversion rule = null;
+        if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {
+            rule = OLD_ID_TO_BLOCKSTATE[stateId];
         }
-        Dynamic<?> dynamic = OLD_ID_TO_BLOCKSTATE[id];
-        return dynamic == null ? "minecraft:air" : dynamic.get("Name").asString("");
+        return rule == null ? MetaDependentIdConversion.UNSPECIFIED_META : rule.getOutputMeta(metadata);
     }
 
+    /**
+     * Reversed direction converter which turns an identifier into a numeric ID
+     * @param dynamic Dynamic with an identifier inside
+     * @return numeric ID
+     * @param <T> Type of the dynamic
+     */
     public static <T> int lookupOldBlockId(Dynamic<T> dynamic) {
         return BLOCK_TO_OLD_ID.getInt(dynamic.get("Name").asString(""));
     }

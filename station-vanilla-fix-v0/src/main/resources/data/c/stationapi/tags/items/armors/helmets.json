@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:armors/helmets/leather",
+      "required": false
+    },
+    {
+      "id": "#c:armors/helmets/chainmail",
+      "required": false
+    },
+    {
+      "id": "#c:armors/helmets/iron",
+      "required": false
+    },
+    {
+      "id": "#c:armors/helmets/gold",
+      "required": false
+    },
+    {
+      "id": "#c:armors/helmets/diamond",
+      "required": false
+    }
+  ]
+}

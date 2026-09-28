@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#c:snow/block",
+      "required": false
+    },
+    {
+      "id": "#c:snow/layer",
+      "required": false
+    }
+  ]
+}

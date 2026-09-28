@@ -8,8 +8,8 @@ public class TemplateDyeItem extends DyeItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateDyeItem(int i) {
-        super(i);
+
+    public TemplateDyeItem(int id) {
+        super(id);
     }
 }

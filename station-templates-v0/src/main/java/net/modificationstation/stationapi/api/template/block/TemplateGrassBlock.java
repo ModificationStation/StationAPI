@@ -8,7 +8,7 @@ public class TemplateGrassBlock extends GrassBlock implements BlockTemplate {
         this(BlockTemplate.getNextId());
         BlockTemplate.onConstructor(this, identifier);
     }
-    
+
     public TemplateGrassBlock(int id) {
         super(id);
     }

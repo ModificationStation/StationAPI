@@ -8,8 +8,8 @@ public class TemplateLogBlock extends LogBlock implements BlockTemplate {
         this(BlockTemplate.getNextId());
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateLogBlock(int i) {
-        super(i);
+
+    public TemplateLogBlock(int id) {
+        super(id);
     }
 }

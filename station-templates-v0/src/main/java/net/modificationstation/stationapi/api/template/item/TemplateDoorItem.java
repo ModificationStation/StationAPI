@@ -14,13 +14,13 @@ public class TemplateDoorItem extends DoorItem implements ItemTemplate {
      */
     protected final Block doorBlock;
 
-    public TemplateDoorItem(Identifier identifier, Material arg, Block doorBlock) {
-        this(ItemTemplate.getNextId(), arg, doorBlock);
+    public TemplateDoorItem(Identifier identifier, Material material, Block doorBlock) {
+        this(ItemTemplate.getNextId(), material, doorBlock);
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateDoorItem(int id, Material arg, Block doorBlock) {
-        super(id, arg);
+
+    public TemplateDoorItem(int id, Material material, Block doorBlock) {
+        super(id, material);
         this.doorBlock = doorBlock;
         if (doorBlock instanceof TemplateDoorBlock templateDoorBlock) {
             templateDoorBlock.doorItem = this;

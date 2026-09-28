@@ -157,10 +157,10 @@ public enum CubeFace {
         static {
             DOWN = Direction.DOWN.ordinal();
             UP = Direction.UP.ordinal();
-            EAST = Direction.EAST.ordinal();
-            WEST = Direction.WEST.ordinal();
-            NORTH = Direction.NORTH.ordinal();
-            SOUTH = Direction.SOUTH.ordinal();
+            EAST = Direction.NORTH.ordinal();
+            WEST = Direction.SOUTH.ordinal();
+            NORTH = Direction.WEST.ordinal();
+            SOUTH = Direction.EAST.ordinal();
         }
     }
 }

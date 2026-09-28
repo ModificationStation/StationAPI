@@ -25,7 +25,7 @@
 package net.fabricmc.loom.util;
 
 import groovy.util.Node;
-import groovy.xml.QName;
+import javax.xml.namespace.QName;
 
 public final class GroovyXmlUtil {
 	private GroovyXmlUtil() { }
@@ -46,7 +46,7 @@ public final class GroovyXmlUtil {
 		}
 
 		if (nodeName instanceof QName qName) {
-			return qName.matches(givenName);
+			return qName.getLocalPart().equals(givenName);
 		}
 
 		// New groovy 3 (gradle 7) class

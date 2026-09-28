@@ -9,7 +9,11 @@ import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
+import net.modificationstation.stationapi.api.item.StationFlatteningItemStack;
 import net.modificationstation.stationapi.api.item.StationItemStack;
+import net.modificationstation.stationapi.api.item.context.ItemContext;
+import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.context.TagEvaluationContext;
 import net.modificationstation.stationapi.impl.item.StationNBTSetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,12 +25,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Mixin(ItemStack.class)
-abstract class ItemStackMixin implements StationItemStack, StationNBTSetter {
+abstract class ItemStackMixin implements StationItemStack, StationNBTSetter, StationFlatteningItemStack {
     @Shadow
     public int itemId;
 
@@ -48,6 +53,16 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter {
 
     @Unique
     private NbtCompound stationapi_stationNbt = new NbtCompound();
+
+    @Unique
+    private ItemContext stationapi_itemContext;
+
+    @Unique
+    private ItemContext stationapi_getItemContext() {
+        if (stationapi_itemContext == null)
+            stationapi_itemContext = ItemContext.of((ItemStack) (Object) this);
+        return stationapi_itemContext;
+    }
 
     @Inject(
             method = "split",
@@ -167,5 +182,17 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter {
     @Unique
     public void setStationNbt(NbtCompound stationNbt) {
         this.stationapi_stationNbt = stationNbt;
+    }
+
+    @Override
+    @Unique
+    public boolean isIn(TagKey<Item> tag, TagEvaluationContext context) {
+        return getRegistryEntry().isIn(tag, TagEvaluationContext.of(stationapi_getItemContext().with(context)));
+    }
+
+    @Override
+    @Unique
+    public Stream<TagKey<Item>> streamTags(TagEvaluationContext context) {
+        return getRegistryEntry().streamTags(TagEvaluationContext.of(stationapi_getItemContext().with(context)));
     }
 }

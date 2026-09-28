@@ -62,8 +62,13 @@ public final class Namespace implements Comparable<@NotNull Namespace> {
 
     @ApiStatus.Experimental
     public static @NotNull Namespace resolve() {
+        return resolve(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass());
+    }
+
+    @ApiStatus.Experimental
+    public static @NotNull Namespace resolve(Class<?> target) {
         return CLASS_CACHE.computeIfAbsent(
-                StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass(),
+                target,
                 (Class<?> caller) -> {
                     final Path callerPath;
                     try {

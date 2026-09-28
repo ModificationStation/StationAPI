@@ -472,8 +472,8 @@ public final class LightingCalculatorImpl {
         return switch (face) {
             case DOWN -> 0.5F;
             case UP -> 1.0F;
-            case EAST, WEST -> 0.8F;
-            case NORTH, SOUTH -> 0.6F;
+            case NORTH, SOUTH -> 0.8F;
+            case WEST, EAST -> 0.6F;
         };
     }
 }

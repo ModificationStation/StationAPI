@@ -4,12 +4,12 @@ import net.minecraft.block.JukeboxBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateJukeboxBlock extends JukeboxBlock implements BlockTemplate {
-    public TemplateJukeboxBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateJukeboxBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateJukeboxBlock(int i, int j) {
-        super(i, j);
+
+    public TemplateJukeboxBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

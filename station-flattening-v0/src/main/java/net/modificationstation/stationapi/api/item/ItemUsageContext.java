@@ -63,7 +63,7 @@ public class ItemUsageContext {
     }
 
     public Direction getHorizontalPlayerFacing() {
-        return this.player == null ? Direction.NORTH : Direction.fromRotation(player.yaw);
+        return this.player == null ? Direction.WEST : Direction.fromRotation(player.yaw);
     }
 
     public boolean shouldCancelInteraction() {

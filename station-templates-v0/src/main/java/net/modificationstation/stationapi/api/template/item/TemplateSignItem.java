@@ -8,8 +8,8 @@ public class TemplateSignItem extends SignItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSignItem(int i) {
-        super(i);
+
+    public TemplateSignItem(int id) {
+        super(id);
     }
 }

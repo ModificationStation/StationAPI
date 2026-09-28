@@ -1,10 +1,12 @@
 package net.modificationstation.stationapi.api.util.collection;
 
+import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntegerArray;
 import net.modificationstation.stationapi.impl.world.chunk.Palette;
-import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.IntConsumer;
 
 public class PackedIntegerArray
@@ -30,6 +32,8 @@ implements PaletteStorage, CompactingPackedIntegerArray {
     private final int indexScale;
     private final int indexOffset;
     private final int indexShift;
+    private final int[] indexLookup;
+    private static final Long2ReferenceOpenHashMap<int[]> indexLookups = new Long2ReferenceOpenHashMap<>();
 
     public PackedIntegerArray(int i, int j, int[] is) {
         this(i, j);
@@ -59,7 +63,7 @@ implements PaletteStorage, CompactingPackedIntegerArray {
     }
 
     public PackedIntegerArray(int elementBits, int size, @SuppressWarnings("NullableProblems") @Nullable long[] data) {
-        Validate.inclusiveBetween(1L, 32L, elementBits);
+        Objects.checkIndex(elementBits - 1, 32);
         this.size = size;
         this.elementBits = elementBits;
         this.maxValue = (1L << elementBits) - 1L;
@@ -77,9 +81,24 @@ implements PaletteStorage, CompactingPackedIntegerArray {
         } else {
             this.data = new long[j];
         }
+
+        long lookupKey = (long)elementBits << 32 | (long)size;
+        if (!indexLookups.containsKey(lookupKey)) {
+            int[] lookup = new int[size];
+            for (int k = 0; k < size; k++) {
+                lookup[k] = computeStorageIndex(k);
+            }
+            indexLookups.put(lookupKey, lookup);
+        }
+
+        this.indexLookup = indexLookups.get(lookupKey);
     }
 
     private int getStorageIndex(int index) {
+        return this.indexLookup[index];
+    }
+    
+    private int computeStorageIndex(int index) {
         long l = Integer.toUnsignedLong(this.indexScale);
         long m = Integer.toUnsignedLong(this.indexOffset);
         return (int)((long)index * l + m >> 32 >> this.indexShift);
@@ -87,8 +106,8 @@ implements PaletteStorage, CompactingPackedIntegerArray {
 
     @Override
     public int swap(int index, int value) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
-        Validate.inclusiveBetween(0L, this.maxValue, value);
+        Objects.checkIndex(index, this.size);
+        Objects.checkIndex(value, this.maxValue + 1);
         int i = this.getStorageIndex(index);
         long l = this.data[i];
         int j = (index - i * this.elementsPerLong) * this.elementBits;
@@ -99,8 +118,8 @@ implements PaletteStorage, CompactingPackedIntegerArray {
 
     @Override
     public void set(int index, int value) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
-        Validate.inclusiveBetween(0L, this.maxValue, value);
+        Objects.checkIndex(index, this.size);
+        Objects.checkIndex(value, this.maxValue + 1);
         int i = this.getStorageIndex(index);
         long l = this.data[i];
         int j = (index - i * this.elementsPerLong) * this.elementBits;
@@ -109,7 +128,7 @@ implements PaletteStorage, CompactingPackedIntegerArray {
 
     @Override
     public int get(int index) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
+        Objects.checkIndex(index, this.size);
         int i = this.getStorageIndex(index);
         long l = this.data[i];
         int j = (index - i * this.elementsPerLong) * this.elementBits;

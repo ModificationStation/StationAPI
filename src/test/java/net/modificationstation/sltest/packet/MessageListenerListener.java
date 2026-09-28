@@ -24,6 +24,6 @@ public class MessageListenerListener {
     }
 
     public void handleSendCoords(PlayerEntity playerBase, MessagePacket message) {
-        SLTest.LOGGER.info(String.valueOf(((ModdedItem.TestNetworkData) message.objects[0]).getHmmSho()));
+//        SLTest.LOGGER.info(String.valueOf(((ModdedItem.TestNetworkData) message.objects[0]).getHmmSho()));
     }
 }

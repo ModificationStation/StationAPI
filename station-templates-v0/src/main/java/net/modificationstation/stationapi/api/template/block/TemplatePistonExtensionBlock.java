@@ -8,7 +8,7 @@ public class TemplatePistonExtensionBlock extends PistonExtensionBlock implement
         this(BlockTemplate.getNextId());
         BlockTemplate.onConstructor(this, identifier);
     }
-    
+
     public TemplatePistonExtensionBlock(int id) {
         super(id);
     }

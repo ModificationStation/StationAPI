@@ -5,7 +5,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
-import net.modificationstation.stationapi.api.registry.Registry;
 
 import java.util.function.BiConsumer;
 
@@ -15,7 +14,7 @@ import java.util.function.BiConsumer;
  * @author mine_diver
  */
 @EventPhases(StationAPI.INTERNAL_PHASE)
-public class MessageListenerRegistryEvent extends RegistryEvent.EntryTypeBound<BiConsumer<PlayerEntity, MessagePacket>, Registry<BiConsumer<PlayerEntity, MessagePacket>>> {
+public class MessageListenerRegistryEvent extends RegistryEvent.EntryTypeBound<BiConsumer<PlayerEntity, MessagePacket>, MessageListenerRegistry> {
     public MessageListenerRegistryEvent() {
         super(MessageListenerRegistry.INSTANCE);
     }

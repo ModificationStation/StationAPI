@@ -4,12 +4,12 @@ import net.minecraft.block.SnowBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateSnowBlock extends SnowBlock implements BlockTemplate {
-    public TemplateSnowBlock(Identifier identifier, int texUVStart) {
-        this(BlockTemplate.getNextId(), texUVStart);
+    public TemplateSnowBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSnowBlock(int id, int texUVStart) {
-        super(id, texUVStart);
+
+    public TemplateSnowBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

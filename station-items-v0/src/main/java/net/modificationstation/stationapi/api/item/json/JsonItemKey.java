@@ -18,7 +18,10 @@ public class JsonItemKey {
 
     public ItemStack getItemStack() {
         Item item = ItemRegistry.INSTANCE.get(of(this.item));
-        return item == null ? null : new ItemStack(item, count, damage);
+        if (item == null) {
+            throw new IllegalStateException("Item " + this.item + " does not exist while loading a recipe!");
+        }
+        return new ItemStack(item, count, damage);
     }
 
     public TagKey<Item> getTag() {

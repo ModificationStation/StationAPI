@@ -20,4 +20,8 @@ import java.util.List;
 @SuperBuilder
 public class KeyBindingRegisterEvent extends Event {
     public final List<KeyBinding> keyBindings;
+    
+    public final void register(KeyBinding keyBinding) {
+        keyBindings.add(keyBinding);
+    }
 }

@@ -12,7 +12,6 @@ public class GuiHelperServerImpl extends GuiHelperImpl {
 
     @Override
     protected void sideDependentPacket(PlayerEntity player, Inventory inventory, MessagePacket message) {
-        message.objects = new Object[] { null };
         ((ServerPlayerEntityAccessor) player).invokeIncrementScreenHandlerSyncId();
         message.ints = new int[] { ((ServerPlayerEntityAccessor) player).getScreenHandlerSyncId() };
     }

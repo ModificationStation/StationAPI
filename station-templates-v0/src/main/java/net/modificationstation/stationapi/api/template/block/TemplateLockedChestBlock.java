@@ -9,7 +9,7 @@ public class TemplateLockedChestBlock extends LockedChestBlock implements BlockT
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateLockedChestBlock(int i) {
-        super(i);
+    public TemplateLockedChestBlock(int id) {
+        super(id);
     }
 }

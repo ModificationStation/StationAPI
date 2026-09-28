@@ -8,8 +8,8 @@ public class TemplateSandstoneBlock extends SandstoneBlock implements BlockTempl
         this(BlockTemplate.getNextId());
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSandstoneBlock(int i) {
-        super(i);
+
+    public TemplateSandstoneBlock(int id) {
+        super(id);
     }
 }

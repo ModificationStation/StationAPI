@@ -13,6 +13,7 @@
   "server": [
   ],
   "client": [
+    "client.InGameHudMixin",
     "client.MinecraftMixin",
     "client.ScreenAccessor",
     "client.SelectWorldScreenAccessor",

@@ -6,10 +6,12 @@
   "mixins": [
     "BlockItemMixin",
     "BlockMixin",
+    "CropBlockMixin",
+    "FarmlandBlockMixin",
     "FireBlockMixin",
     "LeavesBlockMixin",
-    "SecondaryBlockItemMixin",
-    "StatsMixin"
+    "PlantBlockMixin",
+    "SecondaryBlockItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

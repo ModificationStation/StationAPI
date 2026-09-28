@@ -3,8 +3,10 @@ package net.modificationstation.stationapi.api.client.render.model.json;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.gson.*;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.fabricmc.api.EnvType;
@@ -29,7 +31,6 @@ import java.util.stream.Collectors;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 public final class JsonUnbakedModel implements UnbakedModel {
-
     public static final Identifier BUILTIN_GENERATED = Identifier.of("builtin/generated");
 
     private static final BakedQuadFactory QUAD_FACTORY = new BakedQuadFactory();
@@ -94,6 +95,18 @@ public final class JsonUnbakedModel implements UnbakedModel {
         return this.overrides.isEmpty() ? ModelOverrideList.EMPTY : new ModelOverrideList(baker, parent, baker::getOrLoadModel, this.overrides);
     }
 
+    public @Nullable JsonUnbakedModel getParent() {
+        return parent;
+    }
+
+    public @Nullable Identifier getParentId() {
+        return parentId;
+    }
+
+    public Map<String, Either<SpriteIdentifier, String>> getTextureMap() {
+        return textureMap;
+    }
+
     public Collection<Identifier> getModelDependencies() {
         ReferenceSet<Identifier> set = new ReferenceOpenHashSet<>();
         for (ModelOverride modelOverride : this.overrides) set.add(modelOverride.getModelId());
@@ -128,6 +141,30 @@ public final class JsonUnbakedModel implements UnbakedModel {
             if (Objects.equals(unbakedModel, this)) return;
             unbakedModel.setParents(modelLoader);
         });
+    }
+
+    @Override
+    public Collection<SpriteIdentifier> getTextures(Function<Identifier, UnbakedModel> modelLoader, Set<Pair<String, String>> unresolvedTextureReferences) {
+        Set<SpriteIdentifier> textures = Sets.newHashSet(this.resolveSprite("particle"));
+
+        for (ModelElement modelElement : this.getElements()) {
+            SpriteIdentifier spriteIdentifier;
+            for (ModelElementFace modelElementFace : modelElement.faces.values()) {
+                spriteIdentifier = this.resolveSprite(modelElementFace.textureId);
+                
+                if (spriteIdentifier.texture == MissingSprite.getMissingSpriteId()) {
+                    unresolvedTextureReferences.add(Pair.of(modelElementFace.textureId, this.id));
+                }
+                
+                textures.add(spriteIdentifier);
+            }
+        }
+
+        if (this.getRootModel() == ModelLoader.GENERATION_MARKER) {
+            ItemModelGenerator.LAYERS.forEach((string) -> textures.add(this.resolveSprite(string)));
+        }
+
+        return textures;
     }
 
     @Override

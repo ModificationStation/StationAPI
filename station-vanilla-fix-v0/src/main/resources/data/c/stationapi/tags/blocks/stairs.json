@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#c:stairs/wooden",
+      "required": false
+    },
+    {
+      "id": "#c:stairs/cobblestone",
+      "required": false
+    }
+  ]
+}

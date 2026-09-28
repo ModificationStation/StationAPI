@@ -8,8 +8,8 @@ public class TemplateBowItem extends BowItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateBowItem(int i) {
-        super(i);
+
+    public TemplateBowItem(int id) {
+        super(id);
     }
 }

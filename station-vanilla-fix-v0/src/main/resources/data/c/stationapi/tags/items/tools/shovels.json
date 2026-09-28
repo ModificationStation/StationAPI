@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:tools/shovels/wooden",
+      "required": false
+    },
+    {
+      "id": "#c:tools/shovels/stone",
+      "required": false
+    },
+    {
+      "id": "#c:tools/shovels/iron",
+      "required": false
+    },
+    {
+      "id": "#c:tools/shovels/gold",
+      "required": false
+    },
+    {
+      "id": "#c:tools/shovels/diamond",
+      "required": false
+    }
+  ]
+}

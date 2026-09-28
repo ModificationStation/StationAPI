@@ -123,8 +123,12 @@ public class EntrypointManager {
                     val name = logger.value();
                     return name.isEmpty() ? namespace.getLogger() : namespace.getLogger(name);
                 });
-            } catch (IllegalAccessException | NoSuchFieldException e) {
+            } catch (NoSuchFieldException e) {
                 throw new RuntimeException(e);
+            }
+            catch (IllegalAccessException | UnsupportedOperationException e) {
+                Namespace badNamespace = Namespace.resolve(oCl);
+                throw new RuntimeException("You are likely running an extremely outdated mod. Likely culprit: " + badNamespace, e);
             }
         }
     }

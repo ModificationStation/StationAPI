@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:tools/pickaxes/wooden",
+      "required": false
+    },
+    {
+      "id": "#c:tools/pickaxes/stone",
+      "required": false
+    },
+    {
+      "id": "#c:tools/pickaxes/iron",
+      "required": false
+    },
+    {
+      "id": "#c:tools/pickaxes/gold",
+      "required": false
+    },
+    {
+      "id": "#c:tools/pickaxes/diamond",
+      "required": false
+    }
+  ]
+}

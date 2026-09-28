@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.api.util.collection;
 
-import org.apache.commons.lang3.Validate;
-
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.IntConsumer;
 
 /**
@@ -18,20 +17,27 @@ public class EmptyPaletteStorage implements PaletteStorage {
 
     @Override
     public int swap(int index, int value) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
-        Validate.inclusiveBetween(0L, 0L, value);
+        Objects.checkIndex(index, this.size);
+
+        if (value != 0) {
+            throw new IllegalArgumentException("Invalid value, cannot set a non-zero value into an EmptyPaletteStorage: " + value);
+        }
+        
         return 0;
     }
 
     @Override
     public void set(int index, int value) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
-        Validate.inclusiveBetween(0L, 0L, value);
+        Objects.checkIndex(index, this.size);
+        
+        if (value != 0) {
+            throw new IllegalArgumentException("Invalid value, cannot set a non-zero value into an EmptyPaletteStorage: " + value);
+        }
     }
 
     @Override
     public int get(int index) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
+        Objects.checkIndex(index, this.size);
         return 0;
     }
 

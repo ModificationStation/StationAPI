@@ -1,5 +1,6 @@
-import net.modificationstation.stationapi.gradle.SubprojectHelpers.getSubprojectVersion
 import net.modificationstation.stationapi.gradle.SubprojectHelpers.addModuleDependencies
+import net.modificationstation.stationapi.gradle.SubprojectHelpers.getSubprojectVersion
+
 base.archivesName.set("station-vanilla-fix-v0")
 version = getSubprojectVersion(project, "1.0.0")
 
@@ -20,5 +21,6 @@ addModuleDependencies(project,
         "station-nbt-v0",
         "station-localization-api-v0",
         "station-gui-api-v0",
-        "station-renderer-api-v0"
+        "station-renderer-api-v0",
+        "station-achievements-v0"
 )

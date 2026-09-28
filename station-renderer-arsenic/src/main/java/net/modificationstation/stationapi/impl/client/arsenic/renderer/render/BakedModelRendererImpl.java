@@ -189,7 +189,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         random.setSeed(42L);
         boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
         for (BakedQuad bakedQuad : model.getQuads(null, null, random)) {
-            if (bakedQuad.getFace() != Direction.WEST) continue;
+            if (bakedQuad.getFace() != Direction.SOUTH) continue;
             int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
             float light = MathHelper.lerp(bakedQuad.getEmission(), brightness, 1F);
             i = colorF2I(redI2F(i) * light, greenI2F(i) * light, blueI2F(i) * light);

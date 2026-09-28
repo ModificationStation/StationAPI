@@ -9,4 +9,8 @@ import java.util.Map;
 @SuperBuilder
 public class BlockEntityRendererRegisterEvent extends Event {
     public final Map<Class<? extends BlockEntity>, BlockEntityRenderer> renderers;
+    
+    public final void register(Class<? extends BlockEntity> blockEntityClass, BlockEntityRenderer renderer) {
+        renderers.put(blockEntityClass, renderer);
+    }
 }

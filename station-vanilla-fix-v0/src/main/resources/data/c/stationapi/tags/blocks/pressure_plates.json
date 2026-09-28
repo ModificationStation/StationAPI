@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#c:pressure_plates/wooden",
+      "required": false
+    },
+    {
+      "id": "#c:pressure_plates/stone",
+      "required": false
+    }
+  ]
+}

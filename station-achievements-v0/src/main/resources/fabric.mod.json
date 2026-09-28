@@ -21,6 +21,9 @@
   "entrypoints": {
     "stationapi:event_bus_client": [
       "net.modificationstation.stationapi.impl.client.gui.screen.achievement.AchievementPageImpl"
+    ],
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.achievement.AchievementRegisterEventImpl"
     ]
   },
   "mixins": [

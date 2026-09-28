@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -17,12 +18,18 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.ResourceType;
 import net.modificationstation.stationapi.api.resource.SinglePreparationResourceReloader;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
+import net.modificationstation.stationapi.api.util.SideUtil;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
+import net.modificationstation.stationapi.impl.resource.DefaultResourcePackProvider;
+import net.modificationstation.stationapi.impl.resource.LifecycledResourceManagerImpl;
+import net.modificationstation.stationapi.impl.resource.ResourcePackManager;
+import net.modificationstation.stationapi.impl.resource.loader.ModResourcePackCreator;
 import net.modificationstation.stationapi.mixin.lang.TranslationStorageAccessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,8 +56,9 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
     public static final Identifier LANGUAGES = NAMESPACE.id("languages");
     @Entrypoint.Instance
     private static LanguageManager instance;
+    private static final Predicate<String> enUsPathPredicate = buildPathPredicate("en_US");
     @NotNull
-    private static Predicate<String> pathPredicate = buildPathPredicate("en_US");
+    private static Predicate<String> pathPredicate = enUsPathPredicate;
     private static final Object2ReferenceMap<String, Namespace> LANG_PATHS = Util.make(new Object2ReferenceOpenHashMap<>(), paths -> {
         paths.put("/lang", Namespace.MINECRAFT);
         paths.put(NAMESPACE + "/lang", null);
@@ -64,6 +72,8 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
     }
 
     public static void changeLanguage(String langDef) {
+        pathPredicate = enUsPathPredicate;
+        instance.reload();
         pathPredicate = buildPathPredicate(langDef);
         instance.reload();
     }
@@ -88,13 +98,26 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
         reload();
     }
 
+    private static ResourcePackManager serverAssetsPackManager;
+
     private void reload() {
+        ResourceManager manager = SideUtil.get(
+                () -> ReloadableAssetsManager.INSTANCE,
+                () -> {
+                    if (serverAssetsPackManager == null) serverAssetsPackManager = new ResourcePackManager(
+                            new DefaultResourcePackProvider(),
+                            ModResourcePackCreator.CLIENT_RESOURCE_PACK_PROVIDER
+                    );
+                    serverAssetsPackManager.scanPacks();
+                    return new LifecycledResourceManagerImpl(ResourceType.CLIENT_RESOURCES, serverAssetsPackManager.createResourcePacks());
+                }
+        );
         instance.apply(
                 instance.prepare(
-                        ReloadableAssetsManager.INSTANCE,
+                        manager,
                         DummyProfiler.INSTANCE
                 ),
-                ReloadableAssetsManager.INSTANCE,
+                manager,
                 DummyProfiler.INSTANCE
         );
     }
@@ -144,7 +167,6 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
         profiler.startTick();
         profiler.push("upload");
         Properties translations = ((TranslationStorageAccessor) TranslationStorage.getInstance()).getTranslations();
-        translations.clear();
         translations.putAll(prepared);
         profiler.swap("invalidate");
         StationAPI.EVENT_BUS.post(TranslationInvalidationEvent.builder().build());

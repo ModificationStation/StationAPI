@@ -17,6 +17,12 @@ import static net.modificationstation.stationapi.impl.client.texture.StationRend
 
 public class StationTessellatorImpl implements StationTessellator {
 
+    // Hard ceiling on the int-buffer size so it can never grow large enough for
+    // bufferSize * 4 (the byte-buffer allocation) to overflow a signed int.
+    // 2^28 ints = 1 GiB direct buffer, far beyond anything vanilla rendering needs;
+    // the buffer base size is 2^21 ints, so this still allows several doublings.
+    private static final int MAX_BUFFER_SIZE = 1 << 28;
+
     private final Tessellator self;
     private final TessellatorAccessor access;
     private final int[] fastVertexData = new int[32];
@@ -103,11 +109,18 @@ public class StationTessellatorImpl implements StationTessellator {
 
     @Override
     public void ensureBufferCapacity(int criticalCapacity) {
-        if (access.stationapi$getBufferPosition() >= access.stationapi$getBufferSize() - criticalCapacity) {
-            LOGGER.info("Tessellator is nearing its maximum capacity. Increasing the buffer size from {} to {}", access.stationapi$getBufferSize(), access.stationapi$getBufferSize() * 2);
-            access.stationapi$setBufferSize(access.stationapi$getBufferSize() * 2);
-            access.stationapi$setBuffer(Arrays.copyOf(access.stationapi$getBuffer(), access.stationapi$getBufferSize()));
-            ByteBuffer newBuffer = GlAllocationUtils.allocateByteBuffer(access.stationapi$getBufferSize() * 4);
+        int bufferSize = access.stationapi$getBufferSize();
+        if (access.stationapi$getBufferPosition() >= bufferSize - criticalCapacity) {
+            if (bufferSize >= MAX_BUFFER_SIZE) {
+                // Already at the ceiling; doubling further would overflow bufferSize * 4.
+                // Leave the buffer as-is rather than allocating an invalid (negative) capacity.
+                return;
+            }
+            int newBufferSize = Math.min(bufferSize * 2, MAX_BUFFER_SIZE);
+            LOGGER.info("Tessellator is nearing its maximum capacity. Increasing the buffer size from {} to {}", bufferSize, newBufferSize);
+            access.stationapi$setBufferSize(newBufferSize);
+            access.stationapi$setBuffer(Arrays.copyOf(access.stationapi$getBuffer(), newBufferSize));
+            ByteBuffer newBuffer = GlAllocationUtils.allocateByteBuffer(newBufferSize * 4);
             access.stationapi$setByteBuffer(newBuffer);
             access.stationapi$setIntBuffer(newBuffer.asIntBuffer());
             access.stationapi$setFloatBuffer(newBuffer.asFloatBuffer());

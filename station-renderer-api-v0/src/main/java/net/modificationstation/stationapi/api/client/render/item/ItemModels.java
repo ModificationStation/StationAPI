@@ -30,8 +30,8 @@ public class ItemModels {
     public ItemModels(BakedModelManager modelManager) {
         this.modelManager = modelManager;
         ITEM_MODELS.add(this);
-        Int2ObjectMapTracker.register(ItemRegistry.INSTANCE, "ItemModels.modelIds", modelIds);
-        Int2ObjectMapTracker.register(ItemRegistry.INSTANCE, "ItemModels.models", models);
+        Int2ObjectMapTracker.register(ItemRegistry.INSTANCE, "ItemModels.modelIds", modelIds, false);
+        Int2ObjectMapTracker.register(ItemRegistry.INSTANCE, "ItemModels.models", models, false);
     }
 
     public BakedModel getModel(ItemStack stack) {
