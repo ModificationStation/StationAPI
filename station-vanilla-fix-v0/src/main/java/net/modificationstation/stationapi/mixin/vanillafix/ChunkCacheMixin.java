@@ -38,13 +38,10 @@ public class ChunkCacheMixin implements StationChunkCache {
         int distanceToSpawnZ = chunkZ * 16 + 8 - worldSpawn.z;
         short spawnChunkRadius = 128;
 
-        this.chunksToUnload.add(ChunkPos.hashCode(chunkX, chunkZ));
-        System.err.println("Unloading chunk: " + chunkX + ", " + chunkZ);
-
-//        if (distanceToSpawnX < -spawnChunkRadius || distanceToSpawnX > spawnChunkRadius || distanceToSpawnZ < -spawnChunkRadius || distanceToSpawnZ > spawnChunkRadius) {
-//            this.chunksToUnload.add(ChunkPos.hashCode(chunkX, chunkZ));
-//            System.err.println("Unloading chunk: " + chunkX + ", " + chunkZ);
-//        }
+        if (distanceToSpawnX < -spawnChunkRadius || distanceToSpawnX > spawnChunkRadius || distanceToSpawnZ < -spawnChunkRadius || distanceToSpawnZ > spawnChunkRadius) {
+            this.chunksToUnload.add(ChunkPos.hashCode(chunkX, chunkZ));
+            System.err.println("Unloading chunk: " + chunkX + ", " + chunkZ);
+        }
     }
 
     @Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/world/chunk/ChunkCache;storage:Lnet/minecraft/world/chunk/storage/ChunkStorage;", ordinal = 0))
@@ -57,7 +54,7 @@ public class ChunkCacheMixin implements StationChunkCache {
 
 
             Chunk chunk = (Chunk) this.chunks.get(this.nextChunkToUnload++);
-            PlayerEntity player = this.world.getClosestPlayer((chunk.x << 4) + 8.0D, 64.0D, (chunk.z << 4) + 8.0D, 50.0D);
+            PlayerEntity player = this.world.getClosestPlayer((chunk.x << 4) + 8.0D, 64.0D, (chunk.z << 4) + 8.0D, 288.0);
             if (player == null) {
                 this.unloadChunk(chunk.x, chunk.z);
             }

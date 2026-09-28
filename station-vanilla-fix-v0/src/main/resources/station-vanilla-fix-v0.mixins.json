@@ -6,6 +6,7 @@
   "mixins": [
     "ChunkCacheMixin",
     "ChunkMixin",
+    "WorldMixin",
     "WorldPropertiesMixin",
     "recipe.BasicBlockRecipesMixin",
     "recipe.CraftingRecipeManagerMixin",
