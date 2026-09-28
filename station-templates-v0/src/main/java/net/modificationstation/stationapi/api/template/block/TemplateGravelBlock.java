@@ -4,12 +4,12 @@ import net.minecraft.block.GravelBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateGravelBlock extends GravelBlock implements BlockTemplate {
-    public TemplateGravelBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateGravelBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateGravelBlock(int i, int j) {
-        super(i, j);
+
+    public TemplateGravelBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

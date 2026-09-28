@@ -4,12 +4,12 @@ import net.minecraft.block.SugarCaneBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateSugarCaneBlock extends SugarCaneBlock implements BlockTemplate {
-    public TemplateSugarCaneBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateSugarCaneBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSugarCaneBlock(int i, int j) {
-        super(i, j);
+
+    public TemplateSugarCaneBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

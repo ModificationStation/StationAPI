@@ -9,7 +9,7 @@ public class TemplateSnowballItem extends SnowballItem implements ItemTemplate {
         ItemTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateSnowballItem(int i) {
-        super(i);
+    public TemplateSnowballItem(int id) {
+        super(id);
     }
 }

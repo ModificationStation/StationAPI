@@ -15,6 +15,7 @@ import net.modificationstation.stationapi.api.util.collection.Int2ObjectBiMap;
 import net.modificationstation.stationapi.api.util.collection.PackedIntegerArray;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema;
+import net.modificationstation.stationapi.api.vanillafix.util.MetaDependentIdConversion;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -24,6 +25,11 @@ import java.util.Optional;
 
 import static net.modificationstation.stationapi.impl.world.FlattenedWorldManager.SECTIONS;
 
+/**
+ * Datafixer used for converting McRegion worlds (Vanilla Beta 1.7.3 world format)
+ * <p>
+ * Handles block conversions
+ */
 public class McRegionToStationFlatteningChunkFix extends DataFix {
     private final String name;
 
@@ -75,7 +81,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
         public Dynamic<?> transform() {
             Dynamic<?> self = this.level;
 
-            // create sections with blocks
+            // Create sections with blocks
             Section[] sections = new Section[8];
             for (int i = 0; i < 32768; i++) {
                 int worldY = i & 0b1111111;
@@ -84,17 +90,24 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                 int z = i >> 7 & 0b1111;
                 int x = i >> 11;
                 int block = Byte.toUnsignedInt(blocks.get(i));
-                int data = this.data.get(x, worldY, z);
-                if (block > 0 || data > 0) {
+                int metadata = this.data.get(x, worldY, z);
+                if (block > 0 || metadata > 0) {
                     if (sections[sectionY] == null)
                         sections[sectionY] = new Section(self.createMap(Map.of(self.createString("y"), self.createByte((byte) sectionY))));
                     Section section = sections[sectionY];
-                    section.setBlock(x, y, z, StationFlatteningItemStackSchema.lookupState(block)); // do not convert just yet. we need same references for faster key comparison
-                    section.setData(x, y, z, data);
+                    // Preparation for conversion. References are maintained for faster key comparison
+                    // See "transform" method at the bottom of this file for actual conversion
+                    section.setBlock(x, y, z, StationFlatteningItemStackSchema.lookupState(block, metadata));
+                    // Replace old metadata with new one if specified
+                    int newMetadata = StationFlatteningItemStackSchema.lookupMetadata(block, metadata);
+                    if (newMetadata == MetaDependentIdConversion.UNSPECIFIED_META) {
+                        newMetadata = metadata;
+                    }
+                    section.setMetadata(x, y, z, newMetadata);
                 }
             }
 
-            // add lighting in created sections
+            // Add lighting in created sections
             for (Section section : sections) {
                 if (section != null) {
                     int sectionY = section.y;
@@ -110,13 +123,13 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                 }
             }
 
-            // expand height map
-            byte[] height_map = new byte[512];
-            for (int i = 0; i < height_map.length >> 1; i++) height_map[i << 1] = this.height_map.get(i);
+            // Expand height map
+            byte[] heightMap = new byte[512];
+            for (int i = 0; i < heightMap.length >> 1; i++) heightMap[i << 1] = this.height_map.get(i);
 
             return self
                     .set(SECTIONS, self.createList(Arrays.stream(sections).filter(Objects::nonNull).map(Section::transform)))
-                    .set("height_map", self.createByteList(ByteBuffer.wrap(height_map)))
+                    .set("height_map", self.createByteList(ByteBuffer.wrap(heightMap)))
                     .remove("BlockLight")
                     .remove("Blocks")
                     .remove("Data")
@@ -155,7 +168,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
         public Section(Dynamic<?> section) {
             this.section = section;
             y = section.get("y").asInt(0);
-            Dynamic<?> air = StationFlatteningItemStackSchema.lookupState(0); // same applies
+            Dynamic<?> air = StationFlatteningItemStackSchema.lookupState(0, 0); // same applies
             seenStates.add(air);
             paletteData.add(air);
             paletteMap.add(air);
@@ -170,7 +183,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
             states[(y << 4 | z) << 4 | x] = addTo(paletteMap, state);
         }
 
-        public void setData(int x, int y, int z, int data) {
+        public void setMetadata(int x, int y, int z, int data) {
             this.data.setValue(x << 8 | y << 4 | z, data);
         }
 
@@ -180,7 +193,8 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
 
         public Dynamic<?> transform() {
             Dynamic<?> self = this.section;
-            Dynamic<?> palette = self.createList(paletteData.stream().map(dynamic -> dynamic.convert(self.getOps()))); // instead, convert when used
+            // Convert previously prepared values
+            Dynamic<?> palette = self.createList(paletteData.stream().map(dynamic -> dynamic.convert(self.getOps())));
             PackedIntegerArray array = new PackedIntegerArray(Math.max(4, MathHelper.ceilLog2(paletteData.size())), states.length);
             for (int i = 0; i < states.length; i++) array.set(i, states[i]);
             Dynamic<?> data = self.createLongList(Arrays.stream(array.getData()));

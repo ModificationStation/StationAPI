@@ -4,12 +4,12 @@ import net.minecraft.block.PistonHeadBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplatePistonHeadBlock extends PistonHeadBlock implements BlockTemplate {
-    public TemplatePistonHeadBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplatePistonHeadBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplatePistonHeadBlock(int i, int j) {
-        super(i, j);
+    public TemplatePistonHeadBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

@@ -9,7 +9,7 @@ public class TemplateMapBaseItem extends NetworkSyncedItem implements ItemTempla
         ItemTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateMapBaseItem(int i) {
-        super(i);
+    public TemplateMapBaseItem(int id) {
+        super(id);
     }
 }

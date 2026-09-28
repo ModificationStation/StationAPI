@@ -2,12 +2,16 @@ package net.modificationstation.stationapi.api.item;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.context.TagEvaluationContext;
 import net.modificationstation.stationapi.api.util.Util;
+
+import java.util.stream.Stream;
 
 public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockState {
 
@@ -15,8 +19,25 @@ public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockSt
         return Util.assertImpl();
     }
 
+    /**
+     * Since an {@link ItemStack} is itself an item's context,
+     * there's no need to provide the context manually here,
+     * it gets prepended internally
+     */
     default boolean isIn(TagKey<Item> tag) {
-        return getRegistryEntry().isIn(tag);
+        return isIn(tag, TagEvaluationContext.DEFAULT);
+    }
+
+    default boolean isIn(TagKey<Item> tag, TagEvaluationContext context) {
+        return Util.assertImpl();
+    }
+
+    default Stream<TagKey<Item>> streamTags() {
+        return streamTags(TagEvaluationContext.BYPASSED);
+    }
+
+    default Stream<TagKey<Item>> streamTags(TagEvaluationContext context) {
+        return Util.assertImpl();
     }
 
     @Override

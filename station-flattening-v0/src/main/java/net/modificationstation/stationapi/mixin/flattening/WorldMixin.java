@@ -43,7 +43,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
         BlockState oldBlockState = setBlockStateWithoutNotifyingNeighbors(x, y, z, blockState);
         if (oldBlockState != null) {
-            blockUpdate(x, y, z, blockState.getBlock().id);
+            blockUpdate(x, y, z, blockState.block.id);
             return oldBlockState;
         }
         return null;
@@ -60,7 +60,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     public BlockState setBlockState(int x, int y, int z, BlockState blockState, int meta) {
         BlockState oldBlockState = setBlockStateWithoutNotifyingNeighbors(x, y, z, blockState, meta);
         if (oldBlockState != null) {
-            blockUpdate(x, y, z, blockState.getBlock().id);
+            blockUpdate(x, y, z, blockState.block.id);
             return oldBlockState;
         }
         return null;
@@ -75,7 +75,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
             index = 9
     )
     private int stationapi_changeCaveSoundY(int y) {
-        return y + getBottomY();
+        return (y % getHeight()) + getBottomY();
     }
 
     @ModifyExpressionValue(
@@ -137,7 +137,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
             @Local(index = 5) Chunk chunk,
             @Local(index = 8) int x, @Local(index = 10) int y, @Local(index = 9) int z
     ) {
-        return chunk.getBlockState(x, y, z).getBlock().id;
+        return chunk.getBlockState(x, y, z).block.id;
     }
 
     @ModifyConstant(method = {
@@ -248,7 +248,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
             )
     )
     private Block stationapi_accountForAirBlock(Block value) {
-        return value == States.AIR.get().getBlock() ? null : value;
+        return value == States.AIR.get().block ? null : value;
     }
 
     @ModifyVariable(

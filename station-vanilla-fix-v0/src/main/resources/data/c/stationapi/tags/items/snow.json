@@ -1,6 +1,12 @@
 {
   "values": [
-    "minecraft:snow",
-    "minecraft:snow_block"
+    {
+      "id": "#c:snow/block",
+      "required": false
+    },
+    {
+      "id": "#c:snow/layer",
+      "required": false
+    }
   ]
 }

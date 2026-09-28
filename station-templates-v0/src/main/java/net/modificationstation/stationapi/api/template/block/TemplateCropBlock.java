@@ -4,12 +4,12 @@ import net.minecraft.block.CropBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateCropBlock extends CropBlock implements BlockTemplate {
-    public TemplateCropBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateCropBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateCropBlock(int i, int j) {
-        super(i, j);
+    public TemplateCropBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

@@ -1,5 +1,16 @@
 {
   "values": [
-    "minecraft:sapling"
+    {
+      "id": "#c:saplings/oak",
+      "required": false
+    },
+    {
+      "id": "#c:saplings/spruce",
+      "required": false
+    },
+    {
+      "id": "#c:saplings/birch",
+      "required": false
+    }
   ]
 }

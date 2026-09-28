@@ -70,7 +70,7 @@ public class BlockStateItem extends TemplateItem {
             ) {
                 block.onPlaced(world, x, y, z, direction.getId());
                 block.onPlaced(world, x, y, z, player);
-                world.playSound((float)x + 0.5f, (float)y + 0.5f, (float)z + 0.5f, block.soundGroup.getSound(), (block.soundGroup.getVolume() + 1.0f) / 2.0f, block.soundGroup.getPitch() * 0.8f);
+                world.playSound((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f, block.soundGroup.getSound(), (block.soundGroup.getVolume() + 1.0f) / 2.0f, block.soundGroup.getPitch() * 0.8f);
                 --itemStack.count;
             }
             return true;

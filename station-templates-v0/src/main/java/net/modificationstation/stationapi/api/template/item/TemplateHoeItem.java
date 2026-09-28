@@ -5,12 +5,12 @@ import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateHoeItem extends HoeItem implements ItemTemplate {
-    public TemplateHoeItem(Identifier identifier, ToolMaterial arg) {
-        this(ItemTemplate.getNextId(), arg);
+    public TemplateHoeItem(Identifier identifier, ToolMaterial toolMaterial) {
+        this(ItemTemplate.getNextId(), toolMaterial);
         ItemTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateHoeItem(int i, ToolMaterial arg) {
-        super(i, arg);
+    public TemplateHoeItem(int id, ToolMaterial toolMaterial) {
+        super(id, toolMaterial);
     }
 }

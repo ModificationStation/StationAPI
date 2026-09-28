@@ -23,6 +23,9 @@ import java.util.function.Function;
 
 import static net.modificationstation.stationapi.impl.world.FlattenedWorldManager.SECTIONS;
 
+/**
+ * Reverses Station API's block conversion into identifiers and reverts blocks into numeric IDs
+ */
 public class StationFlatteningToMcRegionChunkDamage extends DataFix {
     private final static int CHUNK_SIZE = 16 * 128 * 16;
     private final static byte[] DEFAULT_BLOCK_LIGHT = new byte[CHUNK_SIZE >> 1];

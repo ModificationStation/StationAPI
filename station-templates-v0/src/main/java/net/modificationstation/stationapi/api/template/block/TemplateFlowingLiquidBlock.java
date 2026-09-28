@@ -10,7 +10,7 @@ public class TemplateFlowingLiquidBlock extends FlowingLiquidBlock implements Bl
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateFlowingLiquidBlock(int i, Material arg) {
-        super(i, arg);
+    public TemplateFlowingLiquidBlock(int id, Material material) {
+        super(id, material);
     }
 }

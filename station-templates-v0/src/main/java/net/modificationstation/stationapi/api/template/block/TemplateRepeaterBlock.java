@@ -4,12 +4,12 @@ import net.minecraft.block.RepeaterBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateRepeaterBlock extends RepeaterBlock implements BlockTemplate {
-    public TemplateRepeaterBlock(Identifier identifier, boolean flag) {
-        this(BlockTemplate.getNextId(), flag);
+    public TemplateRepeaterBlock(Identifier identifier, boolean lit) {
+        this(BlockTemplate.getNextId(), lit);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateRepeaterBlock(int i, boolean flag) {
-        super(i, flag);
+
+    public TemplateRepeaterBlock(int id, boolean lit) {
+        super(id, lit);
     }
 }

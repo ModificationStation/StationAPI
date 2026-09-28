@@ -4,12 +4,12 @@ import net.minecraft.block.SaplingBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateSaplingBlock extends SaplingBlock implements BlockTemplate {
-    public TemplateSaplingBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateSaplingBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateSaplingBlock(int i, int j) {
-        super(i, j);
+    public TemplateSaplingBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

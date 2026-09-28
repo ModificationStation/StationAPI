@@ -43,6 +43,10 @@ public class BakedQuad {
         return this.face;
     }
 
+    public Sprite getSprite() {
+        return sprite;
+    }
+
     public boolean hasShade() {
         return this.shade;
     }

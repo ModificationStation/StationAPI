@@ -8,8 +8,8 @@ public class TemplateSpongeBlock extends SpongeBlock implements BlockTemplate {
         this(BlockTemplate.getNextId());
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSpongeBlock(int i) {
-        super(i);
+
+    public TemplateSpongeBlock(int id) {
+        super(id);
     }
 }

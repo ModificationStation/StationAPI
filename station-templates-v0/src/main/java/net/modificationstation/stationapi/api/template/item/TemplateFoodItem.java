@@ -4,12 +4,18 @@ import net.minecraft.item.FoodItem;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateFoodItem extends FoodItem implements ItemTemplate {
-    public TemplateFoodItem(Identifier identifier, int healAmount, boolean isWolfFood) {
-        this(ItemTemplate.getNextId(), healAmount, isWolfFood);
+    /**
+     * @param meat Controls whether the food can be eaten by wolves.
+     */
+    public TemplateFoodItem(Identifier identifier, int healthRestored, boolean meat) {
+        this(ItemTemplate.getNextId(), healthRestored, meat);
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateFoodItem(int id, int healAmount, boolean isWolfFood) {
-        super(id, healAmount, isWolfFood);
+
+    /**
+     * @param meat Controls whether the food can be eaten by wolves.
+     */
+    public TemplateFoodItem(int id, int healthRestored, boolean meat) {
+        super(id, healthRestored, meat);
     }
 }

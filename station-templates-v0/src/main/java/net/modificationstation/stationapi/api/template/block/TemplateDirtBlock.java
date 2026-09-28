@@ -4,12 +4,12 @@ import net.minecraft.block.DirtBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateDirtBlock extends DirtBlock implements BlockTemplate {
-    public TemplateDirtBlock(Identifier identifier, int texture) {
-        this(BlockTemplate.getNextId(), texture);
+    public TemplateDirtBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateDirtBlock(int id, int texture) {
-        super(id, texture);
+    public TemplateDirtBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

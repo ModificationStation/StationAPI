@@ -4,12 +4,12 @@ import net.minecraft.block.FurnaceBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateFurnaceBlock extends FurnaceBlock implements BlockTemplate {
-    public TemplateFurnaceBlock(Identifier identifier, boolean flag) {
-        this(BlockTemplate.getNextId(), flag);
+    public TemplateFurnaceBlock(Identifier identifier, boolean lit) {
+        this(BlockTemplate.getNextId(), lit);
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateFurnaceBlock(int i, boolean flag) {
-        super(i, flag);
+    public TemplateFurnaceBlock(int id, boolean lit) {
+        super(id, lit);
     }
 }

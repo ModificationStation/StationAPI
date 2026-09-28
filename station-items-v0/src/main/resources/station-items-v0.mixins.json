@@ -16,6 +16,7 @@
     "PlayerInventoryMixin",
     "SaplingBlockMixin",
     "ScreenHandlerMixin",
+    "SeedsItemMixin",
     "StatsMixin",
     "dispenser.block.DispenserBlockMixin",
     "dispenser.block.entity.DispenserBlockEntityMixin"

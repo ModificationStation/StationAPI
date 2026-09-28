@@ -1,5 +1,16 @@
 {
   "values": [
-    "minecraft:log"
+    {
+      "id": "#c:logs/oak",
+      "required": false
+    },
+    {
+      "id": "#c:logs/spruce",
+      "required": false
+    },
+    {
+      "id": "#c:logs/birch",
+      "required": false
+    }
   ]
 }

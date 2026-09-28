@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import lombok.val;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderManager;
@@ -85,7 +87,14 @@ public final class ArsenicItemRenderer {
                     glTranslatef(var30, var31, var32);
                 }
 
-                itemRendererAccessor.getBlockRenderer().render(block, var10.getDamage(), item.getBrightnessAtEyes(delta));
+                if (item.stack.getItem() instanceof ItemWithRenderer renderer) {
+                    //noinspection deprecation
+                    Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+                    renderer.renderItemInWorld(itemRenderer, minecraft.textRenderer, minecraft.textureManager, item.stack, item.getBrightnessAtEyes(delta));
+                }
+                else {
+                    itemRendererAccessor.getBlockRenderer().render(block, var10.getDamage(), item.getBrightnessAtEyes(delta));
+                }
                 glPopMatrix();
             }
         } else {

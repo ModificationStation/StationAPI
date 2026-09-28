@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.effect;
 
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 /**
  * Static reference of an effect. Since {@link EntityEffect} is initialized per-entity, a separate class is required
@@ -22,6 +23,29 @@ public final class EntityEffectType<EFFECT_INSTANCE extends EntityEffect<EFFECT_
 
     private EntityEffectType(Builder<EFFECT_INSTANCE> builder) {
         factory = builder.factory;
+    }
+
+    /**
+     * Returns the identifier of the effect
+     */
+    public Identifier getIdentifier() {
+        return registryEntry.registryKey().getValue();
+    }
+
+    /**
+     * Returns the translation key of the effect's name.
+     */
+    public String getTranslationKey() {
+        Identifier identifier = getIdentifier();
+        return "gui.stationapi.effect." + identifier.namespace + "." + identifier.path + ".name";
+    }
+
+    /**
+     * Returns the translation key of the effect's description.
+     */
+    public String getDescriptionTranslationKey() {
+        Identifier identifier = getIdentifier();
+        return "gui.stationapi.effect." + identifier.namespace + "." + identifier.path + ".desc";
     }
 
     /**

@@ -9,7 +9,7 @@ public class TemplateMapItem extends MapItem implements ItemTemplate {
         ItemTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateMapItem(int i) {
-        super(i);
+    public TemplateMapItem(int id) {
+        super(id);
     }
 }

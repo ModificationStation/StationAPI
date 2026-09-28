@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.util.collection;
 
+import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntegerArray;
 import net.modificationstation.stationapi.impl.world.chunk.Palette;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +32,8 @@ implements PaletteStorage, CompactingPackedIntegerArray {
     private final int indexScale;
     private final int indexOffset;
     private final int indexShift;
+    private final int[] indexLookup;
+    private static final Long2ReferenceOpenHashMap<int[]> indexLookups = new Long2ReferenceOpenHashMap<>();
 
     public PackedIntegerArray(int i, int j, int[] is) {
         this(i, j);
@@ -77,9 +81,24 @@ implements PaletteStorage, CompactingPackedIntegerArray {
         } else {
             this.data = new long[j];
         }
+
+        long lookupKey = (long)elementBits << 32 | (long)size;
+        if (!indexLookups.containsKey(lookupKey)) {
+            int[] lookup = new int[size];
+            for (int k = 0; k < size; k++) {
+                lookup[k] = computeStorageIndex(k);
+            }
+            indexLookups.put(lookupKey, lookup);
+        }
+
+        this.indexLookup = indexLookups.get(lookupKey);
     }
 
     private int getStorageIndex(int index) {
+        return this.indexLookup[index];
+    }
+    
+    private int computeStorageIndex(int index) {
         long l = Integer.toUnsignedLong(this.indexScale);
         long m = Integer.toUnsignedLong(this.indexOffset);
         return (int)((long)index * l + m >> 32 >> this.indexShift);

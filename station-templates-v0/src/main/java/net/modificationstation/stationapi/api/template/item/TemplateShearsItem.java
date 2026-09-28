@@ -8,8 +8,8 @@ public class TemplateShearsItem extends ShearsItem implements ItemTemplate {
         this(ItemTemplate.getNextId());
         ItemTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateShearsItem(int i) {
-        super(i);
+
+    public TemplateShearsItem(int id) {
+        super(id);
     }
 }

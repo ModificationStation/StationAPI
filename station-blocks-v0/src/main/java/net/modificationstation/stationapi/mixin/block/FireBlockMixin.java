@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.block;
 import net.minecraft.block.FireBlock;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.block.context.BlockTagContext;
 import net.modificationstation.stationapi.api.event.block.FireBurnableRegisterEvent;
 import net.modificationstation.stationapi.api.registry.tag.BlockTags;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,6 +42,8 @@ abstract class FireBlockMixin {
             }
     )
     private int stationapi_allowInfiniburnBlocks(int constant, World world, int x, int y, int z, Random random) {
-        return world.getBlockState(x, y - 1, z).isIn(BlockTags.INFINIBURN) ? 1 : 0;
+        return world.getBlockState(x, y - 1, z).isIn(
+                BlockTags.INFINIBURN, BlockTagContext.of(world, x, y - 1, z)
+        ) ? 1 : 0;
     }
 }

@@ -10,8 +10,8 @@ public class TemplateBlock extends Block implements BlockTemplate {
         BlockTemplate.onConstructor(this, identifier);
     }
 
-    public TemplateBlock(Identifier identifier, int tex, Material material) {
-        this(BlockTemplate.getNextId(), tex, material);
+    public TemplateBlock(Identifier identifier, int textureId, Material material) {
+        this(BlockTemplate.getNextId(), textureId, material);
         BlockTemplate.onConstructor(this, identifier);
     }
 
@@ -19,7 +19,7 @@ public class TemplateBlock extends Block implements BlockTemplate {
         super(id, material);
     }
 
-    public TemplateBlock(int id, int tex, Material material) {
-        super(id, tex, material);
+    public TemplateBlock(int id, int textureId, Material material) {
+        super(id, textureId, material);
     }
 }

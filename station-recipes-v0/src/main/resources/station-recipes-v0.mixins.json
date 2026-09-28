@@ -11,6 +11,8 @@
     "RecipeComparatorMixin",
     "SmeltingRecipeManagerAccessor",
     "SmeltingRecipeManagerMixin",
+    "StationShapedRecipeMixin",
+    "StationShapelessRecipeMixin",
     "StatsMixin"
   ],
   "injectors": {

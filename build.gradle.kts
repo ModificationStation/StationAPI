@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.17.12"
-    id("babric-loom-extension") version "1.16.1"
+    id("fabric-loom") version "1.17.20"
+    id("babric-loom-extension") version "1.17.4"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -144,6 +144,7 @@ allprojects {
     // this fixes some edge cases with special characters not displaying correctly
     // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
     tasks.withType<JavaCompile> {
+        options.release = 17
         options.encoding = "UTF-8"
     }
 
@@ -195,9 +196,9 @@ allprojects {
         options.release = 17
     }
 
-    tasks.register("purgeBuildFolder") {
+    tasks.register<Delete>("purgeBuildFolder") {
         group = "stapi"
-        project.file("build").deleteRecursively()
+        delete(layout.buildDirectory)
     }
 }
 

@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#c:torches/normal",
+      "required": false
+    },
+    {
+      "id": "#c:torches/redstone",
+      "required": false
+    }
+  ]
+}

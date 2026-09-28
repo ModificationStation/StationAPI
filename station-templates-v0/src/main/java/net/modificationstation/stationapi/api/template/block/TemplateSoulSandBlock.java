@@ -4,12 +4,12 @@ import net.minecraft.block.SoulSandBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateSoulSandBlock extends SoulSandBlock implements BlockTemplate {
-    public TemplateSoulSandBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateSoulSandBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateSoulSandBlock(int i, int j) {
-        super(i, j);
+
+    public TemplateSoulSandBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }

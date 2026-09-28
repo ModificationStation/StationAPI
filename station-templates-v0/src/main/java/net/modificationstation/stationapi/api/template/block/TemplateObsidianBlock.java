@@ -4,12 +4,12 @@ import net.minecraft.block.ObsidianBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateObsidianBlock extends ObsidianBlock implements BlockTemplate {
-    public TemplateObsidianBlock(Identifier identifier, int j) {
-        this(BlockTemplate.getNextId(), j);
+    public TemplateObsidianBlock(Identifier identifier, int textureId) {
+        this(BlockTemplate.getNextId(), textureId);
         BlockTemplate.onConstructor(this, identifier);
     }
-    
-    public TemplateObsidianBlock(int i, int j) {
-        super(i, j);
+
+    public TemplateObsidianBlock(int id, int textureId) {
+        super(id, textureId);
     }
 }
