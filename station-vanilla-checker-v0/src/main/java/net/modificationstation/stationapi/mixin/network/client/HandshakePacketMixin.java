@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.network.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.Minecraft;
@@ -12,9 +14,7 @@ import net.modificationstation.stationapi.impl.network.ModdedPacketHandlerSetter
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.DataInputStream;
@@ -54,11 +54,11 @@ class HandshakePacketMixin {
             for (ModContainer clientMod : SERVER_REQUIRED_MODS) {
                 String serverModVersion = modList.get(clientMod.getMetadata().getId());
                 if (serverModVersion == null) {
-                    networkHandler.method_1646(new DisconnectPacket("Quitting"));
+                    networkHandler.sendPacket(new DisconnectPacket("Quitting"));
                     minecraft.setScreen(new DisconnectedScreen("disconnect.lost", String.format("Server is missing mod %s %s", clientMod.getMetadata().getId(), clientMod.getMetadata().getVersion().getFriendlyString())));
                 }
                 else if (!serverModVersion.equals(clientMod.getMetadata().getVersion().getFriendlyString())) {
-                    networkHandler.method_1646(new DisconnectPacket("Quitting"));
+                    networkHandler.sendPacket(new DisconnectPacket("Quitting"));
                     minecraft.setScreen(new DisconnectedScreen("disconnect.lost", String.format("Server has the wrong version of mod %s %s (they have %s)", clientMod.getMetadata().getId(), clientMod.getMetadata().getVersion().getFriendlyString(), serverModVersion)));
                 }
             }
@@ -76,8 +76,8 @@ class HandshakePacketMixin {
         this.name += ";stapi;";
     }
 
-    @ModifyConstant(method = "read", constant = @Constant(intValue = 32))
-    private int yaYeet(int constant) {
-        return Short.MAX_VALUE;
+    @WrapOperation(method = "read", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/handshake/HandshakePacket;readString(Ljava/io/DataInputStream;I)Ljava/lang/String;"))
+    private String yaYeet(DataInputStream dataInputStream, int i, Operation<String> original) {
+        return original.call(dataInputStream, (int) Short.MAX_VALUE);
     }
 }
