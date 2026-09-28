@@ -23,12 +23,6 @@ class NetworkHandlerMixin implements ModdedPacketHandler, ModdedPacketHandlerSet
 
     @Override
     @Unique
-    public void setModded(boolean value) {
-        modded = value;
-    }
-
-    @Override
-    @Unique
     public void setModded(Map<String, String> mods) {
         modded = true;
         this.mods = mods;
