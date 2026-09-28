@@ -53,6 +53,8 @@ abstract class ServerLoginNetworkHandlerMixin implements ModdedPacketHandler, Mo
         if (!isModded()) {
             LOGGER.error("Player \"{}\" attempted joining the server without {}, disconnecting.", arg.username, NAMESPACE.getName());
             disconnect("Station API is required to join this server.");
+            ci.cancel();
+            return;
         }
 
         LOGGER.info("Player \"{}\"'s mods: {}", arg.username, getMods().entrySet().stream().map(stringStringEntry -> "modid=" + stringStringEntry.getKey() + " version=" + stringStringEntry.getValue()).collect(Collectors.joining(", ", "[", "]")));
