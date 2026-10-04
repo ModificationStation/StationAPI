@@ -335,17 +335,17 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public void setBlockMeta(int x, int y, int z, int meta) {
-        MetaSetEvent event =
-                MetaSetEvent.builder()
-                        .world(world).chunk(this)
-                        .x(this.x << 4 | x).y(y).z(this.z << 4 | z)
-                        .blockMeta(meta)
-                        .overrideMeta(meta)
-                        .build();
-        if (event.isCanceled()) return;
-        meta = event.overrideMeta;
         ChunkSection section = getSection(y);
         if (section != null) {
+            MetaSetEvent event =
+                    MetaSetEvent.builder()
+                            .world(world).chunk(this)
+                            .x(this.x << 4 | x).y(y).z(this.z << 4 | z)
+                            .blockMeta(meta)
+                            .overrideMeta(meta)
+                            .build();
+            if (StationAPI.EVENT_BUS.post(event).isCanceled()) return;
+            meta = event.overrideMeta;
             section.setMeta(x, y & 15, z, meta);
         }
     }
