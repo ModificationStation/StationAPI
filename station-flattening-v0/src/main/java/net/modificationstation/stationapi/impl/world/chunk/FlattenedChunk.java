@@ -346,6 +346,7 @@ public class FlattenedChunk extends Chunk {
                             .build();
             if (StationAPI.EVENT_BUS.post(event).isCanceled()) return;
             meta = event.overrideMeta;
+            this.dirty = true;
             section.setMeta(x, y & 15, z, meta);
         }
     }
