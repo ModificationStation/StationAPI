@@ -3,3 +3,4 @@
 !config
 !config/fabric_loader_dependencies.json
 !.gitignore
+!server.properties
