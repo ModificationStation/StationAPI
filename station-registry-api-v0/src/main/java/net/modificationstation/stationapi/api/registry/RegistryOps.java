@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import net.modificationstation.stationapi.api.util.dynamic.ForwardingDynamicOps;
@@ -30,7 +29,7 @@ public class RegistryOps<T> extends ForwardingDynamicOps<T> {
         return RegistryOps.of(delegate, RegistryOps.caching(new RegistryInfoGetter(){
 
             public <E> Optional<RegistryInfo<E>> getRegistryInfo(RegistryKey<? extends Registry<? extends E>> registryRef) {
-                return wrapperLookup.getOptionalWrapper(registryRef).map(wrapper -> new RegistryInfo<>(wrapper, wrapper, wrapper.getLifecycle()));
+                return wrapperLookup.getOptionalWrapper(registryRef).map(wrapper -> new RegistryInfo<>(wrapper, wrapper));
             }
         }));
     }
@@ -55,7 +54,7 @@ public class RegistryOps<T> extends ForwardingDynamicOps<T> {
     public static <E, O> RecordCodecBuilder<O, RegistryEntryLookup<E>> getEntryLookupCodec(RegistryKey<? extends Registry<? extends E>> registryRef) {
         return Codecs.createContextRetrievalCodec(ops -> {
             if (ops instanceof RegistryOps<?> registryOps) {
-                return registryOps.registryInfoGetter.getRegistryInfo(registryRef).map(info -> DataResult.success(info.entryLookup(), info.elementsLifecycle())).orElseGet(() -> DataResult.error(() -> "Unknown registry: " + registryRef));
+                return registryOps.registryInfoGetter.getRegistryInfo(registryRef).map(info -> DataResult.success(info.entryLookup())).orElseGet(() -> DataResult.error(() -> "Unknown registry: " + registryRef));
             }
             return DataResult.error(() -> "Not a registry ops");
         }).forGetter(object -> null);
@@ -75,6 +74,6 @@ public class RegistryOps<T> extends ForwardingDynamicOps<T> {
         <T> Optional<RegistryInfo<T>> getRegistryInfo(RegistryKey<? extends Registry<? extends T>> var1);
     }
 
-    public record RegistryInfo<T>(RegistryEntryOwner<T> owner, RegistryEntryLookup<T> entryLookup, Lifecycle elementsLifecycle) {}
+    public record RegistryInfo<T>(RegistryEntryOwner<T> owner, RegistryEntryLookup<T> entryLookup) {}
 }
 

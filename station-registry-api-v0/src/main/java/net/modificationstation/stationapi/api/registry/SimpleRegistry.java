@@ -38,17 +38,12 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.util.Namespace.MINECRAFT;
 
 public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry, ListenableRegistry {
-
-
-
     final RegistryKey<? extends Registry<T>> key;
     private final ReferenceList<Reference<T>> rawIdToEntry = new ReferenceArrayList<>(256);
     private final Reference2IntMap<T> entryToRawId = Util.make(new Reference2IntOpenHashMap<>(), map -> map.defaultReturnValue(-1));
     private final Reference2ReferenceMap<Identifier, Reference<T>> idToEntry = new Reference2ReferenceOpenHashMap<>();
     private final Reference2ReferenceMap<RegistryKey<T>, Reference<T>> keyToEntry = new Reference2ReferenceOpenHashMap<>();
     private final Reference2ReferenceMap<T, Reference<T>> valueToEntry = new Reference2ReferenceOpenHashMap<>();
-    private final Reference2ReferenceMap<T, Lifecycle> entryToLifecycle = new Reference2ReferenceOpenHashMap<>();
-    private Lifecycle lifecycle;
     private volatile Reference2ReferenceMap<TagKey<T>, Named<T>> tagToEntryList = new Reference2ReferenceOpenHashMap<>();
     private final Reference2ReferenceMap<Identifier, ConditionType<?>> tagConditionTypes = new Reference2ReferenceOpenHashMap<>();
     private boolean frozen;
@@ -74,20 +69,20 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
 
     private @Nullable MutableEventBus eventBus;
 
-    public SimpleRegistry(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle) {
-        this(key, lifecycle, false);
+    public SimpleRegistry(RegistryKey<? extends Registry<T>> key) {
+        this(key, false);
     }
 
-    public SimpleRegistry(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean intrusive) {
+    @Deprecated(forRemoval = true)
+    public SimpleRegistry(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle) {
+        this(key, false);
+    }
+
+    public SimpleRegistry(RegistryKey<? extends Registry<T>> key, boolean intrusive) {
         this.wrapper = new Impl<>() {
             @Override
             public RegistryKey<? extends Registry<? extends T>> getRegistryKey() {
                 return SimpleRegistry.this.key;
-            }
-
-            @Override
-            public Lifecycle getLifecycle() {
-                return SimpleRegistry.this.getLifecycle();
             }
 
             @Override
@@ -111,10 +106,14 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             }
         };
         this.key = key;
-        this.lifecycle = lifecycle;
         if (intrusive) this.intrusiveValueToEntry = new Reference2ReferenceOpenHashMap<>();
     }
 
+    @Deprecated(forRemoval = true)
+    public SimpleRegistry(RegistryKey<? extends Registry<T>> key, boolean intrusive, Lifecycle lifecycle) {
+        this(key, intrusive);
+    }
+    
     @Override
     public MutableEventBus getEventBus() {
         return requireNonNullElseGet(eventBus, () -> eventBus = new EventBus());
@@ -127,7 +126,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
 
     @Override
     public String toString() {
-        return "Registry[" + this.key + " (" + this.lifecycle + ")]";
+        return "Registry[" + this.key + ")]";
     }
 
     private List<Reference<T>> getEntries() {
@@ -146,11 +145,11 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public Reference<T> set(int rawId, RegistryKey<T> registryKey, T value, Lifecycle lifecycle) {
+    public Reference<T> set(int rawId, RegistryKey<T> registryKey, T value) {
         // since raw ID is explicitly specified here,
         // we need to make sure one isn't
         // already reserved for this entry
-        return set(rawId, registryKey, value, lifecycle, true);
+        return set(rawId, registryKey, value, true);
     }
 
     private void onChange(RegistryKey<T> registryKey) {
@@ -164,7 +163,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         LOGGER.debug("Registry {} has been marked as modded, registry entry {} was changed", getKey().getValue(), registryKey.getValue());
     }
 
-    private Reference<T> set(int rawId, RegistryKey<T> registryKey, T value, Lifecycle lifecycle, boolean checkReservation) {
+    private Reference<T> set(int rawId, RegistryKey<T> registryKey, T value, boolean checkReservation) {
         this.assertNotFrozen(registryKey);
         Validate.notNull(registryKey);
         Validate.notNull(value);
@@ -236,8 +235,6 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         this.entryToRawId.put(value, rawId);
         if (this.nextId <= rawId) this.nextId = rawId + 1;
 
-        this.entryToLifecycle.put(value, lifecycle);
-        this.lifecycle = this.lifecycle.add(lifecycle);
         this.cachedEntries = null;
 
         // shouldn't be here really
@@ -256,11 +253,11 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public Reference<T> add(RegistryKey<T> registryKey, T value, Lifecycle lifecycle) {
+    public Reference<T> add(RegistryKey<T> registryKey, T value) {
         // raw ID isn't specified here,
         // so we can safely use nextId
         // or reserved ID if it exists
-        return set(nextId, registryKey, value, lifecycle, false);
+        return set(nextId, registryKey, value, false);
     }
 
     @Override
@@ -324,16 +321,6 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     @Override
     public int size() {
         return this.keyToEntry.size();
-    }
-
-    @Override
-    public Lifecycle getEntryLifecycle(T entry) {
-        return this.entryToLifecycle.get(entry);
-    }
-
-    @Override
-    public Lifecycle getLifecycle() {
-        return this.lifecycle;
     }
 
     @Override

@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.registry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mojang.serialization.codecs.UnboundedMapCodec;
@@ -20,11 +19,11 @@ public class RegistryCodecs {
         ).apply(instance, RegistryManagerEntry::new));
     }
 
-    public static <T> Codec<Registry<T>> createRegistryCodec(RegistryKey<? extends Registry<T>> registryRef, Lifecycle lifecycle, Codec<T> elementCodec) {
+    public static <T> Codec<Registry<T>> createRegistryCodec(RegistryKey<? extends Registry<T>> registryRef, Codec<T> elementCodec) {
         return RegistryCodecs.managerEntry(registryRef, elementCodec.fieldOf("element")).codec().listOf().xmap(entries -> {
-            SimpleRegistry<T> mutableRegistry = new SimpleRegistry<>(registryRef, lifecycle);
+            SimpleRegistry<T> mutableRegistry = new SimpleRegistry<>(registryRef);
             for (RegistryManagerEntry<T> registryManagerEntry : entries)
-                mutableRegistry.set(registryManagerEntry.rawId(), registryManagerEntry.key(), registryManagerEntry.value(), lifecycle);
+                mutableRegistry.set(registryManagerEntry.rawId(), registryManagerEntry.key(), registryManagerEntry.value());
             return mutableRegistry;
         }, registry -> {
             ImmutableList.Builder<RegistryManagerEntry<T>> builder = ImmutableList.builder();
@@ -34,11 +33,11 @@ public class RegistryCodecs {
         });
     }
 
-    public static <E> Codec<Registry<E>> createKeyedRegistryCodec(RegistryKey<? extends Registry<E>> registryRef, Lifecycle lifecycle, Codec<E> elementCodec) {
+    public static <E> Codec<Registry<E>> createKeyedRegistryCodec(RegistryKey<? extends Registry<E>> registryRef, Codec<E> elementCodec) {
         UnboundedMapCodec<RegistryKey<E>, E> codec = Codec.unboundedMap(RegistryKey.createCodec(registryRef), elementCodec);
         return codec.xmap(entries -> {
-            SimpleRegistry<E> mutableRegistry = new SimpleRegistry<>(registryRef, lifecycle);
-            entries.forEach((key, value) -> mutableRegistry.add(key, value, lifecycle));
+            SimpleRegistry<E> mutableRegistry = new SimpleRegistry<>(registryRef);
+            entries.forEach((key, value) -> mutableRegistry.add(key, value));
             return mutableRegistry.freeze();
         }, registry -> ImmutableMap.copyOf(registry.getEntrySet()));
     }
