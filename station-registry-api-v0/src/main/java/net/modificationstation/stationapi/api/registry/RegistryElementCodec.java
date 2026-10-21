@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.Lifecycle;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Optional;
@@ -65,8 +64,7 @@ public final class RegistryElementCodec<E> implements Codec<RegistryEntry<E>> {
                     .getOptional(registryKey)
                     .<DataResult<RegistryEntry<E>>>map(DataResult::success)
                     .orElseGet(() -> DataResult.error(() -> "Failed to get element " + registryKey))
-                    .map(reference -> Pair.of(reference, pair.getSecond()))
-                    .setLifecycle(Lifecycle.stable());
+                    .map(reference -> Pair.of(reference, pair.getSecond()));
         }
         return this.elementCodec.decode(ops, input).map(pairx -> pairx.mapFirst(RegistryEntry::of));
     }

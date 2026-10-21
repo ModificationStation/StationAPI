@@ -21,7 +21,7 @@ public class RegistryLoader {
 
     public static DynamicRegistryManager.Immutable load(ResourceManager resourceManager, DynamicRegistryManager baseRegistryManager, List<Entry<?>> entries) {
         Map<RegistryKey<?>, Exception> map = new HashMap<>();
-        List<Pair<MutableRegistry<?>, RegistryLoadable>> list = entries.stream().map(entry -> entry.getLoader(Lifecycle.stable(), map)).toList();
+        List<Pair<MutableRegistry<?>, RegistryLoadable>> list = entries.stream().map(entry -> entry.getLoader(map)).toList();
         RegistryOps.RegistryInfoGetter registryInfoGetter = RegistryLoader.createInfoGetter(baseRegistryManager, list);
         list.forEach(loader -> loader.getSecond().load(resourceManager, registryInfoGetter));
         list.forEach(loader -> {
@@ -54,11 +54,11 @@ public class RegistryLoader {
     }
 
     private static <T> RegistryOps.RegistryInfo<T> createInfo(MutableRegistry<T> registry) {
-        return new RegistryOps.RegistryInfo<>(registry.getReadOnlyWrapper(), registry.createMutableEntryLookup(), registry.getLifecycle());
+        return new RegistryOps.RegistryInfo<>(registry.getReadOnlyWrapper(), registry.createMutableEntryLookup());
     }
 
     private static <T> RegistryOps.RegistryInfo<T> createInfo(Registry<T> registry) {
-        return new RegistryOps.RegistryInfo<>(registry.getReadOnlyWrapper(), registry.getTagCreatingWrapper(), registry.getLifecycle());
+        return new RegistryOps.RegistryInfo<>(registry.getReadOnlyWrapper(), registry.getTagCreatingWrapper());
     }
 
     private static void writeLoadingError(Map<RegistryKey<?>, Exception> exceptions) {
@@ -92,7 +92,7 @@ public class RegistryLoader {
                 JsonElement jsonElement = JsonParser.parseReader(reader);
                 DataResult<E> dataResult = decoder.parse(registryOps, jsonElement);
                 E object = dataResult.getOrThrow();
-                newRegistry.add(registryKey, object, resource.isAlwaysStable() ? Lifecycle.stable() : dataResult.lifecycle());
+                newRegistry.add(registryKey, object);
             } catch (Exception exception) {
                 exceptions.put(registryKey, new IllegalStateException(String.format(Locale.ROOT, "Failed to parse %s from pack %s", identifier, resource.getResourcePackName()), exception));
             }
@@ -104,8 +104,8 @@ public class RegistryLoader {
     }
 
     public record Entry<T>(RegistryKey<? extends Registry<T>> key, Codec<T> elementCodec) {
-        Pair<MutableRegistry<?>, RegistryLoadable> getLoader(Lifecycle lifecycle, Map<RegistryKey<?>, Exception> exceptions) {
-            SimpleRegistry<T> mutableRegistry = new SimpleRegistry<>(this.key, lifecycle);
+        Pair<MutableRegistry<?>, RegistryLoadable> getLoader(Map<RegistryKey<?>, Exception> exceptions) {
+            SimpleRegistry<T> mutableRegistry = new SimpleRegistry<>(this.key);
             RegistryLoadable registryLoadable = (resourceManager, registryInfoGetter) -> RegistryLoader.load(registryInfoGetter, resourceManager, this.key, mutableRegistry, this.elementCodec, exceptions);
             return Pair.of(mutableRegistry, registryLoadable);
         }

@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.mojang.serialization.Lifecycle;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 
 import java.net.URL;
@@ -15,9 +14,9 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 public final class JsonRecipeParserRegistry extends SimpleRegistry<Consumer<URL>> {
 
     public static final RegistryKey<JsonRecipeParserRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("json_recipe_parsers"));
-    public static final JsonRecipeParserRegistry INSTANCE = Registries.create(KEY, new JsonRecipeParserRegistry(), Lifecycle.experimental());
+    public static final JsonRecipeParserRegistry INSTANCE = Registries.create(KEY, new JsonRecipeParserRegistry());
 
     private JsonRecipeParserRegistry() {
-        super(KEY, Lifecycle.experimental(), false);
+        super(KEY, false);
     }
 }

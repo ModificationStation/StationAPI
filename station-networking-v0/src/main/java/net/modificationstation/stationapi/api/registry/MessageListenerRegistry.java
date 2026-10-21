@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.mojang.serialization.Lifecycle;
 import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 
@@ -17,9 +16,9 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
  */
 public class MessageListenerRegistry extends SimpleRegistry<BiConsumer<PlayerEntity, MessagePacket>> {
     public static final RegistryKey<MessageListenerRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("message_listeners"));
-    public static final MessageListenerRegistry INSTANCE = Registries.create(KEY, new MessageListenerRegistry(), Lifecycle.experimental());
+    public static final MessageListenerRegistry INSTANCE = Registries.create(KEY, new MessageListenerRegistry());
 
     private MessageListenerRegistry() {
-        super(KEY, Lifecycle.experimental());
+        super(KEY);
     }
 }
