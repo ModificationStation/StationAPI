@@ -772,6 +772,14 @@ public class ChunkSection {
         skyLight.fill(LightType.SKY.lightValue);
     }
 
+    /**
+     * {@return whether every cell has this sky light and block light}
+     * Exact after {@link #compact()}.
+     */
+    public boolean hasUniformLight(int skyLight, int blockLight) {
+        return this.skyLight.isUniform(skyLight) && this.blockLight.isUniform(blockLight);
+    }
+
     /** compacts light; light writes only ever add stored layers */
     public void compactLight() {
         skyLight.compact();

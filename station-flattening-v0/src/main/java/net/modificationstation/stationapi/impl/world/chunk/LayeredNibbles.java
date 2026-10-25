@@ -69,6 +69,14 @@ final class LayeredNibbles {
         return (nibbles & ~(15L << shift)) | ((long) nibble << shift);
     }
 
+    /**
+     * {@return whether every cell holds {@code value}}
+     * Exact after {@link #compact()}; before it, a stored layer whose cells became uniform still counts as different.
+     */
+    boolean isUniform(int value) {
+        return stored == 0 && nibbles == (value & 15) * 0x1111_1111_1111_1111L;
+    }
+
     /** sets every cell to {@code value} */
     void fill(int value) {
         nibbles = (value & 15) * 0x1111_1111_1111_1111L;
