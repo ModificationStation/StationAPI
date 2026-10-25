@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
@@ -19,12 +18,12 @@ public class SimpleLogicalRegistry<ENTRY> extends SimpleRegistry<ENTRY> implemen
     private final Int2ReferenceMap<RegistryEntry.Reference<ENTRY>> logicalIdToEntry = new Int2ReferenceOpenHashMap<>();
     private final Reference2IntMap<ENTRY> entryToLogicalId = new Reference2IntOpenHashMap<>();
 
-    public SimpleLogicalRegistry(RegistryKey<? extends Registry<ENTRY>> key, Lifecycle lifecycle) {
-        super(key, lifecycle);
+    public SimpleLogicalRegistry(RegistryKey<? extends Registry<ENTRY>> key) {
+        super(key);
     }
 
-    public SimpleLogicalRegistry(RegistryKey<? extends Registry<ENTRY>> key, Lifecycle lifecycle, boolean intrusive) {
-        super(key, lifecycle, intrusive);
+    public SimpleLogicalRegistry(RegistryKey<? extends Registry<ENTRY>> key, boolean intrusive) {
+        super(key, intrusive);
     }
 
     @Override
@@ -47,15 +46,15 @@ public class SimpleLogicalRegistry<ENTRY> extends SimpleRegistry<ENTRY> implemen
     }
 
     @Override
-    public RegistryEntry.Reference<ENTRY> set(int rawId, int logicalId, RegistryKey<ENTRY> registryKey, ENTRY value, Lifecycle lifecycle) {
-        final var ref = set(rawId, registryKey, value, lifecycle);
+    public RegistryEntry.Reference<ENTRY> set(int rawId, int logicalId, RegistryKey<ENTRY> registryKey, ENTRY value) {
+        final var ref = set(rawId, registryKey, value);
         setLogicalId(logicalId, ref);
         return ref;
     }
 
     @Override
-    public RegistryEntry.Reference<ENTRY> add(int logicalId, RegistryKey<ENTRY> registryKey, ENTRY value, Lifecycle lifecycle) {
-        final var ref = add(registryKey, value, lifecycle);
+    public RegistryEntry.Reference<ENTRY> add(int logicalId, RegistryKey<ENTRY> registryKey, ENTRY value) {
+        final var ref = add(registryKey, value);
         setLogicalId(logicalId, ref);
         return ref;
     }

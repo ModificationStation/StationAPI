@@ -145,25 +145,6 @@ public class Codecs {
         };
     }
 
-    public static <E> Codec<E> withLifecycle(Codec<E> originalCodec, final Function<E, Lifecycle> entryLifecycleGetter, final Function<E, Lifecycle> lifecycleGetter) {
-        return originalCodec.mapResult(new Codec.ResultFunction<>() {
-
-            @Override
-            public <T> DataResult<Pair<E, T>> apply(DynamicOps<T> ops, T input, DataResult<Pair<E, T>> result) {
-                return result.result().map(pair -> result.setLifecycle(entryLifecycleGetter.apply(pair.getFirst()))).orElse(result);
-            }
-
-            @Override
-            public <T> DataResult<T> coApply(DynamicOps<T> ops, E input, DataResult<T> result) {
-                return result.setLifecycle(lifecycleGetter.apply(input));
-            }
-
-            public String toString() {
-                return "WithLifecycle[" + entryLifecycleGetter + " " + lifecycleGetter + "]";
-            }
-        });
-    }
-
     public static <T> Codec<T> validate(Codec<T> codec, Function<T, DataResult<T>> validator) {
         return codec.flatXmap(validator, validator);
     }
@@ -250,7 +231,7 @@ public class Codecs {
                     return DataResult.error(() -> "Mixed type list: element " + object2 + " had type " + object3 + ", but list is of type " + object);
                 }
             }
-            return DataResult.success(collection, Lifecycle.stable());
+            return DataResult.success(collection);
         };
     }
 
