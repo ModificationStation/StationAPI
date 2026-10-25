@@ -10,6 +10,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.impl.vanillafix.util.LastAccessInt2ReferenceOpenHashMap;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.Map;
@@ -20,6 +21,10 @@ import java.util.Set;
  */
 @Mixin(ServerChunkCache.class)
 class ServerChunkCacheMixin {
+    /** the map put in {@code chunksByPos}, typed, for the lookups */
+    @Unique
+    private LastAccessInt2ReferenceOpenHashMap<Chunk> stationapi_chunkMap;
+
     @WrapOperation(
             method = "<init>",
             at = @At(
@@ -45,7 +50,8 @@ class ServerChunkCacheMixin {
     private void stationapi_useLastAccessMap(
             ServerChunkCache instance, Map<Integer, Chunk> map, Operation<Void> original
     ) {
-        original.call(instance, new LastAccessInt2ReferenceOpenHashMap<>(map));
+        stationapi_chunkMap = new LastAccessInt2ReferenceOpenHashMap<>(map);
+        original.call(instance, stationapi_chunkMap);
     }
 
     @WrapOperation(
@@ -77,9 +83,7 @@ class ServerChunkCacheMixin {
             Map<Integer, Chunk> map, Object key, Operation<Boolean> original,
             @Share("chunkKey") LocalIntRef chunkKey
     ) {
-        return map instanceof LastAccessInt2ReferenceOpenHashMap<Chunk> lastAccessMap
-                ? lastAccessMap.containsKey(chunkKey.get())
-                : original.call(map, key == null ? chunkKey.get() : key);
+        return stationapi_chunkMap.containsKey(chunkKey.get());
     }
 
     @WrapOperation(
@@ -93,8 +97,6 @@ class ServerChunkCacheMixin {
             Map<Integer, Chunk> map, Object key, Operation<Object> original,
             @Share("chunkKey") LocalIntRef chunkKey
     ) {
-        return map instanceof LastAccessInt2ReferenceOpenHashMap<Chunk> lastAccessMap
-                ? lastAccessMap.get(chunkKey.get())
-                : original.call(map, key == null ? chunkKey.get() : key);
+        return stationapi_chunkMap.get(chunkKey.get());
     }
 }

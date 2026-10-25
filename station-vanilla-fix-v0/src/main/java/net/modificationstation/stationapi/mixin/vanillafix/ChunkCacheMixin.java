@@ -10,6 +10,7 @@ import net.minecraft.world.chunk.ChunkCache;
 import net.modificationstation.stationapi.impl.vanillafix.util.LastAccessInt2ReferenceOpenHashMap;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.HashMap;
@@ -26,18 +27,20 @@ import java.util.Set;
  * and the JIT doesn't eliminate the box.
  *
  * <p>The maps are swapped by wrapping the field initializers' writes, so other mods' injectors on the same
- * instantiation or field write chain with these, and a mod replacing a field later in the constructor wins.
- * The field types stay {@link Map} and {@link Set} for other mods' shadows. The lookups capture the key at
- * {@link Integer#valueOf(int)}, skip the boxing by returning {@code null}, and pass the {@code int} to our map's
- * primitive method. This sees the key as modified by other mods' injectors on {@code ChunkPos.hashCode} and on
- * {@code Integer.valueOf}'s argument. Any other map in the field, including another mod's fastutil map that might
- * override the boxed methods, gets the captured key boxed as in vanilla, which undoes our {@code null} before it
- * reaches that map. Injectors between the two see {@code null} in place of the key: one that expects a non-null key
- * (for example a {@code @ModifyArg} on the map call) breaks, and a key put in its place reaches any other map but
- * not ours.
+ * instantiation or field write chain with these. The field types stay {@link Map} and {@link Set} for other mods'
+ * shadows. The chunk map is also kept in a typed field, as SmoothBeta does, and the lookups go straight to it: they
+ * capture the key at {@link Integer#valueOf(int)}, skip the boxing by returning {@code null}, and pass the
+ * {@code int} to the map's primitive method. This sees the key as modified by other mods' injectors on
+ * {@code ChunkPos.hashCode} and on {@code Integer.valueOf}'s argument. Injectors between the two see {@code null} in
+ * place of the key, and whatever they put in its place is ignored. The lookups don't see a map another mod puts in
+ * the field later; the chunk cache's own writes would go to that one.
  */
 @Mixin(ChunkCache.class)
 class ChunkCacheMixin {
+    /** the map put in {@code chunkByPos}, typed, for the lookups */
+    @Unique
+    private LastAccessInt2ReferenceOpenHashMap<Chunk> stationapi_chunkMap;
+
     @WrapOperation(
             method = "<init>",
             at = @At(
@@ -63,7 +66,8 @@ class ChunkCacheMixin {
     private void stationapi_useLastAccessMap(
             ChunkCache instance, Map<Integer, Chunk> map, Operation<Void> original
     ) {
-        original.call(instance, new LastAccessInt2ReferenceOpenHashMap<>(map));
+        stationapi_chunkMap = new LastAccessInt2ReferenceOpenHashMap<>(map);
+        original.call(instance, stationapi_chunkMap);
     }
 
     @WrapOperation(
@@ -95,9 +99,7 @@ class ChunkCacheMixin {
             Map<Integer, Chunk> map, Object key, Operation<Boolean> original,
             @Share("chunkKey") LocalIntRef chunkKey
     ) {
-        return map instanceof LastAccessInt2ReferenceOpenHashMap<Chunk> lastAccessMap
-                ? lastAccessMap.containsKey(chunkKey.get())
-                : original.call(map, key == null ? chunkKey.get() : key);
+        return stationapi_chunkMap.containsKey(chunkKey.get());
     }
 
     @WrapOperation(
@@ -111,8 +113,6 @@ class ChunkCacheMixin {
             Map<Integer, Chunk> map, Object key, Operation<Object> original,
             @Share("chunkKey") LocalIntRef chunkKey
     ) {
-        return map instanceof LastAccessInt2ReferenceOpenHashMap<Chunk> lastAccessMap
-                ? lastAccessMap.get(chunkKey.get())
-                : original.call(map, key == null ? chunkKey.get() : key);
+        return stationapi_chunkMap.get(chunkKey.get());
     }
 }
