@@ -22,6 +22,12 @@ public class StationFlatteningItemStackSchema extends Schema {
     private static final String[] OLD_ID_TO_ITEM = new String[32000];
     private static final Object2IntOpenHashMap<String> ITEM_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(512), map -> map.defaultReturnValue(0));
 
+    /**
+     * Assigns a numeric block ID to its new identifier
+     * @param oldId Numeric block ID to be converted
+     * @param id New identifier (including the namespace)
+     * @param properties Block states to be added to the block
+     */
     public static void putState(int oldId, String id, NbtCompound properties) {
         putState(oldId, Util.make(new NbtCompound(), tag -> {
             tag.putString("Name", id);
@@ -144,11 +150,22 @@ public class StationFlatteningItemStackSchema extends Schema {
         return BLOCK_TO_OLD_ID.getInt(dynamic.get("Name").asString(""));
     }
 
+    /**
+     * Assigns an item ID to its new identifier
+     * @param oldId Numeric ID of the item
+     * @param id New identifier (including the namespace)
+     */
     public static void putItem(int oldId, String id) {
         OLD_ID_TO_ITEM[oldId] = id;
         ITEM_TO_OLD_ID.put(id, oldId);
     }
 
+    /**
+     * Provides a new identifier for the provided parameters and applies block rules if it is a block item
+     * @param oldId Old numeric ID of the item
+     * @param oldMeta Old metadata of the item (relevant for block items)
+     * @return New identifier
+     */
     public static String lookupItem(int oldId, int oldMeta) {
         if (oldId < 0 || oldId >= OLD_ID_TO_ITEM.length)
             return "minecraft:air";
@@ -167,6 +184,12 @@ public class StationFlatteningItemStackSchema extends Schema {
         return item == null ? "minecraft:air" : item;
     }
 
+    /**
+     * Provides a new metadata value for the provided parameters and applies block rules if it is a block item
+     * @param oldId Old numeric ID of the item (relevant for block items)
+     * @param oldMeta Old metadata of the item (relevant for block items)
+     * @return New metadata
+     */
     public static short lookupItemMeta(int oldId, int oldMeta) {
         if (oldId < 0 || oldId >= OLD_ID_TO_ITEM.length)
             return 0;
