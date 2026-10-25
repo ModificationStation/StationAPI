@@ -86,6 +86,8 @@ public class ChunkSection {
     /** {@link #palette} is a {@link GlobalStates#states()} array, possibly an outdated one */
     private boolean global;
     private final LayeredNibbles meta = new LayeredNibbles();
+    /** nothing was written since the last {@link #compact()}, so the next one has nothing to do */
+    private boolean compacted = true;
     private final LayeredNibbles skyLight = new LayeredNibbles();
     private final LayeredNibbles blockLight = new LayeredNibbles();
 
@@ -124,6 +126,8 @@ public class ChunkSection {
             index = addState(state);
         }
         setPaletteIndexAt(cell, index);
+        // after the write: addState may have compacted
+        compacted = false;
 
         if (!previous.isAir()) {
             --this.nonEmptyBlockCount;
@@ -274,6 +278,8 @@ public class ChunkSection {
      * section global if that's smaller; and compacts metadata and light to their non-uniform layers.
      */
     public void compact() {
+        if (compacted) return;
+        compacted = true;
         meta.compact();
         compactLight();
         // one state at width 0, like the sections that only exist for light: nothing to narrow
@@ -396,7 +402,8 @@ public class ChunkSection {
      * @param sparse whether {@code source} may be much bigger than what the cells use, like every raw ID: then a first
      *               pass finds the indices in use, so only those are looked up. Otherwise every index is taken as used,
      *               which holds for palettes {@link #compact()} wrote; one that isn't used costs a palette slot until
-     *               the next compaction. Data with indices past the source is loaded again as sparse, for their air
+     *               the section is written and compacted again. Data with indices past the source is loaded again as
+     *               sparse, for their air
      */
     private void load(IntFunction<@Nullable BlockState> source, int size, long[] longs, int width, boolean sparse) {
         int perLong = 64 / width, mask = (1 << width) - 1;
@@ -583,6 +590,8 @@ public class ChunkSection {
             }
             load(v -> states[v], states.length, readLongs(buf, header), header, false);
         }
+        // the sender's palette may hold replaced states
+        compacted = false;
         byte[] flat = FLAT_NIBBLES.get();
         buf.get(flat);
         meta.setAll(flat);
@@ -711,6 +720,7 @@ public class ChunkSection {
 
     public void setMeta(int x, int y, int z, int meta) {
         this.meta.set(x, y, z, meta);
+        compacted = false;
     }
 
     /**
@@ -738,6 +748,7 @@ public class ChunkSection {
 
     public void setLight(LightType type, int x, int y, int z, int light) {
         (type == LightType.BLOCK ? blockLight : skyLight).set(x, y, z, light);
+        compacted = false;
     }
 
     /**
