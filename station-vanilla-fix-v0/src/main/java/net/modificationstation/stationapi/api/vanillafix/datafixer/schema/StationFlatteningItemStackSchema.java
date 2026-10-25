@@ -167,6 +167,20 @@ public class StationFlatteningItemStackSchema extends Schema {
         return item == null ? "minecraft:air" : item;
     }
 
+    public static short lookupItemMeta(int oldId, int oldMeta) {
+        if (oldId < 0 || oldId >= OLD_ID_TO_ITEM.length)
+            return 0;
+        // Handle Vanilla block items using expanded logic
+        if (oldId < 256) {
+            MetaDependentIdConversion metaDependentIdConversion = OLD_ID_TO_BLOCKSTATE[oldId];
+            if (metaDependentIdConversion != null) {
+                return (short) metaDependentIdConversion.getOutputMeta(oldMeta);
+            }
+        }
+        // Handle regular items by preserving the meta value
+        return (short) oldMeta;
+    }
+
     public static int lookupOldItemId(String id) {
         return ITEM_TO_OLD_ID.getInt(id);
     }

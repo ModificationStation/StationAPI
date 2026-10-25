@@ -41,6 +41,10 @@ public  class McRegionToStationFlatteningItemStackFix extends DataFix {
                                             value.asShort((short) 0),
                                             oldMeta[0]
                                     )))
+                                    .set("Damage", dynamic.createShort(StationFlatteningItemStackSchema.lookupItemMeta(
+                                            value.asShort((short) 0),
+                                            oldMeta[0]
+                                    )))
                     ).orElse(dynamic);
                 }
         );
