@@ -13,12 +13,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.world.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.world.MetaSetEvent;
 import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import net.modificationstation.stationapi.mixin.flattening.ChunkAccessor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,11 @@ public class FlattenedChunk extends Chunk {
     public final ChunkSection[] sections;
     public final short firstBlock;
     public final short lastBlock;
+    /**
+     * The world's bottom section coordinate: sections sit on the 16-block grid, so {@code (y >> 4) - bottomSection}
+     * is {@code y}'s index, like {@code world.sectionCoordToIndex(y >> 4)}, whether or not the bottom Y is on the grid.
+     */
+    private final int bottomSection;
     private final short[] stationHeightmap = new short[256];
 
     public FlattenedChunk(World world, int xPos, int zPos) {
@@ -37,6 +42,7 @@ public class FlattenedChunk extends Chunk {
         sections = new ChunkSection[countSections];
         firstBlock = (short) world.getBottomY();
         lastBlock = (short) (world.getTopY() - 1);
+        bottomSection = world.getBottomSectionCoord();
         entities = new List[countSections];
         for(short i = 0; i < entities.length; i++) {
             this.entities[i] = new ArrayList<>();
@@ -59,6 +65,14 @@ public class FlattenedChunk extends Chunk {
             bz = (i >> offsetZ) & 15;
             section.setBlockState(bx, by & 15, bz, Block.BLOCKS[id].getDefaultState());
         }
+        compactSections();
+    }
+
+    /**
+     * Narrows every section's palette and index width to what it holds. Called after generation and before saving.
+     */
+    public void compactSections() {
+        for (ChunkSection section : sections) if (section != null) section.compact();
     }
 
     public byte[] getStoredHeightmap() {
@@ -99,12 +113,15 @@ public class FlattenedChunk extends Chunk {
         return y >= getShortHeight(relX, relZ);
     }
 
-    private ChunkSection getSection(int y) {
+    /**
+     * {@return the section holding {@code y}, or {@code null} if it's missing or out of range}
+     */
+    private @Nullable ChunkSection getSection(int y) {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
 
-        return sections[world.sectionCoordToIndex(y >> 4)];
+        return sections[(y >> 4) - bottomSection];
     }
 
     @Override
@@ -121,7 +138,7 @@ public class FlattenedChunk extends Chunk {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
-        int index = world.sectionCoordToIndex(y >> 4);
+        int index = (y >> 4) - bottomSection;
         ChunkSection section = sections[index];
         if (section == null) {
             section = new ChunkSection(world.sectionIndexToCoord(index));
@@ -329,7 +346,8 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public int getBlockMeta(int x, int y, int z) {
-        ChunkSection section = getSection(y);
+        if ((y - firstBlock | lastBlock - y) < 0) return 0;
+        ChunkSection section = sections[(y >> 4) - bottomSection];
         return section == null ? 0 : section.getMeta(x, y & 15, z);
     }
 
@@ -353,12 +371,9 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public BlockState getBlockState(int x, int y, int z) {
-        ChunkSection section = getSection(y);
-        if (section == null) return States.AIR.get();
-        BlockState blockState = section.getBlockState(x, y & 15, z);
-        if (blockState == null)
-            throw new RuntimeException();
-        return blockState;
+        if ((y - firstBlock | lastBlock - y) < 0) return ChunkSection.AIR;
+        ChunkSection section = sections[(y >> 4) - bottomSection];
+        return section == null ? ChunkSection.AIR : section.getBlockState(x, y & 15, z);
     }
 
     @Override
