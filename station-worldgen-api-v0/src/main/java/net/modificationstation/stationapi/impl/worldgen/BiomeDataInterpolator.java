@@ -74,7 +74,7 @@ public class BiomeDataInterpolator {
             for (int dz = -radius; dz <= radius; dz++) {
                 final int lookupX = x + dx * distance;
                 final int lookupZ = z + dz * distance;
-                final long key = ((long) (lookupX) << 32L) | lookupZ;
+                final long key = ((long) (lookupX) << 32L) | (lookupZ & 0xFFFFFFFFL);
                 Biome biome = GLOBAL_CACHE.get(key);
                 if (biome == null)
                     GLOBAL_CACHE.put(key, biome = source.getBiome(lookupX, lookupZ));
