@@ -27,7 +27,10 @@ public  class McRegionToStationFlatteningItemStackFix extends DataFix {
                         dynamic.get("id").result().<Dynamic<?>>map(
                                 value -> dynamic
                                         .remove("id")
-                                        .set(STATION_ID, dynamic.createString(StationFlatteningItemStackSchema.lookupItem(value.asShort((short) 0))))
+                                        .set(STATION_ID, dynamic.createString(StationFlatteningItemStackSchema.lookupItem(
+                                                value.asShort((short) 0),
+                                                0
+                                        )))
                         ).orElse(dynamic)
         );
     }

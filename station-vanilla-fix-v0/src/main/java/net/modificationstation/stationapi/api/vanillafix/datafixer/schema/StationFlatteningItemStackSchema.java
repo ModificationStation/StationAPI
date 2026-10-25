@@ -7,6 +7,7 @@ import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
+import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.vanillafix.util.MetaDependentIdConversion;
 
@@ -116,7 +117,7 @@ public class StationFlatteningItemStackSchema extends Schema {
         if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {
             rule = OLD_ID_TO_BLOCKSTATE[stateId];
         }
-        return rule == null ? OLD_ID_TO_BLOCKSTATE[0].getDefaultTag() : rule.getTagForMeta(metadata);
+        return rule == null ? toDynamic(OLD_ID_TO_BLOCKSTATE[0].getDefaultTag()) : rule.getTagForMeta(metadata);
     }
 
     /**
@@ -148,9 +149,20 @@ public class StationFlatteningItemStackSchema extends Schema {
         ITEM_TO_OLD_ID.put(id, oldId);
     }
 
-    public static String lookupItem(int oldId) {
+    public static String lookupItem(int oldId, int oldMeta) {
         if (oldId < 0 || oldId >= OLD_ID_TO_ITEM.length)
             return "minecraft:air";
+        // Handle Vanilla block items using expanded logic
+        if (oldId < 256) {
+            MetaDependentIdConversion metaDependentIdConversion = OLD_ID_TO_BLOCKSTATE[oldId];
+            if (metaDependentIdConversion != null) {
+                NbtCompound output = metaDependentIdConversion.getRawTagForMeta(oldMeta);
+                if (output != null) {
+                    return output.getString("Name");
+                }
+            }
+        }
+        // Handle regular items
         String item = OLD_ID_TO_ITEM[oldId];
         return item == null ? "minecraft:air" : item;
     }
@@ -385,5 +397,9 @@ public class StationFlatteningItemStackSchema extends Schema {
                 TypeReferences.ITEM_NAME,
                 () -> DSL.constType(IdentifierNormalizingSchema.getIdentifierType())
         );
+    }
+
+    private static Dynamic<?> toDynamic(NbtCompound tag) {
+        return new Dynamic<>(NbtOps.INSTANCE, tag);
     }
 }
