@@ -8,4 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface ChunkAccessor {
     @Invoker
     void invokeLightGaps(int i, int j);
+
+    @Invoker
+    void invokeLightGap(int x, int z, int height);
 }

@@ -49,23 +49,19 @@ public class FlattenedChunk extends Chunk {
         }
     }
 
+    /**
+     * Fills the sections from a vanilla generator's array of block IDs, see {@link VanillaTerrainFill}.
+     */
     public void fromLegacy(byte[] tiles) {
-        int mask = (tiles.length >> 8) - 1;
-        int offsetZ = mask == 127 ? 7 : net.modificationstation.stationapi.api.util.math.MathHelper.ceilLog2(mask + 1);
-        int offsetX = offsetZ + 4;
-        int bottom = this.world.getBottomY();
-        int id, bx, by, bz;
-        for(int i = 0; i < tiles.length; i++) {
-            id = Byte.toUnsignedInt(tiles[i]);
-            if (id == 0 || id >= Block.BLOCKS.length) continue;
-            by = (i & mask) + bottom;
-            ChunkSection section = getOrCreateSection(by, false);
-            if (section == null) continue;
-            bx = (i >> offsetX) & 15;
-            bz = (i >> offsetZ) & 15;
-            section.setBlockState(bx, by & 15, bz, Block.BLOCKS[id].getDefaultState());
-        }
-        compactSections();
+        fromLegacy(tiles, false);
+    }
+
+    /**
+     * Fills the sections from a vanilla generator's array of block IDs and, with {@code heightMap}, does what
+     * {@link #populateHeightMap()} does, from the array, see {@link VanillaTerrainFill}.
+     */
+    public void fromLegacy(byte[] tiles, boolean heightMap) {
+        VanillaTerrainFill.fill(this, tiles, heightMap);
     }
 
     /**
@@ -116,7 +112,7 @@ public class FlattenedChunk extends Chunk {
     /**
      * {@return the section holding {@code y}, or {@code null} if it's missing or out of range}
      */
-    private @Nullable ChunkSection getSection(int y) {
+    @Nullable ChunkSection getSection(int y) {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
@@ -176,7 +172,7 @@ public class FlattenedChunk extends Chunk {
         return lightLevel;
     }
 
-    private void setShortHeight(int x, int z, short height) {
+    void setShortHeight(int x, int z, short height) {
         stationHeightmap[z << 4 | x] = height;
     }
 
@@ -242,11 +238,50 @@ public class FlattenedChunk extends Chunk {
         // the sky light just written fills whole layers of open air with 15
         for (ChunkSection section : sections) if (section != null) section.compactLight();
 
-        for (short i = 0; i < 256; i++) {
-            ((ChunkAccessor) this).invokeLightGaps(i & 15, i >> 4);
-        }
+        lightGaps();
 
         this.dirty = true;
+    }
+
+    /**
+     * Queues the same light updates as vanilla's {@code lightGaps} on every column.
+     *
+     * <p>While the chunk isn't in its world's chunk source, as during generation, every {@code lightGap} that stays
+     * inside the chunk is a no-op: {@code World.getTopY} returns the bottom Y for an unloaded chunk, and
+     * {@code World.queueLightUpdate} drops boxes centered in one. Only the calls facing out of the chunk are made
+     * then, in vanilla's order, which saves about 2,000 chunk lookups per chunk.
+     */
+    void lightGaps() {
+        ChunkAccessor accessor = (ChunkAccessor) this;
+        if (world.getChunkSource().isChunkLoaded(x, z)) {
+            for (short i = 0; i < 256; i++) {
+                accessor.invokeLightGaps(i & 15, i >> 4);
+            }
+            return;
+        }
+
+        int worldX = x << 4;
+        int worldZ = z << 4;
+        for (int localZ = 0; localZ < 16; localZ++) {
+            boolean edgeZ = localZ == 0 || localZ == 15;
+            for (int localX = 0; localX < 16; localX += edgeZ ? 1 : 15) {
+                int height = getHeight(localX, localZ);
+                int posX = worldX | localX;
+                int posZ = worldZ | localZ;
+                if (localX == 0) {
+                    accessor.invokeLightGap(posX - 1, posZ, height);
+                }
+                if (localX == 15) {
+                    accessor.invokeLightGap(posX + 1, posZ, height);
+                }
+                if (localZ == 0) {
+                    accessor.invokeLightGap(posX, posZ - 1, height);
+                }
+                if (localZ == 15) {
+                    accessor.invokeLightGap(posX, posZ + 1, height);
+                }
+            }
+        }
     }
 
     private void updateHeightMap(int x, int y, int z) {
