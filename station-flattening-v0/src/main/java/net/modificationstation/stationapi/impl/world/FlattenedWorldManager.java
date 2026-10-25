@@ -44,8 +44,12 @@ public class FlattenedWorldManager {
                 byte[] metadata = new byte[2048];
                 section.copyMetadata(metadata);
                 sectionTag.putByteArray(METADATA_KEY, metadata);
-                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(LightType.SKY).toTag());
-                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(LightType.BLOCK).toTag());
+                byte[] skyLight = new byte[2048];
+                section.copyLight(LightType.SKY, skyLight);
+                sectionTag.putByteArray(SKY_LIGHT_KEY, skyLight);
+                byte[] blockLight = new byte[2048];
+                section.copyLight(LightType.BLOCK, blockLight);
+                sectionTag.putByteArray(BLOCK_LIGHT_KEY, blockLight);
                 sectionTags.add(sectionTag);
             }
         }
@@ -88,8 +92,8 @@ public class FlattenedWorldManager {
                 if (sectionTag.contains(BLOCK_STATES_KEY))
                     chunkSection.readBlockStates(sectionTag.getCompound(BLOCK_STATES_KEY), errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage));
                 chunkSection.setMetadata(sectionTag.getByteArray(METADATA_KEY));
-                chunkSection.getLightArray(LightType.SKY).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
-                chunkSection.getLightArray(LightType.BLOCK).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
+                chunkSection.setLight(LightType.SKY, sectionTag.getByteArray(SKY_LIGHT_KEY));
+                chunkSection.setLight(LightType.BLOCK, sectionTag.getByteArray(BLOCK_LIGHT_KEY));
                 sections[index] = chunkSection;
             }
         }

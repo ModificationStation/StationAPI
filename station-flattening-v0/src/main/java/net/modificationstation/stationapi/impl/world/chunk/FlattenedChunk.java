@@ -239,6 +239,8 @@ public class FlattenedChunk extends Chunk {
         }
 
         this.minHeightmapValue = minHeight;
+        // the sky light just written fills whole layers of open air with 15
+        for (ChunkSection section : sections) if (section != null) section.compactLight();
 
         for (short i = 0; i < 256; i++) {
             ((ChunkAccessor) this).invokeLightGaps(i & 15, i >> 4);

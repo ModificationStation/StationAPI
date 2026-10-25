@@ -37,8 +37,8 @@ import java.util.function.IntFunction;
  * goes back to local, so a section can't flip between the two while it's being written. A global section keeps the
  * array it was encoded against, so its reads stay right after a registry remap, and it re-encodes on its next write.
  *
- * <p>Metadata is lazy: its nibble array exists only once a non-zero meta is written, and {@link #compact()} drops it
- * once it's all zero again.
+ * <p>Metadata and light are stored per 16x16 layer, see {@link LayeredNibbles}: uniform layers, like open sky, unlit
+ * stone or blocks without metadata, keep a single value.
  */
 public class ChunkSection {
 
@@ -63,8 +63,8 @@ public class ChunkSection {
     private static final VarHandle LONG_LE = MethodHandles.byteArrayViewVarHandle(long[].class, ByteOrder.LITTLE_ENDIAN);
     /** scratch for passes over every cell */
     private static final ThreadLocal<int[]> CELLS = ThreadLocal.withInitial(() -> new int[VOLUME]);
-    private static final byte[] INITIAL_SKY_LIGHT = Util.make(new byte[2048], array -> Arrays.fill(array, (byte) (LightType.SKY.lightValue << 4 | LightType.SKY.lightValue)));
-    private static final byte[] ZERO_META = new byte[META_BYTES];
+    /** scratch for metadata and light in the flat format */
+    private static final ThreadLocal<byte[]> FLAT_NIBBLES = ThreadLocal.withInitial(() -> new byte[LayeredNibbles.BYTES]);
     static final BlockState AIR = States.AIR.get();
     /**
      * An all-air section with full sky light, for code that reads a section where {@link FlattenedChunk#sections} has
@@ -85,9 +85,9 @@ public class ChunkSection {
     private @Nullable Reference2IntOpenHashMap<BlockState> paletteLookup;
     /** {@link #palette} is a {@link GlobalStates#states()} array, possibly an outdated one */
     private boolean global;
-    private byte @Nullable [] meta;
-    private final NibbleArray skyLightArray = new NibbleArray(4096);
-    private final NibbleArray blockLightArray = new NibbleArray(4096);
+    private final LayeredNibbles meta = new LayeredNibbles();
+    private final LayeredNibbles skyLight = new LayeredNibbles();
+    private final LayeredNibbles blockLight = new LayeredNibbles();
 
     public ChunkSection(int chunkPos) {
         this.yOffset = (short) ChunkSection.blockCoordFromChunkCoord(chunkPos);
@@ -271,10 +271,11 @@ public class ChunkSection {
 
     /**
      * Narrows the palette to the states in use and the index width to the narrowest that fits them, or makes the
-     * section global if that's smaller; and drops all-zero metadata.
+     * section global if that's smaller; and compacts metadata and light to their non-uniform layers.
      */
     public void compact() {
-        if (meta != null && isZero(meta)) meta = null;
+        meta.compact();
+        compactLight();
         // one state at width 0, like the sections that only exist for light: nothing to narrow
         if (bits == 0) return;
         int[] indices = CELLS.get();
@@ -582,11 +583,13 @@ public class ChunkSection {
             }
             load(v -> states[v], states.length, readLongs(buf, header), header, false);
         }
-        byte[] metadata = new byte[META_BYTES];
-        buf.get(metadata);
-        setMetadata(metadata);
-        buf.get(blockLightArray.data);
-        buf.get(skyLightArray.data);
+        byte[] flat = FLAT_NIBBLES.get();
+        buf.get(flat);
+        meta.setAll(flat);
+        buf.get(flat);
+        blockLight.setAll(flat);
+        buf.get(flat);
+        skyLight.setAll(flat);
     }
 
     public void toPacket(ByteBuffer buf) {
@@ -618,9 +621,13 @@ public class ChunkSection {
             }
             for (long l : packIndices(bits, null)) buf.putLong(l);
         }
-        buf.put(meta == null ? ZERO_META : meta);
-        buf.put(blockLightArray.data);
-        buf.put(skyLightArray.data);
+        byte[] flat = FLAT_NIBBLES.get();
+        meta.copyTo(flat);
+        buf.put(flat);
+        blockLight.copyTo(flat);
+        buf.put(flat);
+        skyLight.copyTo(flat);
+        buf.put(flat);
     }
 
     public int getPacketSize() {
@@ -629,7 +636,7 @@ public class ChunkSection {
         if (sendsRawIds()) blockStates = 1 + 8 * longsFor(rawIdWidth());
         else if (n == 1) blockStates = 1 + 4;
         else blockStates = 1 + 4 + 4 * n + 8 * longsFor(savedWidth(n));
-        return 2 + blockStates + META_BYTES + skyLightArray.data.length + blockLightArray.data.length;
+        return 2 + blockStates + META_BYTES + 2 * LayeredNibbles.BYTES;
     }
 
     private boolean sendsRawIds() {
@@ -698,86 +705,70 @@ public class ChunkSection {
 
     // ---- metadata ----
 
-    public int getMeta(int index) {
-        byte[] meta = this.meta;
-        return meta == null ? 0 : (meta[index >> 1] >> ((index & 1) << 2)) & 15;
-    }
-
     public int getMeta(int x, int y, int z) {
-        return getMeta(nibbleIndex(x, y, z));
-    }
-
-    public void setMeta(int index, int meta) {
-        byte[] array = this.meta;
-        if (array == null) {
-            if (meta == 0) return;
-            this.meta = array = new byte[META_BYTES];
-        }
-        int shift = (index & 1) << 2;
-        array[index >> 1] = (byte) ((array[index >> 1] & ~(15 << shift)) | ((meta & 15) << shift));
+        return meta.get(x, y, z);
     }
 
     public void setMeta(int x, int y, int z, int meta) {
-        setMeta(nibbleIndex(x, y, z), meta);
+        this.meta.set(x, y, z, meta);
     }
 
     /**
-     * Copies the metadata nibble array, {@code x << 8 | y << 4 | z} order, to {@code out}.
+     * Copies the metadata in the flat format, {@code x << 8 | y << 4 | z} order, to {@code out}.
      *
      * @param out 2048 bytes
      */
     public void copyMetadata(byte[] out) {
-        if (meta == null) Arrays.fill(out, 0, META_BYTES, (byte) 0);
-        else System.arraycopy(meta, 0, out, 0, META_BYTES);
+        meta.copyTo(out);
     }
 
     /**
-     * Replaces the metadata nibble array; arrays of another length are ignored.
+     * Replaces the metadata from the flat format; arrays of another length are ignored.
      */
     public void setMetadata(byte[] data) {
         if (data.length != META_BYTES) return;
-        meta = isZero(data) ? null : Arrays.copyOf(data, META_BYTES);
-    }
-
-    /** @param array {@link #META_BYTES} long, like {@link #ZERO_META} */
-    private static boolean isZero(byte[] array) {
-        // vectorized, unlike a loop over the bytes
-        return Arrays.equals(array, ZERO_META);
+        meta.setAll(data);
     }
 
     // ---- light ----
 
-    public int getLight(LightType type, int index) {
-        return getLightArray(type).getValue(index);
-    }
-
     public int getLight(LightType type, int x, int y, int z) {
-        return getLight(type, nibbleIndex(x, y, z));
-    }
-
-    public void setLight(LightType type, int index, int light) {
-        getLightArray(type).setValue(index, light);
+        return (type == LightType.BLOCK ? blockLight : skyLight).get(x, y, z);
     }
 
     public void setLight(LightType type, int x, int y, int z, int light) {
-        setLight(type, nibbleIndex(x, y, z), light);
+        (type == LightType.BLOCK ? blockLight : skyLight).set(x, y, z, light);
     }
 
-    public NibbleArray getLightArray(LightType type) {
-        return type == LightType.BLOCK ? blockLightArray : skyLightArray;
+    /**
+     * Copies a light type in the flat format, {@code x << 8 | y << 4 | z} order, to {@code out}.
+     *
+     * @param out 2048 bytes
+     */
+    public void copyLight(LightType type, byte[] out) {
+        (type == LightType.BLOCK ? blockLight : skyLight).copyTo(out);
+    }
+
+    /**
+     * Replaces a light type from the flat format; arrays of another length are ignored.
+     */
+    public void setLight(LightType type, byte[] data) {
+        if (data.length != LayeredNibbles.BYTES) return;
+        (type == LightType.BLOCK ? blockLight : skyLight).setAll(data);
     }
 
     public void initSkyLight() {
-        skyLightArray.copyArray(INITIAL_SKY_LIGHT);
+        skyLight.fill(LightType.SKY.lightValue);
     }
 
-    /** a metadata or light nibble's index: {@code x << 8 | y << 4 | z}, unlike the block state cells */
-    private static int nibbleIndex(int x, int y, int z) {
-        return x << 8 | y << 4 | z;
+    /** compacts light; light writes only ever add stored layers */
+    public void compactLight() {
+        skyLight.compact();
+        blockLight.compact();
     }
 
     @Override
     public String toString() {
-        return "ChunkSection[y=" + yOffset + (global ? " global" : " states=" + paletteSize) + " bits=" + bits + " meta=" + (meta != null) + "]";
+        return "ChunkSection[y=" + yOffset + (global ? " global" : " states=" + paletteSize) + " bits=" + bits + "]";
     }
 }
