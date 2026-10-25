@@ -23,15 +23,26 @@ public  class McRegionToStationFlatteningItemStackFix extends DataFix {
                 name,
                 getInputSchema().getType(TypeReferences.ITEM_STACK),
                 getOutputSchema().getType(TypeReferences.ITEM_STACK),
-                dynamic ->
-                        dynamic.get("id").result().<Dynamic<?>>map(
-                                value -> dynamic
-                                        .remove("id")
-                                        .set(STATION_ID, dynamic.createString(StationFlatteningItemStackSchema.lookupItem(
-                                                value.asShort((short) 0),
-                                                0
-                                        )))
-                        ).orElse(dynamic)
+                dynamic -> {
+                    // Single entry array to keep IntelliJ happy
+                    final int[] oldMeta = {0};
+                    // Get the meta value by transforming the data structure into something that can actually be used
+                    dynamic.get("Damage").result().<Dynamic<?>>map(
+                            value -> {
+                                oldMeta[0] = value.asShort((short) 0);
+                                return dynamic;
+                            }
+                    );
+                    // Actually convert the item data
+                    return dynamic.get("id").result().<Dynamic<?>>map(
+                            value -> dynamic
+                                    .remove("id")
+                                    .set(STATION_ID, dynamic.createString(StationFlatteningItemStackSchema.lookupItem(
+                                            value.asShort((short) 0),
+                                            oldMeta[0]
+                                    )))
+                    ).orElse(dynamic);
+                }
         );
     }
 }
