@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.impl.network;
 
-import java.util.*;
+import java.util.Map;
 
 public interface ModdedPacketHandlerSetter {
-
     void setModded(Map<String, String> mods);
 }
