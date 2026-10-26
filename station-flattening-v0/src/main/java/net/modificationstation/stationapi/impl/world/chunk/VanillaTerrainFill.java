@@ -164,7 +164,7 @@ final class VanillaTerrainFill {
             short height = (short) (firstBlock + topOpaque(tiles, base, top));
             chunk.setShortHeight(x, z, height);
             if (height < minHeight) minHeight = height;
-            if (sky) skyLight(chunk, tiles, base, x, z);
+            if (sky) skyLight(chunk, tiles, base, x, z, height);
         }
         chunk.minHeightmapValue = minHeight;
         // the sky light just written fills whole layers of open air with 15
@@ -192,11 +192,23 @@ final class VanillaTerrainFill {
         }
     }
 
-    /** populateHeightMap's sky light walk down one column, from the top until the light runs out */
-    private static void skyLight(FlattenedChunk chunk, byte[] tiles, int base, int x, int z) {
+    /**
+     * populateHeightMap's sky light walk down one column, from the top until the light runs out. The cells from the
+     * top down to {@code height} are written 15 without reading them.
+     */
+    private static void skyLight(FlattenedChunk chunk, byte[] tiles, int base, int x, int z, int height) {
         int firstBlock = chunk.firstBlock;
         int light = 15;
         int y = chunk.lastBlock;
+        // topOpaque passed every cell from lastBlock - 1 down to the height, so they have opacity 0 and keep the full
+        // light; only the top cell, which it doesn't look at, has to be checked
+        if (Block.BLOCKS_LIGHT_OPACITY[tiles[base + (y - firstBlock)] & 0xFF] == 0) {
+            for (int low = Math.max(height, firstBlock + 1); y >= low; y--) {
+                ChunkSection section = chunk.getSection(y);
+                if (section != null) section.setLight(LightType.SKY, x, y & 15, z, 15);
+            }
+            if (y <= firstBlock) return;
+        }
         do {
             light -= Block.BLOCKS_LIGHT_OPACITY[tiles[base + (y - firstBlock)] & 0xFF];
             if (light > 0) {
