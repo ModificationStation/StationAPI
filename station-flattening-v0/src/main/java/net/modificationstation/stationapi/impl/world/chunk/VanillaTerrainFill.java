@@ -60,6 +60,8 @@ final class VanillaTerrainFill {
         indices[0] = 0;
         BlockState[] palette = new BlockState[MAX_STATES];
         palette[0] = AIR;
+        int[] blockIds = new int[MAX_STATES];
+        blockIds[0] = AIR.block.id;
         int n = 1;
         byte[] data = PackedIndices.alloc(BITS);
         int xShift = columnBits + 4;
@@ -81,6 +83,7 @@ final class VanillaTerrainFill {
                         return;
                     } else {
                         index = n;
+                        blockIds[n] = block.id;
                         palette[n++] = block.getDefaultState();
                     }
                     indices[id] = index;
@@ -108,6 +111,7 @@ final class VanillaTerrainFill {
             else randomTickable += count;
         }
         section.palette = palette;
+        section.blockIds = blockIds;
         section.paletteSize = n;
         section.paletteLookup = null;
         section.global = false;

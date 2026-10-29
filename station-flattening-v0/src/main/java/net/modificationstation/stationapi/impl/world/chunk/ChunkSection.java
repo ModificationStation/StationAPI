@@ -70,6 +70,11 @@ public class ChunkSection {
     /** palette indices at {@link #bits} each, cell {@code y << 8 | z << 4 | x}, see {@link PackedIndices} */
     byte[] data = alloc(0);
     BlockState[] palette = {AIR};
+    /**
+     * {@link #palette}'s block IDs at the same indices, so {@link #getBlockId} reads one array instead of the state
+     * and its block. Global sections share {@link GlobalStates#blockIds()}.
+     */
+    int[] blockIds = {AIR.block.id};
     int paletteSize = 1;
     /** state to palette index, built once the palette passes {@link #MAP_AT} entries */
     @Nullable Reference2IntOpenHashMap<BlockState> paletteLookup;
@@ -101,6 +106,14 @@ public class ChunkSection {
         int bit = (y << 8 | z << 4 | x) * bits;
         int window = (int) INT_LE.get(data, bit >>> 3);
         return palette[(window >>> (bit & 7)) & ((1 << bits) - 1)];
+    }
+
+    /** {@return the block ID of the state at the cell}, {@link #getBlockState}'s read through {@link #blockIds} */
+    public int getBlockId(int x, int y, int z) {
+        int bits = this.bits;
+        int bit = (y << 8 | z << 4 | x) * bits;
+        int window = (int) INT_LE.get(data, bit >>> 3);
+        return blockIds[(window >>> (bit & 7)) & ((1 << bits) - 1)];
     }
 
     /**
@@ -201,9 +214,11 @@ public class ChunkSection {
         }
         if (paletteSize == palette.length) {
             palette = Arrays.copyOf(palette, paletteSize * 2);
+            blockIds = Arrays.copyOf(blockIds, paletteSize * 2);
         }
         int index = paletteSize++;
         palette[index] = state;
+        blockIds[index] = state.block.id;
         if (paletteLookup != null) paletteLookup.put(state, index);
         if (paletteSize > 1 << bits) {
             // under 4 bits, go straight to 4: sections pass 2-8 states while they're generated, and compaction
@@ -285,7 +300,10 @@ public class ChunkSection {
         }
         // every entry still in use at the exact width, as after a load: nothing to narrow
         if (!global && n == paletteSize && bits == exactBits) {
-            if (palette.length != n) palette = Arrays.copyOf(palette, n);
+            if (palette.length != n) {
+                palette = Arrays.copyOf(palette, n);
+                blockIds = Arrays.copyOf(blockIds, n);
+            }
             return;
         }
         setLayout(used, n, false, exactBits, indices);
@@ -317,13 +335,28 @@ public class ChunkSection {
      * drops the lookup map, which is rebuilt when it's next needed.
      */
     void setLayout(BlockState[] palette, int paletteSize, boolean global, int bits, int[] indices) {
-        if (palette != this.palette) this.paletteLookup = null;
+        if (palette != this.palette) {
+            this.paletteLookup = null;
+            this.blockIds = blockIdsOf(palette, paletteSize, global);
+        }
         this.palette = palette;
         this.paletteSize = paletteSize;
         this.global = global;
         this.bits = bits;
         this.data = alloc(bits);
         PackedIndices.write(data, bits, indices);
+    }
+
+    /**
+     * {@return the block IDs of a palette's first {@code size} states, in an array as long as the palette}
+     *
+     * @param global {@code palette} is the current {@link GlobalStates#states()}
+     */
+    static int[] blockIdsOf(BlockState[] palette, int size, boolean global) {
+        if (global) return GlobalStates.blockIds();
+        int[] ids = new int[palette.length];
+        for (int i = 0; i < size; i++) ids[i] = palette[i].block.id;
+        return ids;
     }
 
     private int paletteIndexAt(int cell) {

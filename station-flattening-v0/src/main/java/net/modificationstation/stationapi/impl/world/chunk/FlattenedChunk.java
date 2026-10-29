@@ -368,7 +368,9 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public int getBlockId(int x, int y, int z) {
-        return getBlockState(x, y, z).block.id;
+        if ((y - firstBlock | lastBlock - y) < 0) return ChunkSection.AIR.block.id;
+        ChunkSection section = sections[(y >> 4) - bottomSection];
+        return section == null ? ChunkSection.AIR.block.id : section.getBlockId(x, y & 15, z);
     }
 
     @Override

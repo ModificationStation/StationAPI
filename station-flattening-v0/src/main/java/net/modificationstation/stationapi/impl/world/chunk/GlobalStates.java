@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEven
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ final class GlobalStates {
     private static int bits;
     private static int[] rawIds = new int[0];
     private static int rawIdLimit;
+    private static int[] blockIds = new int[0];
 
     static {
         BlockRegistry.INSTANCE.getEventBus().register(Listener.<RegistryIdRemapEvent<Block>>simple()
@@ -74,6 +76,15 @@ final class GlobalStates {
         return rawIdLimit;
     }
 
+    /**
+     * {@return the block ID at each index of {@link #states()}}
+     * Global sections read block IDs through it. It keeps the same array while the IDs don't change.
+     */
+    static int[] blockIds() {
+        if (stale) rebuild();
+        return blockIds;
+    }
+
     static int indexOf(BlockState state) {
         if (stale) rebuild();
         int i = state.globalIndex;
@@ -100,6 +111,9 @@ final class GlobalStates {
         for (int i = 0; i < ids.length; i++) limit = Math.max(limit, (ids[i] = Block.STATE_IDS.getRawId(states[i])) + 1);
         rawIds = ids;
         rawIdLimit = limit;
+        int[] blocks = new int[states.length];
+        for (int i = 0; i < blocks.length; i++) blocks[i] = states[i].block.id;
+        if (!Arrays.equals(blocks, blockIds)) blockIds = blocks;
         stale = false;
     }
 }

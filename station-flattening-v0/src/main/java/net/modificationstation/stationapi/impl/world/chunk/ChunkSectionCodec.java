@@ -72,6 +72,7 @@ final class ChunkSectionCodec {
         if (longs.length != longsFor(bits))
             throw new IllegalStateException("Invalid length given for storage, got: " + longs.length + " but expected: " + longsFor(bits));
         load(section, entries::get, n, longs, bits, false);
+        setBlockIds(section);
     }
 
     // ---- packets ----
@@ -82,6 +83,7 @@ final class ChunkSectionCodec {
         if ((header & RAW_IDS) != 0) {
             int bits = header & ~RAW_IDS;
             load(section, Block.STATE_IDS::get, GlobalStates.rawIdLimit(), readLongs(buf, bits), bits, true);
+            setBlockIds(section);
         } else if (header == 0) {
             loadUniform(section, Block.STATE_IDS.getOrThrow(buf.getInt()));
         } else {
@@ -90,6 +92,7 @@ final class ChunkSectionCodec {
                 states[i] = Block.STATE_IDS.getOrThrow(buf.getInt());
             }
             load(section, v -> states[v], states.length, readLongs(buf, header), header, false);
+            setBlockIds(section);
         }
         // the sender's palette may hold replaced states
         section.compacted = false;
@@ -282,6 +285,14 @@ final class ChunkSectionCodec {
     }
 
     /** replaces the section's block states with {@code state} in every cell, and recounts */
+    /**
+     * Fills in the block IDs of the palette {@link #load} set. Kept out of {@link #load}: the extra call there made
+     * C2 compile its cell pass slower (chunk loads +17..30%).
+     */
+    private static void setBlockIds(ChunkSection section) {
+        section.blockIds = ChunkSection.blockIdsOf(section.palette, section.paletteSize, section.global);
+    }
+
     private static void loadUniform(ChunkSection section, BlockState state) {
         section.setLayout(new BlockState[] {state}, 1, false, 0, ChunkSection.CELLS.get());
         boolean solid = !state.isAir();
