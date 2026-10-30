@@ -17,16 +17,19 @@ public class MetaDependentIdConversion {
     public static final int UNSPECIFIED_META = -1;
 
     @Getter
-    private Dynamic<?> defaultTag;
+    private NbtCompound defaultTag;
+    private Dynamic<?> defaultDynamic;
 
-    private Dynamic<?>[] metaDependentTags = null;
+    private NbtCompound[] metaDependentTags = null;
     private int[] outputMetas = null;
+    private Dynamic<?>[] metaDependentDynamics = null;
 
     /**
      * @param defaultTag Tag to be used for unspecified metadata rules
      */
     public MetaDependentIdConversion(NbtCompound defaultTag) {
-        this.defaultTag = toDynamic(defaultTag);
+        this.defaultTag = defaultTag;
+        this.defaultDynamic = toDynamic(defaultTag);
     }
 
     /**
@@ -36,7 +39,8 @@ public class MetaDependentIdConversion {
      * @param defaultTag New tag to be used for unspecified metadata rules
      */
     public void setDefaultTag(NbtCompound defaultTag) {
-        this.defaultTag = toDynamic(defaultTag);
+        this.defaultTag = defaultTag;
+        this.defaultDynamic = toDynamic(defaultTag);
     }
 
     /**
@@ -61,11 +65,13 @@ public class MetaDependentIdConversion {
             );
         }
         if (metaDependentTags == null || outputMetas == null) {
-            metaDependentTags = new Dynamic[META_COUNT];
+            metaDependentTags = new NbtCompound[META_COUNT];
+            metaDependentDynamics = new Dynamic[META_COUNT];
             outputMetas = new int[META_COUNT];
             Arrays.fill(outputMetas, UNSPECIFIED_META);
         }
-        metaDependentTags[meta] = toDynamic(metaDependentTag);
+        metaDependentTags[meta] = metaDependentTag;
+        metaDependentDynamics[meta] = toDynamic(metaDependentTag);
         outputMetas[meta] = outputMeta;
     }
 
@@ -75,10 +81,26 @@ public class MetaDependentIdConversion {
      * @return Specific rule, or default if unspecified or out of range
      */
     public Dynamic<?> getTagForMeta(int meta) {
+        if (metaDependentDynamics == null || isOutOfRange(meta)) {
+            return defaultDynamic;
+        }
+        Dynamic<?> dynamic = metaDependentDynamics[meta];
+        if (dynamic == null) {
+            return defaultDynamic;
+        }
+        return dynamic;
+    }
+
+    /**
+     * Provides a conversion rule for a given metadata value without converting to Dynamic
+     * @param meta Metadata to check the rule for
+     * @return Specific rule, or default if unspecified or out of range
+     */
+    public NbtCompound getRawTagForMeta(int meta) {
         if (metaDependentTags == null || isOutOfRange(meta)) {
             return defaultTag;
         }
-        Dynamic<?> tag = metaDependentTags[meta];
+        NbtCompound tag = metaDependentTags[meta];
         if (tag == null) {
             return defaultTag;
         }
