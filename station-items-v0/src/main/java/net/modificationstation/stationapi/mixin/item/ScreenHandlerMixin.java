@@ -100,7 +100,7 @@ class ScreenHandlerMixin {
             )
     )
     private int stationapi_cancelStatement(ItemStack instance) {
-        return Objects.equals(thisStationNBT, instance.getStationNbt()) ? instance.itemId : 0;
+        return Objects.equals(thisStationNBT, instance.getStationNbt()) ? instance.getMaxCount() : 0;
     }
 
     @Redirect(
