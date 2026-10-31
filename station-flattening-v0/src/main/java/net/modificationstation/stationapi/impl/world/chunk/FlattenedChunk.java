@@ -233,8 +233,8 @@ public class FlattenedChunk extends Chunk {
     private void updateHeightMap(int x, int y, int z) {
         short height = getShortHeight(x, z);
         short maxHeight = (short) Math.max(y, height);
-        if (maxHeight > lastBlock) {
-            maxHeight = lastBlock;
+        if (maxHeight > lastBlock + 1) {
+            maxHeight = (short) (lastBlock + 1);
         }
 
         while (maxHeight > firstBlock && Block.BLOCKS_LIGHT_OPACITY[getBlockId(x, maxHeight - 1, z)] == 0) {
