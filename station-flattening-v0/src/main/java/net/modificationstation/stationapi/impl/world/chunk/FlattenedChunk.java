@@ -324,7 +324,7 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public boolean setBlock(int x, int y, int z, int blockId) {
-        return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState()) != null;
+        return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState(), false) != null;
     }
 
     @Override
@@ -374,10 +374,12 @@ public class FlattenedChunk extends Chunk {
     private BlockState setBlock(int x, int y, int z, BlockState state, int meta, boolean inPlace) {
         int worldX = this.x << 4 | x;
         int worldZ = this.z << 4 | z;
+        BlockState oldState = getBlockState(x, y, z);
         BlockSetEvent event =
                 BlockSetEvent.builder()
                         .world(world).chunk(this)
                         .x(worldX).y(y).z(worldZ)
+                        .oldState(oldState)
                         .blockState(state).blockMeta(meta)
                         .overrideState(state).overrideMeta(meta)
                         .build();
@@ -388,7 +390,6 @@ public class FlattenedChunk extends Chunk {
         if (section == null) return null;
         boolean sameMeta = section.getMeta(x, y & 15, z) == meta;
         short var6 = getShortHeight(x, z);
-        BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state && sameMeta) return null;
 
         if (inPlace && state.isOf(oldState.getBlock())) {
@@ -438,20 +439,27 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
+        return setBlockState(x, y, z, state, true);
+    }
+
+    private BlockState setBlockState(int x, int y, int z, BlockState state, boolean inPlace) {
         int worldX = this.x << 4 | x;
         int worldZ = this.z << 4 | z;
-        if (
-                StationAPI.EVENT_BUS.post(
-                        BlockSetEvent.builder()
-                                .world(world).chunk(this)
-                                .x(worldX).y(y).z(worldZ)
-                                .blockState(state)
-                                .build()
-                ).isCanceled()
-        ) return null;
+        BlockState oldState = getBlockState(x, y, z);
+        // vanilla setBlock(id) does nothing if the block is already there
+        if (!inPlace && state.isOf(oldState.getBlock())) return null;
+        BlockSetEvent event =
+                BlockSetEvent.builder()
+                        .world(world).chunk(this)
+                        .x(worldX).y(y).z(worldZ)
+                        .oldState(oldState)
+                        .blockState(state)
+                        .overrideState(state)
+                        .build();
+        if (StationAPI.EVENT_BUS.post(event).isCanceled()) return null;
+        state = event.overrideState;
         ChunkSection section = getOrCreateSection(y, true);
         if (section == null) return null;
-        BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state) return null;
 
         if (state.isOf(oldState.getBlock())) {
