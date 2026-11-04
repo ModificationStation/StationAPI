@@ -12,6 +12,8 @@ import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS
 import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
+import net.modificationstation.stationapi.mixin.flattening.client.ClientNetworkHandlerAccessor;
+import net.modificationstation.stationapi.mixin.flattening.client.MultiplayerInteractionManagerAccessor;
 
 import java.nio.ByteBuffer;
 
@@ -22,10 +24,19 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         return false;
     }
 
+    /**
+     * Vanilla packet handlers apply changes to the connection's own world, not {@link Minecraft#world},
+     * which a client-side dimension switch can replace with a non-remote {@link net.minecraft.world.World}.
+     */
+    private static ClientWorld getWorld() {
+        //noinspection deprecation
+        Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+        return ((ClientNetworkHandlerAccessor) ((MultiplayerInteractionManagerAccessor) minecraft.interactionManager).stationapi_getNetworkHandler()).stationapi_getWorld();
+    }
+
     @Override
     public void onMapChunk(FlattenedChunkDataS2CPacket packet) {
-        //noinspection deprecation
-        ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        ClientWorld world = getWorld();
         int fromX = packet.chunkX << 4;
         int fromZ = packet.chunkZ << 4;
         world.clearBlockResets(fromX, world.getBottomY(), fromZ, fromX + 15, world.getTopY() - 1, fromZ + 15);
@@ -41,16 +52,14 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
 
     @Override
     public void onBlockChange(FlattenedBlockChangeS2CPacket packet) {
-        //noinspection deprecation
-        ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        ClientWorld world = getWorld();
         world.clearBlockResets(packet.x, packet.y, packet.z, packet.x, packet.y, packet.z);
         world.setBlock(packet.x, packet.y, packet.z, Block.STATE_IDS.get(packet.stateId), packet.blockMetadata);
     }
 
     @Override
     public void onMultiBlockChange(FlattenedMultiBlockChangeS2CPacket packet) {
-        //noinspection deprecation
-        ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        ClientWorld world = getWorld();
         Chunk chunk = world.getChunk(packet.x, packet.z);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(packet.sectionIndex), true);
@@ -81,8 +90,7 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
 
     @Override
     public void onChunkSection(FlattenedChunkSectionDataS2CPacket packet) {
-        //noinspection deprecation
-        ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        ClientWorld world = getWorld();
         int fromX = packet.chunkX << 4;
         int fromY = world.sectionIndexToCoord(packet.sectionIndex) << 4;
         int fromZ = packet.chunkZ << 4;
