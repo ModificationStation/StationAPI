@@ -11,14 +11,23 @@ public interface StationFlatteningWorld extends BlockStateView, HeightLimitView 
         return Util.assertImpl();
     }
 
+    /**
+     * @see net.modificationstation.stationapi.api.world.chunk.StationFlatteningChunk#setBlockState(int, int, int, BlockState)
+     */
     default BlockState setBlockStateWithoutNotifyingNeighbors(int x, int y, int z, BlockState blockState) {
         return Util.assertImpl();
     }
 
+    /**
+     * @see net.modificationstation.stationapi.api.world.chunk.StationFlatteningChunk#setBlockState(int, int, int, BlockState)
+     */
     default BlockState setBlockState(int x, int y, int z, BlockState blockState) {
         return Util.assertImpl();
     }
 
+    /**
+     * @see net.modificationstation.stationapi.api.world.chunk.StationFlatteningChunk#setBlockState(int, int, int, BlockState, int)
+     */
     default BlockState setBlockStateWithoutNotifyingNeighbors(int x, int y, int z, BlockState blockState, int meta) {
         return Util.assertImpl();
     }
@@ -31,7 +40,24 @@ public interface StationFlatteningWorld extends BlockStateView, HeightLimitView 
         return setBlockState(pos.x, pos.y, pos.z, blockState);
     }
 
+    /**
+     * @see net.modificationstation.stationapi.api.world.chunk.StationFlatteningChunk#setBlockState(int, int, int, BlockState, int)
+     */
     default BlockState setBlockState(int x, int y, int z, BlockState blockState, int meta) {
+        return Util.assertImpl();
+    }
+
+    /**
+     * @see net.modificationstation.stationapi.api.world.chunk.StationFlatteningChunk#setBlock(int, int, int, BlockState, int)
+     */
+    default BlockState setBlockWithoutNotifyingNeighbors(int x, int y, int z, BlockState blockState, int meta) {
+        return Util.assertImpl();
+    }
+
+    /**
+     * @see net.modificationstation.stationapi.api.world.chunk.StationFlatteningChunk#setBlock(int, int, int, BlockState, int)
+     */
+    default BlockState setBlock(int x, int y, int z, BlockState blockState, int meta) {
         return Util.assertImpl();
     }
 

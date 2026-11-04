@@ -44,10 +44,12 @@
   ],
   "client": [
     "client.BlockRenderManagerMixin",
+    "client.ClientNetworkHandlerAccessor",
     "client.ClientWorldMixin",
     "client.InteractionManagerMixin",
     "client.MinecraftMixin",
     "client.MultiplayerChunkCacheMixin",
+    "client.MultiplayerInteractionManagerAccessor",
     "client.MultiplayerInteractionManagerMixin",
     "client.PlayerEntityRendererMixin",
     "client.SingleplayerInteractionManagerMixin",

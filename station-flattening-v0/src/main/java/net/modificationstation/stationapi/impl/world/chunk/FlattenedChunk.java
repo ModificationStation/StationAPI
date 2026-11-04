@@ -287,8 +287,8 @@ public class FlattenedChunk extends Chunk {
     private void updateHeightMap(int x, int y, int z) {
         short height = getShortHeight(x, z);
         short maxHeight = (short) Math.max(y, height);
-        if (maxHeight > lastBlock) {
-            maxHeight = lastBlock;
+        if (maxHeight > lastBlock + 1) {
+            maxHeight = (short) (lastBlock + 1);
         }
 
         while (maxHeight > firstBlock && Block.BLOCKS_LIGHT_OPACITY[getBlockId(x, maxHeight - 1, z)] == 0) {
@@ -375,12 +375,12 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public boolean setBlock(int x, int y, int z, int blockId, int meta) {
-        return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState(), meta) != null;
+        return setBlock(x, y, z, Block.BLOCKS[blockId].getDefaultState(), meta) != null;
     }
 
     @Override
     public boolean setBlock(int x, int y, int z, int blockId) {
-        return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState()) != null;
+        return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState(), false) != null;
     }
 
     @Override
@@ -416,13 +416,24 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
+    public BlockState setBlock(int x, int y, int z, BlockState state, int meta) {
+        return setBlock(x, y, z, state, meta, false);
+    }
+
+    @Override
     public BlockState setBlockState(int x, int y, int z, BlockState state, int meta) {
+        return setBlock(x, y, z, state, meta, true);
+    }
+
+    private BlockState setBlock(int x, int y, int z, BlockState state, int meta, boolean inPlace) {
         int worldX = this.x << 4 | x;
         int worldZ = this.z << 4 | z;
+        BlockState oldState = getBlockState(x, y, z);
         BlockSetEvent event =
                 BlockSetEvent.builder()
                         .world(world).chunk(this)
                         .x(worldX).y(y).z(worldZ)
+                        .oldState(oldState)
                         .blockState(state).blockMeta(meta)
                         .overrideState(state).overrideMeta(meta)
                         .build();
@@ -433,8 +444,18 @@ public class FlattenedChunk extends Chunk {
         if (section == null) return null;
         boolean sameMeta = section.getMeta(x, y & 15, z) == meta;
         short var6 = getShortHeight(x, z);
-        BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state && sameMeta) return null;
+
+        if (inPlace && state.isOf(oldState.getBlock())) {
+            // same block: an in-place change, so no replacement hooks,
+            // and the heightmap and sky light are skipped, since opacity is per block
+            section.setBlockState(x, y & 15, z, state);
+            section.setMeta(x, y & 15, z, meta);
+            if (oldState.getLuminance() != state.getLuminance())
+                this.world.queueLightUpdate(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
+            this.dirty = true;
+            return oldState;
+        }
 
         Block oldBlock = oldState.block;
         if (
@@ -446,6 +467,7 @@ public class FlattenedChunk extends Chunk {
                 ).isCanceled()
         ) return null;
         section.setBlockState(x, y & 15, z, state);
+        // unless inPlace, this replaces the block even if it stays the same, like vanilla
         if (!world.isRemote)
             oldState.onStateReplaced(world, CACHED_BLOCK_POS.get().set(worldX, y, worldZ), state);
         section.setMeta(x, y & 15, z, meta);
@@ -471,21 +493,38 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
+        return setBlockState(x, y, z, state, true);
+    }
+
+    private BlockState setBlockState(int x, int y, int z, BlockState state, boolean inPlace) {
         int worldX = this.x << 4 | x;
         int worldZ = this.z << 4 | z;
-        if (
-                StationAPI.EVENT_BUS.post(
-                        BlockSetEvent.builder()
-                                .world(world).chunk(this)
-                                .x(worldX).y(y).z(worldZ)
-                                .blockState(state)
-                                .build()
-                ).isCanceled()
-        ) return null;
+        BlockState oldState = getBlockState(x, y, z);
+        // vanilla setBlock(id) does nothing if the block is already there
+        if (!inPlace && state.isOf(oldState.getBlock())) return null;
+        BlockSetEvent event =
+                BlockSetEvent.builder()
+                        .world(world).chunk(this)
+                        .x(worldX).y(y).z(worldZ)
+                        .oldState(oldState)
+                        .blockState(state)
+                        .overrideState(state)
+                        .build();
+        if (StationAPI.EVENT_BUS.post(event).isCanceled()) return null;
+        state = event.overrideState;
         ChunkSection section = getOrCreateSection(y, true);
         if (section == null) return null;
-        BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state) return null;
+
+        if (state.isOf(oldState.getBlock())) {
+            // same block: an in-place change, so no replacement hooks, metadata is kept,
+            // and the heightmap and sky light are skipped, since opacity is per block
+            section.setBlockState(x, y & 15, z, state);
+            if (oldState.getLuminance() != state.getLuminance())
+                this.world.queueLightUpdate(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
+            this.dirty = true;
+            return oldState;
+        }
 
         short topY = getShortHeight(x, z);
         Block oldBlock = oldState.block;

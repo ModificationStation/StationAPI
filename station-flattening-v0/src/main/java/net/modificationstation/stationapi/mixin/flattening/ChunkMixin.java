@@ -32,6 +32,13 @@ abstract class ChunkMixin implements StationFlatteningChunk {
     @Override
     @Unique
     public BlockState setBlockState(int x, int y, int z, BlockState blockState, int meta) {
+        // vanilla chunks only store default states, so nothing can change in place
+        return setBlock(x, y, z, blockState, meta);
+    }
+
+    @Override
+    @Unique
+    public BlockState setBlock(int x, int y, int z, BlockState blockState, int meta) {
         BlockState oldState = getBlockState(x, y, z);
         return setBlock(x, y, z, blockState.block.id, meta) ? oldState : null;
     }
