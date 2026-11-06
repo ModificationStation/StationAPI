@@ -5,6 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.client.particle.BlockParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.util.math.BlockPos;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWorldModelProvider;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
@@ -13,6 +15,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.mixin.arsenic.client.BlockParticleAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.ParticleAccessor;
+import java.util.Objects;
 
 public class ArsenicDiggingParticle {
 
@@ -32,9 +35,14 @@ public class ArsenicDiggingParticle {
         if (block instanceof BlockWorldModelProvider provider)
             texture = provider.getCustomWorldModel(digging.world, x, y, z).getBaked().getSprite();
         else {
-            BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(((BlockStateView) digging.world).getBlockState(x, y, z));
-            if (!model.isBuiltin())
+            BlockState state = digging.world.getBlockState(x, y, z);
+            BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
+            if (!model.isBuiltin()) {
+                BlockPos pos = new BlockPos(x, y, z);
+                long seed = state.getRenderingSeed(pos);
+                model = Objects.requireNonNull(model.getOverrides().apply(model, state, digging.world, pos, (int) seed));
                 texture = model.getSprite();
+            }
         }
     }
 
