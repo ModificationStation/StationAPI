@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Unit;
-import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.item.Item;
@@ -20,13 +19,13 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public final class ItemRegistry extends SimpleRegistry<Item> {
     public static final RegistryKey<Registry<Item>> KEY = RegistryKey.ofRegistry(NAMESPACE.id("items"));
-    public static final ItemRegistry INSTANCE = Registries.create(KEY, new ItemRegistry(), Lifecycle.experimental());
+    public static final ItemRegistry INSTANCE = Registries.create(KEY, new ItemRegistry());
     public static final int ID_SHIFT = 256;
     public static final Int2IntFunction SHIFTED_ID = id -> id - ID_SHIFT;
     public static final int AUTO_ID = SHIFTED_ID.get(Registry.AUTO_ID);
 
     private ItemRegistry() {
-        super(KEY, Lifecycle.experimental(), true);
+        super(KEY, true);
         RegistryAttributeHolder.get(this).addAttribute(RegistryAttribute.SYNCED);
     }
 

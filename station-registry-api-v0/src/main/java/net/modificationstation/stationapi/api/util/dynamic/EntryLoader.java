@@ -128,13 +128,13 @@ public interface EntryLoader {
     final class Impl implements EntryLoader {
         private final Map<RegistryKey<?>, Element> values = Maps.newIdentityHashMap();
 
-        public <E> void add(DynamicRegistryManager registryManager, RegistryKey<E> key, Encoder<E> encoder, int rawId, E entry, Lifecycle lifecycle) {
+        public <E> void add(DynamicRegistryManager registryManager, RegistryKey<E> key, Encoder<E> encoder, int rawId, E entry) {
             DataResult<JsonElement> dataResult = encoder.encodeStart(RegistryOps.of(JsonOps.INSTANCE, registryManager), entry);
             Optional<DataResult.Error<JsonElement>> optional = dataResult.error();
             if (optional.isPresent()) {
                 LOGGER.error("Error adding element: {}", optional.get().message());
             } else {
-                this.values.put(key, new Element(dataResult.result().orElseThrow(), rawId, lifecycle));
+                this.values.put(key, new Element(dataResult.result().orElseThrow(), rawId));
             }
         }
 
@@ -154,9 +154,9 @@ public interface EntryLoader {
             return Optional.of(element::parse);
         }
 
-        record Element(JsonElement data, int id, Lifecycle lifecycle) {
+        record Element(JsonElement data, int id) {
             public <E> DataResult<Entry<E>> parse(DynamicOps<JsonElement> jsonOps, Decoder<E> decoder) {
-                return decoder.parse(jsonOps, this.data).setLifecycle(this.lifecycle).map(value -> Entry.of(value, this.id));
+                return decoder.parse(jsonOps, this.data).map(value -> Entry.of(value, this.id));
             }
         }
     }

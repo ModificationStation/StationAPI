@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.mojang.serialization.Lifecycle;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
 import java.util.Map;
@@ -110,19 +109,12 @@ public interface RegistryWrapper<T> extends RegistryEntryLookup<T> {
     interface Impl<T> extends RegistryWrapper<T>, RegistryEntryOwner<T> {
         RegistryKey<? extends Registry<? extends T>> getRegistryKey();
 
-        Lifecycle getLifecycle();
-
         abstract class Delegating<T> implements Impl<T> {
             protected abstract Impl<T> getBase();
 
             @Override
             public RegistryKey<? extends Registry<? extends T>> getRegistryKey() {
                 return this.getBase().getRegistryKey();
-            }
-
-            @Override
-            public Lifecycle getLifecycle() {
-                return this.getBase().getLifecycle();
             }
 
             @Override
