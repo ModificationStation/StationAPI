@@ -4,8 +4,10 @@
   "package": "net.modificationstation.stationapi.mixin.gui",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ScreenHandlerMixin"
   ],
   "client": [
+    "PlayerEntityMixin",
     "client.ScreenAccessor",
     "client.SelectWorldScreenMixin"
   ],
