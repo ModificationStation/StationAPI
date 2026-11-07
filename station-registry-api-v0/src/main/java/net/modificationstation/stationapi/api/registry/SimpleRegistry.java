@@ -18,6 +18,7 @@ import net.modificationstation.stationapi.api.registry.RegistryWrapper.Impl;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.collection.PagedTable;
 import net.modificationstation.stationapi.api.util.context.Condition;
 import net.modificationstation.stationapi.api.util.context.ConditionType;
 import net.modificationstation.stationapi.api.util.context.Context;
@@ -42,7 +43,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
 
 
     final RegistryKey<? extends Registry<T>> key;
-    private final ReferenceList<Reference<T>> rawIdToEntry = new ReferenceArrayList<>(256);
+    private final PagedTable<Reference<T>> rawIdToEntry = new PagedTable<>();
     private final Reference2IntMap<T> entryToRawId = Util.make(new Reference2IntOpenHashMap<>(), map -> map.defaultReturnValue(-1));
     private final Reference2ReferenceMap<Identifier, Reference<T>> idToEntry = new Reference2ReferenceOpenHashMap<>();
     private final Reference2ReferenceMap<RegistryKey<T>, Reference<T>> keyToEntry = new Reference2ReferenceOpenHashMap<>();
@@ -132,7 +133,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
 
     private List<Reference<T>> getEntries() {
         if (this.cachedEntries == null)
-            this.cachedEntries = this.rawIdToEntry.stream().filter(Objects::nonNull).toList();
+            this.cachedEntries = this.rawIdToEntry.values();
 
         return this.cachedEntries;
     }
@@ -216,23 +217,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         this.keyToEntry.put(registryKey, reference);
         this.idToEntry.put(registryKey.getValue(), reference);
         this.valueToEntry.put(value, reference);
-
-        int size = rawIdToEntry.size();
-        if (rawId == size) {
-            // If we're appending a new element, use add() to allow ReferenceArrayList to efficiently grow the capacity
-            // by at least 50% if necessary, and avoid memory leaks by resizing on each insertion.
-            rawIdToEntry.add(reference);
-        } else if (rawId > size) {
-            // Grow the array to the required size first by adding nulls. Calls grow() internally, growing it by at
-            // least 50%. More efficient than addElements, which takes an array and only uses size(), potentially
-            // incurring unnecessary additional array copies internally.
-            rawIdToEntry.addAll(Collections.nCopies(rawId - size, null));
-            rawIdToEntry.add(reference); // This may also call grow() internally, but ideally shouldn't.
-        } else {
-            // Otherwise, just use set() to change the existing value in the registry directly.
-            rawIdToEntry.set(rawId, reference);
-        }
-
+        this.rawIdToEntry.set(rawId, reference);
         this.entryToRawId.put(value, rawId);
         if (this.nextId <= rawId) this.nextId = rawId + 1;
 
@@ -289,12 +274,12 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     @Override
     @Nullable
     public T get(int index) {
-        return index >= 0 && index < this.rawIdToEntry.size() ? getValue(this.rawIdToEntry.get(index)) : null;
+        return getValue(this.rawIdToEntry.get(index));
     }
 
     @Override
     public Optional<Reference<T>> getEntry(int rawId) {
-        return rawId >= 0 && rawId < this.rawIdToEntry.size() ? Optional.ofNullable(this.rawIdToEntry.get(rawId)) : Optional.empty();
+        return Optional.ofNullable(this.rawIdToEntry.get(rawId));
     }
 
     @Override
@@ -633,16 +618,13 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             }
         }
         Int2IntMap idMap = new Int2IntOpenHashMap();
-        for (int i = 0; i < rawIdToEntry.size(); i++) {
-            Reference<T> reference = rawIdToEntry.get(i);
-
-            // Unused id, skip
-            if (reference == null) continue;
+        final Reference2IntMap<Identifier> newIndexedEntries = remoteIndexedEntries;
+        rawIdToEntry.forEach((rawId, reference) -> {
             Identifier id = reference.registryKey().getValue();
 
             // see above note
-            if (remoteIndexedEntries.containsKey(id)) idMap.put(i, remoteIndexedEntries.getInt(id));
-        }
+            if (newIndexedEntries.containsKey(id)) idMap.put(rawId, newIndexedEntries.getInt(id));
+        });
 
         // entries was handled above, if it was necessary.
         rawIdToEntry.clear();
@@ -665,22 +647,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             }
 
             // Add the new object, increment nextId to match.
-            int size = rawIdToEntry.size();
-            if (id == size) {
-                // If we're appending a new element, use add() to allow ReferenceArrayList to efficiently grow the
-                // capacity by at least 50% if necessary, and avoid memory leaks by resizing on each insertion.
-                rawIdToEntry.add(object);
-            } else if (id > size) {
-                // Grow the array to the required size first by adding nulls. Calls grow() internally, growing it by at
-                // least 50%. More efficient than addElements, which takes an array and only uses size(), potentially
-                // incurring unnecessary additional array copies internally.
-                rawIdToEntry.addAll(Collections.nCopies(id - size, null));
-                rawIdToEntry.add(object); // This may also call grow() internally, but ideally shouldn't.
-            } else {
-                // Otherwise, just use set() to change the existing value in the registry directly.
-                rawIdToEntry.set(id, object);
-            }
-
+            rawIdToEntry.set(id, object);
             entryToRawId.put(object.value(), id);
             if (nextId <= id) nextId = id + 1;
         }
