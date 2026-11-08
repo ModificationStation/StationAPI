@@ -47,7 +47,7 @@ public class ChunkSection {
      * width has at least half its entries unused: compacting it always frees room, and it takes 4096 more new states
      * to fill it again. A 12-bit palette could be full of states in use.
      */
-    private static final int MAX_BITS = 13;
+    static final int MAX_BITS = 13;
     /**
      * The widest index a 4-byte window holds at any shift: 32 minus the largest shift, 7. A registry whose global
      * width is past this never goes global, see {@link #globalBytes()}.

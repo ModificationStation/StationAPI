@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.world.chunk;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
@@ -156,6 +157,38 @@ final class LayeredNibbles {
             if ((long) WORD.get(array, from + x * stride) != first) return -1;
         }
         return value;
+    }
+
+    // ---- packets ----
+
+    /** {@return the bytes {@link #toPacket} writes} */
+    int packetSize() {
+        return 8 + 2 + Integer.bitCount(stored) * LAYER_BYTES;
+    }
+
+    /** writes the layers as they are: {@link #nibbles}, {@link #stored}, then the stored layers by slot */
+    void toPacket(ByteBuffer buf) {
+        buf.putLong(nibbles);
+        buf.putShort((short) stored);
+        buf.put(layers, 0, Integer.bitCount(stored) * LAYER_BYTES);
+    }
+
+    /** replaces every cell with what {@link #toPacket} wrote */
+    void fromPacket(ByteBuffer buf) {
+        long nibbles = buf.getLong();
+        int stored = buf.getShort() & 0xFFFF;
+        int count = Integer.bitCount(stored);
+        // each stored layer needs its own slot below count, or writes to one would show up in another
+        int slots = 0;
+        for (int y = 0; y < 16; y++) {
+            if ((stored & (1 << y)) != 0) slots |= 1 << ((int) (nibbles >>> (y << 2)) & 15);
+        }
+        if (slots != (1 << count) - 1) throw new IllegalStateException("Invalid layer slots: stored " + Integer.toBinaryString(stored) + ", slots " + Long.toHexString(nibbles));
+        byte[] layers = count == 0 ? NO_LAYERS : new byte[count * LAYER_BYTES];
+        buf.get(layers);
+        this.nibbles = nibbles;
+        this.stored = stored;
+        this.layers = layers;
     }
 
     /**

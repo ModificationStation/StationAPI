@@ -15,11 +15,11 @@ import java.util.List;
 /**
  * The palette that global sections share: every block state, numbered densely in {@link Block#STATE_IDS} order.
  *
- * <p>The numbering is the sections' own. Saves and packets never carry these indices: saves write states, packets
- * raw IDs through {@link #rawIds()}, so it doesn't have to match raw IDs. It's rebuilt lazily after any block
- * registration or remap: those rebuild {@link Block#STATE_IDS} too, and listeners here can't rely on running after
- * that. A rebuild that comes out in the same order keeps the same array, so sections only see a new array when the
- * numbering really changed.
+ * <p>The numbering is derived from raw IDs alone, so a client numbers the server's synced raw IDs the same way and
+ * packets send global sections' indices as they are; it doesn't have to match raw IDs, which can have holes. Saves
+ * never carry these indices: they write states. It's rebuilt lazily after any block registration or remap: those
+ * rebuild {@link Block#STATE_IDS} too, and listeners here can't rely on running after that. A rebuild that comes out
+ * in the same order keeps the same array, so sections only see a new array when the numbering really changed.
  *
  * <p>Not thread-safe: section writes, packets and registry remaps all happen on the game thread. Reads of global
  * sections never come here.
@@ -28,8 +28,6 @@ final class GlobalStates {
     private static boolean stale = true;
     private static BlockState[] states = new BlockState[0];
     private static int bits;
-    private static int[] rawIds = new int[0];
-    private static int rawIdLimit;
     private static int[] blockIds = new int[0];
 
     static {
@@ -61,21 +59,6 @@ final class GlobalStates {
         return bits;
     }
 
-    /** {@return the raw state ID at each index of {@link #states()}} */
-    static int[] rawIds() {
-        if (stale) rebuild();
-        return rawIds;
-    }
-
-    /**
-     * {@return one past the largest raw state ID}
-     * Not {@code STATE_IDS.size()}, which counts states and falls short if the raw IDs have holes.
-     */
-    static int rawIdLimit() {
-        if (stale) rebuild();
-        return rawIdLimit;
-    }
-
     /**
      * {@return the block ID at each index of {@link #states()}}
      * Global sections read block IDs through it. It keeps the same array while the IDs don't change.
@@ -105,12 +88,6 @@ final class GlobalStates {
             states = next;
             bits = next.length <= 1 ? 0 : 32 - Integer.numberOfLeadingZeros(next.length - 1);
         }
-        // raw IDs can move even when the order doesn't
-        int[] ids = new int[states.length];
-        int limit = 0;
-        for (int i = 0; i < ids.length; i++) limit = Math.max(limit, (ids[i] = Block.STATE_IDS.getRawId(states[i])) + 1);
-        rawIds = ids;
-        rawIdLimit = limit;
         int[] blocks = new int[states.length];
         for (int i = 0; i < blocks.length; i++) blocks[i] = states[i].block.id;
         if (!Arrays.equals(blocks, blockIds)) blockIds = blocks;

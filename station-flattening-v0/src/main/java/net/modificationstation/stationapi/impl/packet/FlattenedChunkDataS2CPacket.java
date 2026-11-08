@@ -8,24 +8,20 @@ import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
-import net.modificationstation.stationapi.impl.world.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Objects;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
 public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements ManagedPacket<FlattenedChunkDataS2CPacket> {
     public static final PacketType<FlattenedChunkDataS2CPacket> TYPE = PacketType.builder(true, false, FlattenedChunkDataS2CPacket::new).build();
 
     public int chunkX, chunkZ;
     private int sectionsSize;
+    /** the sections' size before deflating, on the server */
+    private int rawSize;
     public byte[] sectionsData;
 
     private FlattenedChunkDataS2CPacket() {}
@@ -35,28 +31,10 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         FlattenedChunk chunk = (FlattenedChunk) world.getChunk(chunkX, chunkZ);
-        ChunkSection[] sections = chunk.sections;
-        byte[] sectionsData = new byte[getSectionsPacketSize(chunk)];
-        ByteBuffer buf = ByteBuffer.wrap(sectionsData);
-        for (ChunkSection section : sections) {
-            Objects.requireNonNullElse(section, ChunkSection.EMPTY).toPacket(buf);
-        }
-        Deflater deflater = new Deflater(Deflater.DEFAULT_COMPRESSION);
-        try {
-            deflater.setInput(sectionsData);
-            deflater.finish();
-            this.sectionsData = new byte[sectionsData.length];
-            sectionsSize = deflater.deflate(this.sectionsData);
-        } finally {
-            deflater.end();
-        }
-    }
-
-    private static int getSectionsPacketSize(FlattenedChunk chunk) {
-        int i = 0;
-        for (ChunkSection chunkSection : chunk.sections)
-            i += Objects.requireNonNullElse(chunkSection, ChunkSection.EMPTY).getPacketSize();
-        return i;
+        SectionPacketData data = SectionPacketData.of(chunk.sections);
+        sectionsData = data.compressed;
+        sectionsSize = data.length;
+        rawSize = data.rawSize;
     }
 
     @Override
@@ -68,16 +46,7 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
             int sectionsSize = in.readInt();
             byte[] sectionsData = new byte[sectionsSize];
             in.readFully(sectionsData);
-            this.sectionsData = new byte[realSectionsSize];
-            Inflater inflater = new Inflater();
-            inflater.setInput(sectionsData);
-            try {
-                inflater.inflate(this.sectionsData);
-            } catch (DataFormatException dataFormatException) {
-                throw new IOException("Bad compressed data format");
-            } finally {
-                inflater.end();
-            }
+            this.sectionsData = SectionPacketData.inflate(sectionsData, realSectionsSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -88,7 +57,7 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
         try {
             out.writeInt(chunkX);
             out.writeInt(chunkZ);
-            out.writeInt(sectionsData.length);
+            out.writeInt(rawSize);
             out.writeInt(sectionsSize);
             out.write(sectionsData, 0, sectionsSize);
         } catch (IOException e) {
