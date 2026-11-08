@@ -104,9 +104,8 @@ final class ChunkSectionCodec {
         BlockState[] palette = section.palette;
         int n = section.paletteSize;
         if (section.global) {
-            // only a renumbering while it's loaded leaves a section on an outdated array, which receivers don't have
-            if (palette != GlobalStates.states())
-                throw new IllegalStateException("Global section encoded against an outdated numbering");
+            // receivers only have the current numbering
+            section.requireCurrentNumbering();
             // the section's own layout: the number of global states, for the receiver to check, then the indices
             buf.put((byte) (GLOBAL | section.bits));
             buf.putInt(n);

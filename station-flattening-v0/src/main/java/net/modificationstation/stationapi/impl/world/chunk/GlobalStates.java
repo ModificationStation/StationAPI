@@ -19,7 +19,8 @@ import java.util.List;
  * packets send global sections' indices as they are; it doesn't have to match raw IDs, which can have holes. Saves
  * never carry these indices: they write states. It's rebuilt lazily after any block registration or remap: those
  * rebuild {@link Block#STATE_IDS} too, and listeners here can't rely on running after that. A rebuild that comes out
- * in the same order keeps the same array, so sections only see a new array when the numbering really changed.
+ * in the same order keeps the same array, so sections only see a new array when the numbering really changed, which
+ * never happens while sections are loaded, see {@link ChunkSection#requireCurrentNumbering()}.
  *
  * <p>Not thread-safe: section writes, packets and registry remaps all happen on the game thread. Reads of global
  * sections never come here.
@@ -45,8 +46,7 @@ final class GlobalStates {
 
     /**
      * {@return every state, at its index}
-     * Global sections point their palette at this array; a section whose palette is no longer it is encoded
-     * against an older numbering.
+     * Global sections point their palette at this array.
      */
     static BlockState[] states() {
         if (stale) rebuild();

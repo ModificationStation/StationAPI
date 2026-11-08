@@ -29,8 +29,8 @@ import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.
  * <p>A section goes global once that's smaller: its palette becomes {@link GlobalStates}' shared array of every
  * state, and its indices are global indices. Reads don't change, and writes need no palette search, growth or map.
  * See {@link #globalBeats} for the cost rule. Widening and {@link #compact()} apply it, but only {@link #compact()}
- * goes back to local, so a section can't flip between the two while it's being written. A global section keeps the
- * array it was encoded against, so its reads stay right after a registry remap, and it re-encodes on its next write.
+ * goes back to local, so a section can't flip between the two while it's being written. A global section is always
+ * on the current numbering, see {@link #requireCurrentNumbering()}.
  *
  * <p>Metadata and light are stored per 16x16 layer, see {@link LayeredNibbles}: uniform layers, like open sky, unlit
  * stone or blocks without metadata, keep a single value.
@@ -78,7 +78,7 @@ public class ChunkSection {
     int paletteSize = 1;
     /** state to palette index, built once the palette passes {@link #MAP_AT} entries */
     @Nullable Reference2IntOpenHashMap<BlockState> paletteLookup;
-    /** {@link #palette} is a {@link GlobalStates#states()} array, possibly an outdated one */
+    /** {@link #palette} is the {@link GlobalStates#states()} array */
     boolean global;
     /** nothing was written since the last {@link #compact()}, so the next one has nothing to do */
     boolean compacted = true;
@@ -191,13 +191,20 @@ public class ChunkSection {
         return lookup.getInt(state);
     }
 
-    /**
-     * {@return the state's index in a global section}
-     * Re-encodes the section first if it was encoded against an outdated numbering.
-     */
+    /** {@return the state's index in a global section} */
     private int globalIndexOf(BlockState state) {
-        if (palette != GlobalStates.states()) toGlobal();
+        requireCurrentNumbering();
         return GlobalStates.indexOf(state);
+    }
+
+    /**
+     * Throws if the section is global but encoded against an outdated {@link GlobalStates} numbering, whose indices
+     * neither writes nor packets can use. Only clients renumber states, when they join or leave a server, and no
+     * sections are loaded then, so this would be a bug.
+     */
+    void requireCurrentNumbering() {
+        if (global && palette != GlobalStates.states())
+            throw new IllegalStateException("Global section encoded against an outdated numbering");
     }
 
     /**
@@ -242,10 +249,7 @@ public class ChunkSection {
         setLayout(palette, paletteSize, false, newBits, indices);
     }
 
-    /**
-     * Re-encodes the section against the current {@link GlobalStates} numbering, from a local palette or an
-     * outdated global one.
-     */
+    /** re-encodes a local section as a global one */
     private void toGlobal() {
         int[] indices = CELLS.get();
         for (int cell = 0; cell < VOLUME; cell++) {
@@ -295,7 +299,7 @@ public class ChunkSection {
         int n = used.length;
         int exactBits = widthFor(n);
         if (globalBeats(exactBits, n, n)) {
-            if (!global || palette != GlobalStates.states()) toGlobal();
+            if (!global) toGlobal();
             return;
         }
         // every entry still in use at the exact width, as after a load: nothing to narrow
