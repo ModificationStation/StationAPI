@@ -12,7 +12,7 @@ public class BlockSetEvent extends WorldEvent {
     public final int
             x, y, z,
             blockMeta;
-    public final BlockState blockState;
+    public final BlockState oldState, blockState;
     public BlockState overrideState;
     public int overrideMeta;
 }

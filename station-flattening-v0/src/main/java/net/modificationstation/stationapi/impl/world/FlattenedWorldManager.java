@@ -37,12 +37,15 @@ public class FlattenedWorldManager {
         chunkTag.putInt("zPos", chunk.z);
         chunkTag.putLong("LastUpdate", world.getTime());
         ChunkSection[] sections = chunk.sections;
+        // what a section that isn't saved reads as when loaded: an all-air section with other light needs saving
+        int missingSkyLight = world.dimension.hasCeiling ? 0 : LightType.SKY.lightValue;
+        int missingBlockLight = LightType.BLOCK.lightValue;
         NbtList sectionTags = new NbtList();
         for (int sectionY = world.getBottomSectionCoord(); sectionY < world.getTopSectionCoord() + 2; ++sectionY) {
             int index = world.sectionCoordToIndex(sectionY);
             if (index < 0 || index >= sections.length) continue;
             ChunkSection section = sections[index];
-            if (!ChunkSection.isEmpty(section)) {
+            if (section != null && (!section.isEmpty() || !section.hasUniformLight(missingSkyLight, missingBlockLight))) {
                 NbtCompound sectionTag = new NbtCompound();
                 sectionTag.putByte(HEIGHT_KEY, (byte)sectionY);
                 sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow());
