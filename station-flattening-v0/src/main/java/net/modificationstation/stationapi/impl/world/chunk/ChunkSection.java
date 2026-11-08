@@ -199,6 +199,11 @@ public class ChunkSection {
         return type == LightType.BLOCK ? blockLightArray : skyLightArray;
     }
 
+    /** {@return whether every cell has this sky light and block light} */
+    public boolean hasUniformLight(int skyLight, int blockLight) {
+        return skyLightArray.isUniform(skyLight) && blockLightArray.isUniform(blockLight);
+    }
+
     public void initSkyLight() {
         skyLightArray.copyArray(INITIAL_SKY_LIGHT);
     }

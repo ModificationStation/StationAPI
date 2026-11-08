@@ -26,6 +26,13 @@ public class NibbleArray {
         data[index2] = (byte) internal;
     }
 
+    /** {@return whether every cell holds {@code value}} */
+    public boolean isUniform(int value) {
+        byte packed = (byte) ((value & 15) << 4 | value & 15);
+        for (byte b : data) if (b != packed) return false;
+        return true;
+    }
+
     public NbtByteArray toTag() {
         return new NbtByteArray(data);
     }
