@@ -97,18 +97,12 @@ final class VanillaTerrainFill {
         if (n == 1 || (n == 2 && air == 0)) {
             // uniform: one state at width 0
             section.setLayout(new BlockState[] {palette[n - 1]}, 1, false, 0, ChunkSection.CELLS.get());
-            setCounts(section, palette[n - 1], PackedIndices.VOLUME);
+            section.nonEmptyBlockCount = (short) (palette[n - 1].isAir() ? 0 : PackedIndices.VOLUME);
             return;
         }
         int nonEmpty = PackedIndices.VOLUME - air;
-        int randomTickable = 0;
         for (int i = 1; i < n; i++) {
-            BlockState state = palette[i];
-            boolean empty = state.isAir();
-            if (!empty && !state.hasRandomTicks()) continue;
-            int count = countNibbles(data, i);
-            if (empty) nonEmpty -= count;
-            else randomTickable += count;
+            if (palette[i].isAir()) nonEmpty -= countNibbles(data, i);
         }
         section.palette = palette;
         section.blockIds = blockIds;
@@ -118,7 +112,6 @@ final class VanillaTerrainFill {
         section.bits = BITS;
         section.data = data;
         section.nonEmptyBlockCount = (short) nonEmpty;
-        section.randomTickableBlockCount = (short) randomTickable;
         section.compacted = false;
     }
 
@@ -132,12 +125,6 @@ final class VanillaTerrainFill {
                 if (block != null) section.setBlockState(column >> 4, y, column & 15, block.getDefaultState());
             }
         }
-    }
-
-    private static void setCounts(ChunkSection section, BlockState state, int count) {
-        boolean solid = !state.isAir();
-        section.nonEmptyBlockCount = (short) (solid ? count : 0);
-        section.randomTickableBlockCount = (short) (solid && state.hasRandomTicks() ? count : 0);
     }
 
     /** {@return how many of the 16 nibbles of {@code word} equal {@code index}} */

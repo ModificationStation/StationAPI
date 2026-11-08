@@ -42,7 +42,7 @@ final class ChunkSectionCodec {
     /** saved palettes; entries that don't load become air, as with PalettedContainer's codec */
     private static final Codec<List<BlockState>> PALETTE_CODEC = BlockState.CODEC.mapResult(Codecs.orElsePartial(AIR)).listOf();
     /** {@link #load}'s per-source-index flags, around an index of at most {@link ChunkSection#WINDOW_BITS} bits */
-    private static final int USED = 1 << 31, SOLID = 1 << 30, TICKING = 1 << 29, INDEX = TICKING - 1;
+    private static final int USED = 1 << 31, SOLID = 1 << 30, INDEX = SOLID - 1;
     /** {@link #adopt}'s flag for an index past the palette, below the count flags */
     private static final int BAD = 1;
     /** {@link #adopt}'s flags for the current {@link GlobalStates#states()}, see {@link #globalFlags} */
@@ -172,18 +172,17 @@ final class ChunkSectionCodec {
      * Copies the packed indices into the section as its layout. One pass over the cells recounts and checks that every
      * index is in the palette.
      *
-     * @param flags per index {@code bits} can hold: for the palette's, the count flags, {@link #countFlags}; for the
+     * @param flags per index {@code bits} can hold: for the palette's, {@link #SOLID} unless the state is air; for the
      *              ones past it, {@link #BAD}. So every index has an entry and the pass needs no branch or clamp: the
-     *              counts sum the flags, and {@link #BAD}, below them, is ORed up to be checked once at the end
+     *              count sums {@link #SOLID}, and {@link #BAD}, below it, is ORed up to be checked once at the end
      */
     private static void adopt(ChunkSection section, ByteBuffer buf, BlockState[] palette, int n, boolean global, int bits, int[] flags) {
         byte[] data = PackedIndices.alloc(bits);
         buf.get(data, 0, nativeBytes(bits));
-        int nonEmpty = 0, randomTickable = 0, bad = 0;
+        int nonEmpty = 0, bad = 0;
         for (int cell = 0; cell < VOLUME; cell++) {
             int f = flags[PackedIndices.get(data, bits, cell)];
             nonEmpty += f >>> 30;
-            randomTickable += (f >>> 29) & 1;
             bad |= f;
         }
         if ((bad & BAD) != 0) throw new IllegalStateException("Section data refers past its palette of " + n);
@@ -194,13 +193,12 @@ final class ChunkSectionCodec {
         section.bits = bits;
         section.data = data;
         section.nonEmptyBlockCount = (short) nonEmpty;
-        section.randomTickableBlockCount = (short) randomTickable;
         setBlockIds(section);
     }
 
-    /** {@return the flags a cell of {@code state} adds to the counts: {@link #SOLID}, and {@link #TICKING} on top} */
+    /** {@return the flag a cell of {@code state} adds to the count: {@link #SOLID} unless it's air} */
     private static int countFlags(BlockState state) {
-        return state.isAir() ? 0 : state.hasRandomTicks() ? SOLID | TICKING : SOLID;
+        return state.isAir() ? 0 : SOLID;
     }
 
     private record GlobalFlags(BlockState[] states, int[] flags) {}
@@ -239,7 +237,7 @@ final class ChunkSectionCodec {
     private static void load(ChunkSection section, IntFunction<@Nullable BlockState> source, int size, long[] longs, int width, boolean sparse) {
         int perLong = 64 / width, mask = (1 << width) - 1;
         // per source index (size standing for the out-of-range ones): USED while it's only known to be used, then
-        // its new index and the SOLID and TICKING flags the counts are summed from
+        // its new index and the SOLID flag the count is summed from
         int[] target = new int[size + 1];
         if (sparse) {
             for (int i = 0, cell = 0; i < longs.length; i++) {
@@ -298,15 +296,15 @@ final class ChunkSectionCodec {
             BlockState state = states[target[v] & ~USED];
             // global indices straight away rather than laying the section out locally first
             int index = toGlobal ? GlobalStates.indexOf(state) : target[v] & ~USED;
-            if (!state.isAir()) index |= state.hasRandomTicks() ? SOLID | TICKING : SOLID;
+            if (!state.isAir()) index |= SOLID;
             target[v] = index;
         }
 
-        // the counts are summed in registers: counting into an array would make each cell wait for the previous
+        // the count is summed in a register: counting into an array would make each cell wait for the previous
         // one's store whenever neighbors share a state. The packing is PackedIndices.write's, from the target indices
         byte[] data = PackedIndices.alloc(bits);
         long word = 0;
-        int filled = 0, offset = 0, nonEmpty = 0, randomTickable = 0;
+        int filled = 0, offset = 0, nonEmpty = 0;
         boolean outOfRange = false;
         for (int i = 0, cell = 0; i < longs.length; i++) {
             long l = longs[i];
@@ -315,7 +313,6 @@ final class ChunkSectionCodec {
                 outOfRange |= v >= size;
                 int t = target[Math.min(v, size)];
                 nonEmpty += t >>> 30;
-                randomTickable += (t >>> 29) & 1;
                 if (bits == 0) continue;
                 long index = t & INDEX;
                 word |= index << filled;
@@ -339,10 +336,8 @@ final class ChunkSectionCodec {
         section.bits = bits;
         section.data = data;
         section.nonEmptyBlockCount = (short) nonEmpty;
-        section.randomTickableBlockCount = (short) randomTickable;
     }
 
-    /** replaces the section's block states with {@code state} in every cell, and recounts */
     /**
      * Fills in the block IDs of the palette {@link #load} set. Kept out of {@link #load}: the extra call there made
      * C2 compile its cell pass slower (chunk loads +17..30%).
@@ -351,11 +346,10 @@ final class ChunkSectionCodec {
         section.blockIds = ChunkSection.blockIdsOf(section.palette, section.paletteSize, section.global);
     }
 
+    /** replaces the section's block states with {@code state} in every cell, and recounts */
     private static void loadUniform(ChunkSection section, BlockState state) {
         section.setLayout(new BlockState[] {state}, 1, false, 0, ChunkSection.CELLS.get());
-        boolean solid = !state.isAir();
-        section.nonEmptyBlockCount = (short) (solid ? VOLUME : 0);
-        section.randomTickableBlockCount = (short) (solid && state.hasRandomTicks() ? VOLUME : 0);
+        section.nonEmptyBlockCount = (short) (state.isAir() ? 0 : VOLUME);
     }
 
     // ---- PackedIntegerArray-style longs ----

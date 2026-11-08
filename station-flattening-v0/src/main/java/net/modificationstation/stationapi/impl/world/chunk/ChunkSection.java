@@ -64,7 +64,6 @@ public class ChunkSection {
 
     private final short yOffset;
     short nonEmptyBlockCount;
-    short randomTickableBlockCount;
     /** the width of each cell's palette index */
     int bits;
     /** palette indices at {@link #bits} each, cell {@code y << 8 | z << 4 | x}, see {@link PackedIndices} */
@@ -133,19 +132,8 @@ public class ChunkSection {
         // after the write: addState may have compacted
         compacted = false;
 
-        if (!previous.isAir()) {
-            --this.nonEmptyBlockCount;
-            if (previous.hasRandomTicks()) {
-                --this.randomTickableBlockCount;
-            }
-        }
-
-        if (!state.isAir()) {
-            ++this.nonEmptyBlockCount;
-            if (state.hasRandomTicks()) {
-                ++this.randomTickableBlockCount;
-            }
-        }
+        if (!previous.isAir()) --nonEmptyBlockCount;
+        if (!state.isAir()) ++nonEmptyBlockCount;
 
         return previous;
     }
@@ -156,18 +144,6 @@ public class ChunkSection {
 
     public static boolean isEmpty(@Nullable ChunkSection section) {
         return section == null || section.isEmpty();
-    }
-
-    public boolean hasRandomTicks() {
-        return this.hasRandomBlockTicks() || this.hasRandomFluidTicks();
-    }
-
-    public boolean hasRandomBlockTicks() {
-        return this.randomTickableBlockCount > 0;
-    }
-
-    public boolean hasRandomFluidTicks() {
-        return false;
     }
 
     // ---- palette ----
