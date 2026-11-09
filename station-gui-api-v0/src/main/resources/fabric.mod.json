@@ -33,6 +33,11 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/screen/ScreenHandler": [
+        "net/modificationstation/stationapi/api/client/gui/screen/StationScreenHandler"
+      ]
+    }
   }
 }
