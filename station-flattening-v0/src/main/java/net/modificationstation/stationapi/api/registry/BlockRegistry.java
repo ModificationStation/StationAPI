@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Unit;
-import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.context.BlockContext;
@@ -19,10 +18,10 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public final class BlockRegistry extends SimpleRegistry<Block> {
     public static final RegistryKey<Registry<Block>> KEY = RegistryKey.ofRegistry(NAMESPACE.id("blocks"));
-    public static final BlockRegistry INSTANCE = Registries.create(KEY, new BlockRegistry(), Lifecycle.experimental());
+    public static final BlockRegistry INSTANCE = Registries.create(KEY, new BlockRegistry());
 
     private BlockRegistry() {
-        super(KEY, Lifecycle.experimental(), true);
+        super(KEY, true);
         RegistryAttributeHolder.get(this).addAttribute(RegistryAttribute.SYNCED);
         nextId = 256;
     }

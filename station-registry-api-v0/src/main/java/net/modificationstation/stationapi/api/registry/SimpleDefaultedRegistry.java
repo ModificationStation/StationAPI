@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.mojang.serialization.Lifecycle;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,13 +11,13 @@ public class SimpleDefaultedRegistry<T> extends SimpleRegistry<T> implements Def
     private final Identifier defaultId;
     private RegistryEntry.Reference<T> defaultEntry;
 
-    public SimpleDefaultedRegistry(Identifier defaultId, RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean intrusive) {
-        super(key, lifecycle, intrusive);
+    public SimpleDefaultedRegistry(Identifier defaultId, RegistryKey<? extends Registry<T>> key, boolean intrusive) {
+        super(key, intrusive);
         this.defaultId = defaultId;
     }
 
-    public RegistryEntry.Reference<T> set(int rawId, RegistryKey<T> registryKey, T value, Lifecycle lifecycle) {
-        RegistryEntry.Reference<T> reference = super.set(rawId, registryKey, value, lifecycle);
+    public RegistryEntry.Reference<T> set(int rawId, RegistryKey<T> registryKey, T value) {
+        RegistryEntry.Reference<T> reference = super.set(rawId, registryKey, value);
         if (this.defaultId.equals(registryKey.getValue())) this.defaultEntry = reference;
 
         return reference;

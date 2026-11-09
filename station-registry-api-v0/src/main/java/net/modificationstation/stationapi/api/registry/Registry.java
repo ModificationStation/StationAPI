@@ -188,11 +188,8 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
                 this::get,
                 -1
         );
-        return Codecs.withLifecycle(
-                Codecs.orCompressed(codec, codec2),
-                this::getEntryLifecycle,
-                this::getEntryLifecycle
-        );
+        
+        return Codecs.orCompressed(codec, codec2);
     }
 
     /**
@@ -210,11 +207,8 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
                         .map(DataResult::success)
                         .orElseGet(() -> DataResult.error(() -> "Unknown registry element in " + this.getKey() + ":" + entry))
         );
-        return Codecs.withLifecycle(
-                codec,
-                entry -> this.getEntryLifecycle(entry.value()),
-                entry -> this.getEntryLifecycle(entry.value())
-        );
+        
+        return codec;
     }
 
     default <U> Stream<U> keys(DynamicOps<U> ops) {
@@ -247,13 +241,6 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
      * {@return the value that is assigned {@code id}, or {@code null} if there is none}
      */
     @Nullable T get(@Nullable Identifier var1);
-
-    /**
-     * Gets the lifecycle of a registry entry.
-     */
-    Lifecycle getEntryLifecycle(T var1);
-
-    Lifecycle getLifecycle();
 
     /**
      * {@return the value that is assigned {@code id}, or an empty optional if there is none}
@@ -336,12 +323,12 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
      * @return the passed {@code entry}
      */
     static <V, T extends V> T register(Registry<V> registry, RegistryKey<V> key, T entry) {
-        ((MutableRegistry<V>)registry).add(key, entry, Lifecycle.stable());
+        ((MutableRegistry<V>)registry).add(key, entry);
         return entry;
     }
 
     static <T> RegistryEntry.Reference<T> registerReference(Registry<T> registry, RegistryKey<T> registryKey, T object) {
-        return ((MutableRegistry<T>)registry).add(registryKey, object, Lifecycle.stable());
+        return ((MutableRegistry<T>)registry).add(registryKey, object);
     }
 
     static <T> RegistryEntry.Reference<T> registerReference(Registry<T> registry, Identifier identifier, T object) {
@@ -349,7 +336,7 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
     }
 
     static <V, T extends V> T register(Registry<V> registry, int rawId, Identifier id, T entry) {
-        ((MutableRegistry<V>)registry).set(rawId, RegistryKey.of(registry.getKey(), id), entry, Lifecycle.stable());
+        ((MutableRegistry<V>)registry).set(rawId, RegistryKey.of(registry.getKey(), id), entry);
         return entry;
     }
 

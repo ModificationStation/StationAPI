@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.registry.legacy;
 
-import com.mojang.serialization.Lifecycle;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.RegistryKey;
 import net.modificationstation.stationapi.api.registry.SimpleRegistry;
@@ -64,7 +63,7 @@ public abstract class AbstractLegacyRegistry<T> extends SimpleRegistry<T> {
      * @param intrusive               whether the registry is intrusive
      */
     public AbstractLegacyRegistry(@NotNull RegistryKey<? extends Registry<T>> key, boolean shiftLegacyIDOnRegister, boolean intrusive) {
-        super(key, Lifecycle.experimental(), intrusive);
+        super(key, intrusive);
         this.shiftLegacyIDOnRegister = shiftLegacyIDOnRegister;
     }
 

@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.client.registry;
 
-import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.render.model.BlockModelPredicateProviderRegistryEvent;
@@ -19,14 +18,14 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 public final class BlockModelPredicateProviderRegistry extends SimpleRegistry<BlockModelPredicateProvider> {
 
     public static final RegistryKey<BlockModelPredicateProviderRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("block_model_predicate_providers"));
-    public static final BlockModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new BlockModelPredicateProviderRegistry(), Lifecycle.experimental());
+    public static final BlockModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new BlockModelPredicateProviderRegistry());
 
     private static final Identifier META_ID = Identifier.of("meta");
     private static final BlockModelPredicateProvider META_PROVIDER = (state, clientWorld, pos, seed) -> clientWorld == null || pos == null ? 0 : MathHelper.clamp(clientWorld.getBlockMeta(pos.x, pos.y, pos.z), 0, 15);
     private final Map<Block, Map<Identifier, BlockModelPredicateProvider>> BLOCK_SPECIFIC = new IdentityHashMap<>();
 
     private BlockModelPredicateProviderRegistry() {
-        super(KEY, Lifecycle.experimental(), false);
+        super(KEY, false);
     }
 
     public BlockModelPredicateProvider get(Block block, Identifier identifier) {

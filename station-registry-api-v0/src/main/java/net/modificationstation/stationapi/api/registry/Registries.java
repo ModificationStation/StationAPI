@@ -8,36 +8,39 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class Registries {
     public static final Identifier ROOT_KEY = NAMESPACE.id("root");
-    private static final MutableRegistry<MutableRegistry<?>> ROOT = new SimpleRegistry<>(RegistryKey.ofRegistry(ROOT_KEY), Lifecycle.stable());
+    private static final MutableRegistry<MutableRegistry<?>> ROOT = new SimpleRegistry<>(RegistryKey.ofRegistry(ROOT_KEY));
     public static final Registry<? extends Registry<?>> REGISTRIES = ROOT;
 
     public static <T> Registry<T> create(RegistryKey<? extends Registry<T>> key) {
-        return Registries.create(key, Lifecycle.stable());
+        return Registries.create(key, new SimpleRegistry<>(key, false));
     }
 
+    @Deprecated(forRemoval = true)
+    public static <T> Registry<T> create(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle) {
+        return Registries.create(key, new SimpleRegistry<>(key));
+    }
+    
     public static <T> DefaultedRegistry<T> create(RegistryKey<? extends Registry<T>> key, Identifier defaultId) {
-        return Registries.create(key, defaultId, Lifecycle.stable());
+        return Registries.create(key, new SimpleDefaultedRegistry<>(defaultId, key, false));
+    }
+
+    @Deprecated(forRemoval = true)
+    public static <T> DefaultedRegistry<T> create(RegistryKey<? extends Registry<T>> key, Identifier defaultId, Lifecycle lifecycle) {
+        return Registries.create(key, defaultId);
     }
 
     public static <T> DefaultedRegistry<T> createIntrusive(RegistryKey<? extends Registry<T>> key, Identifier defaultId) {
-        return Registries.createIntrusive(key, defaultId, Lifecycle.stable());
+        return Registries.create(key, new SimpleDefaultedRegistry<>(defaultId, key, true));
     }
 
-    public static <T> Registry<T> create(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle) {
-        return Registries.create(key, new SimpleRegistry<>(key, lifecycle, false), lifecycle);
-    }
-
-    public static <T> DefaultedRegistry<T> create(RegistryKey<? extends Registry<T>> key, Identifier defaultId, Lifecycle lifecycle) {
-        return Registries.create(key, new SimpleDefaultedRegistry<>(defaultId, key, lifecycle, false), lifecycle);
-    }
-
+    @Deprecated(forRemoval = true)
     public static <T> DefaultedRegistry<T> createIntrusive(RegistryKey<? extends Registry<T>> key, Identifier defaultId, Lifecycle lifecycle) {
-        return Registries.create(key, new SimpleDefaultedRegistry<>(defaultId, key, lifecycle, true), lifecycle);
+        return Registries.createIntrusive(key, defaultId);
     }
 
-    public static <T, R extends MutableRegistry<T>> R create(RegistryKey<? extends Registry<T>> key, R registry, Lifecycle lifecycle) {
+    public static <T, R extends MutableRegistry<T>> R create(RegistryKey<? extends Registry<T>> key, R registry) {
         //noinspection unchecked
-        ((MutableRegistry<R>) ROOT).add((RegistryKey<R>) key, registry, lifecycle);
+        ((MutableRegistry<R>) ROOT).add((RegistryKey<R>) key, registry);
         return registry;
     }
 

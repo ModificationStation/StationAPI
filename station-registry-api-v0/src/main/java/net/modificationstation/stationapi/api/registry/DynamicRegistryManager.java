@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.serialization.Lifecycle;
 
 import java.util.List;
 import java.util.Map;
@@ -67,10 +66,6 @@ public interface DynamicRegistryManager extends RegistryWrapper.WrapperLookup {
             }
         }
         return new Immutablized(this.streamAllRegistries().map(Entry::freeze));
-    }
-
-    default Lifecycle getRegistryLifecycle() {
-        return this.streamAllRegistries().map(entry -> entry.value.getLifecycle()).reduce(Lifecycle.stable(), Lifecycle::add);
     }
 
     record Entry<T>(RegistryKey<? extends Registry<T>> key, Registry<T> value) {

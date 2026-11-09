@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.event.registry;
 
-import com.mojang.serialization.Lifecycle;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
@@ -34,11 +33,11 @@ public abstract class RegistryEvent<REGISTRY extends Registry<?>> extends Event 
         }
 
         public ENTRY register(Identifier id, ENTRY entry) {
-            return registry.add(RegistryKey.of(registry.getKey(), id), entry, Lifecycle.stable()).value();
+            return registry.add(RegistryKey.of(registry.getKey(), id), entry).value();
         }
 
         public ENTRY register(int rawId, Identifier id, ENTRY entry) {
-            return registry.set(rawId, RegistryKey.of(registry.getKey(), id), entry, Lifecycle.stable()).value();
+            return registry.set(rawId, RegistryKey.of(registry.getKey(), id), entry).value();
         }
 
         @Contract(pure = true)
@@ -63,11 +62,11 @@ public abstract class RegistryEvent<REGISTRY extends Registry<?>> extends Event 
         }
 
         public ENTRY registerLogical(int logicalId, Identifier id, ENTRY entry) {
-            return registry.add(logicalId, RegistryKey.of(registry.getKey(), id), entry, Lifecycle.stable()).value();
+            return registry.add(logicalId, RegistryKey.of(registry.getKey(), id), entry).value();
         }
 
         public ENTRY registerLogical(int rawId, int logicalId, Identifier id, ENTRY entry) {
-            return registry.set(rawId, logicalId, RegistryKey.of(registry.getKey(), id), entry, Lifecycle.stable()).value();
+            return registry.set(rawId, logicalId, RegistryKey.of(registry.getKey(), id), entry).value();
         }
     }
 }

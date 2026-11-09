@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.client.registry;
 
-import com.mojang.serialization.Lifecycle;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.render.model.ItemModelPredicateProviderRegistryEvent;
@@ -19,7 +18,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<ItemModelPredicateProvider> {
 
     public static final RegistryKey<ItemModelPredicateProviderRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("item_model_predicate_providers"));
-    public static final ItemModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new ItemModelPredicateProviderRegistry(), Lifecycle.experimental());
+    public static final ItemModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new ItemModelPredicateProviderRegistry());
 
     private static final Identifier DAMAGED_ID = Identifier.of("damaged");
     private static final Identifier DAMAGE_ID = Identifier.of("damage");
@@ -30,7 +29,7 @@ public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<Ite
     private final Map<Item, Map<Identifier, ItemModelPredicateProvider>> ITEM_SPECIFIC = new IdentityHashMap<>();
 
     private ItemModelPredicateProviderRegistry() {
-        super(KEY, Lifecycle.experimental(), false);
+        super(KEY, false);
     }
 
     public ItemModelPredicateProvider get(Item item, Identifier identifier) {
