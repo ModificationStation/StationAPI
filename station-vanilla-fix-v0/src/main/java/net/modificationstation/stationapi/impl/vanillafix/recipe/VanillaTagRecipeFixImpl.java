@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.tag.TagKey;
 public class VanillaTagRecipeFixImpl {
     private static final Supplier<ImmutableMap<Item, TagKey<Item>>> TAGIFICATION_MAP = Suppliers.memoize(() -> {
         val builder = ImmutableMap.<Item, TagKey<Item>>builder();
-        builder.put(Block.STONE.asItem(), ItemTags.STONES);
+        builder.put(Block.STONE.asItem(), ItemTags.NORMAL_STONES);
         builder.put(Block.COBBLESTONE.asItem(), ItemTags.NORMAL_COBBLESTONES);
         builder.put(Block.PLANKS.asItem(), ItemTags.PLANKS);
         builder.put(Block.SAND.asItem(), ItemTags.NORMAL_SANDS);

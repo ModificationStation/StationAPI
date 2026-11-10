@@ -85,6 +85,7 @@ public final class BlockTags {
             WOODEN_STAIRS = of("c:stairs/wooden"),
             OAK_STAIRS = of("c:stairs/wooden/oak"),
             STONES = of("c:stones"),
+            NORMAL_STONES = of("c:stones/normal"),
             STORAGE_BLOCKS = of("c:storage_blocks"),
             DIAMOND_STORAGE_BLOCKS = of("c:storage_blocks/diamond"),
             GOLD_STORAGE_BLOCKS = of("c:storage_blocks/gold"),
