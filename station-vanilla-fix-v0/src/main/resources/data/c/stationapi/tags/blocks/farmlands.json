@@ -1,4 +1,8 @@
 {
-  "id": "#c:farmlands/normal",
-  "required": false
+  "values": [
+    {
+      "id": "#c:farmlands/normal",
+      "required": false
+    }
+  ]
 }

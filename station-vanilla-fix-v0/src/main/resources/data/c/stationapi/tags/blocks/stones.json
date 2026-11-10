@@ -1,5 +1,8 @@
 {
   "values": [
-    "minecraft:stone"
+    {
+      "id": "#c:stones/normal",
+      "required": false
+    }
   ]
 }

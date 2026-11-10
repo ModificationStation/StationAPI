@@ -190,6 +190,7 @@ public final class ItemTags {
             STICKS = of("c:sticks"),
             WOODEN_STICKS = of("c:sticks/wooden"),
             STONES = of("c:stones"),
+            NORMAL_STONES = of("c:stones/normal"),
             STORAGE_BLOCKS = of("c:storage_blocks"),
             DIAMOND_STORAGE_BLOCKS = of("c:storage_blocks/diamond"),
             GOLD_STORAGE_BLOCKS = of("c:storage_blocks/gold"),
