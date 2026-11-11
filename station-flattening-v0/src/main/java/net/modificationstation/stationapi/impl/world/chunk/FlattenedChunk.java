@@ -65,7 +65,7 @@ public class FlattenedChunk extends Chunk {
     }
 
     /**
-     * Narrows every section's palette and index width to what it holds. Called after generation and before saving.
+     * Narrows every section's palette and index width to what it holds. Called before saving.
      */
     public void compactSections() {
         for (ChunkSection section : sections) if (section != null) section.compact();

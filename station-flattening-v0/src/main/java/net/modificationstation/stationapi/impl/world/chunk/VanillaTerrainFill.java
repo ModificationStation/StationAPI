@@ -60,8 +60,6 @@ final class VanillaTerrainFill {
         indices[0] = 0;
         BlockState[] palette = new BlockState[MAX_STATES];
         palette[0] = AIR;
-        int[] blockIds = new int[MAX_STATES];
-        blockIds[0] = AIR.block.id;
         int n = 1;
         byte[] data = PackedIndices.alloc(BITS);
         int xShift = columnBits + 4;
@@ -83,7 +81,6 @@ final class VanillaTerrainFill {
                         return;
                     } else {
                         index = n;
-                        blockIds[n] = block.id;
                         palette[n++] = block.getDefaultState();
                     }
                     indices[id] = index;
@@ -96,22 +93,15 @@ final class VanillaTerrainFill {
 
         if (n == 1 || (n == 2 && air == 0)) {
             // uniform: one state at width 0
-            section.setLayout(new BlockState[] {palette[n - 1]}, 1, false, 0, ChunkSection.CELLS.get());
-            section.nonEmptyBlockCount = (short) (palette[n - 1].isAir() ? 0 : PackedIndices.VOLUME);
+            section.setUniform(palette[n - 1]);
             return;
         }
         int nonEmpty = PackedIndices.VOLUME - air;
         for (int i = 1; i < n; i++) {
             if (palette[i].isAir()) nonEmpty -= countNibbles(data, i);
         }
-        section.palette = palette;
-        section.blockIds = blockIds;
-        section.paletteSize = n;
-        section.paletteLookup = null;
-        section.global = false;
-        section.bits = BITS;
-        section.data = data;
-        section.nonEmptyBlockCount = (short) nonEmpty;
+        section.setBlockStates(palette, n, false, BITS, data, nonEmpty);
+        // 4 bits and the whole palette array, for decoration to add to
         section.compacted = false;
     }
 

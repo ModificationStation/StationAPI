@@ -35,7 +35,8 @@ import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.
  * <p>Metadata and light are stored per 16x16 layer, see {@link LayeredNibbles}: uniform layers, like open sky, unlit
  * stone or blocks without metadata, keep a single value.
  *
- * <p>Saving, sending and loading are {@link ChunkSectionCodec}'s, which reads and writes the fields directly.
+ * <p>Saving, sending and loading are {@link ChunkSectionCodec}'s, which reads the fields directly and hands what it
+ * loads to {@link #setBlockStates}.
  */
 public class ChunkSection {
 
@@ -53,7 +54,7 @@ public class ChunkSection {
      * width is past this never goes global, see {@link #globalBytes()}.
      */
     static final int WINDOW_BITS = 32 - 7;
-    /** scratch for passes over every cell */
+    /** scratch for passes over every cell, per thread so sections worked on by different threads don't share it */
     static final ThreadLocal<int[]> CELLS = ThreadLocal.withInitial(() -> new int[VOLUME]);
     static final BlockState AIR = States.AIR.get();
     /**
@@ -63,7 +64,7 @@ public class ChunkSection {
     public static final ChunkSection EMPTY = Util.make(new ChunkSection(0), ChunkSection::initSkyLight);
 
     private final short yOffset;
-    short nonEmptyBlockCount;
+    private short nonEmptyBlockCount;
     /** the width of each cell's palette index */
     int bits;
     /** palette indices at {@link #bits} each, cell {@code y << 8 | z << 4 | x}, see {@link PackedIndices} */
@@ -73,13 +74,16 @@ public class ChunkSection {
      * {@link #palette}'s block IDs at the same indices, so {@link #getBlockId} reads one array instead of the state
      * and its block. Global sections share {@link GlobalStates#blockIds()}.
      */
-    int[] blockIds = {AIR.block.id};
+    private int[] blockIds = {AIR.block.id};
     int paletteSize = 1;
     /** state to palette index, built once the palette passes {@link #MAP_AT} entries */
-    @Nullable Reference2IntOpenHashMap<BlockState> paletteLookup;
+    private @Nullable Reference2IntOpenHashMap<BlockState> paletteLookup;
     /** {@link #palette} is the {@link GlobalStates#states()} array */
     boolean global;
-    /** nothing was written since the last {@link #compact()}, so the next one has nothing to do */
+    /**
+     * Nothing was written since the last {@link #compact()}, so the next one has nothing to do. Cleared by every
+     * write, and by the loads that can leave something to narrow: a packet's or a generator's.
+     */
     boolean compacted = true;
     final LayeredNibbles meta = new LayeredNibbles();
     final LayeredNibbles skyLight = new LayeredNibbles();
@@ -311,10 +315,23 @@ public class ChunkSection {
     }
 
     /**
-     * Replaces the block state layout, writing {@code indices} as every cell's index at {@code bits}. A new palette
-     * drops the lookup map, which is rebuilt when it's next needed.
+     * Lays the same cells out again: {@code indices} as every cell's index at {@code bits}, into a palette that
+     * holds the states they had, so the count stays.
      */
-    void setLayout(BlockState[] palette, int paletteSize, boolean global, int bits, int[] indices) {
+    private void setLayout(BlockState[] palette, int paletteSize, boolean global, int bits, int[] indices) {
+        byte[] data = alloc(bits);
+        PackedIndices.write(data, bits, indices);
+        setBlockStates(palette, paletteSize, global, bits, data, nonEmptyBlockCount);
+    }
+
+    /**
+     * Replaces the block states with a layout packed elsewhere. Every change of layout ends up here. A new palette
+     * drops the lookup map, which is rebuilt when it's next needed.
+     *
+     * @param data every cell's index at {@code bits}, in an array from {@link PackedIndices#alloc}
+     * @param nonEmpty how many cells aren't air
+     */
+    void setBlockStates(BlockState[] palette, int paletteSize, boolean global, int bits, byte[] data, int nonEmpty) {
         if (palette != this.palette) {
             this.paletteLookup = null;
             this.blockIds = blockIdsOf(palette, paletteSize, global);
@@ -323,8 +340,13 @@ public class ChunkSection {
         this.paletteSize = paletteSize;
         this.global = global;
         this.bits = bits;
-        this.data = alloc(bits);
-        PackedIndices.write(data, bits, indices);
+        this.data = data;
+        this.nonEmptyBlockCount = (short) nonEmpty;
+    }
+
+    /** replaces the block states with {@code state} in every cell */
+    void setUniform(BlockState state) {
+        setBlockStates(new BlockState[] {state}, 1, false, 0, alloc(0), state.isAir() ? 0 : VOLUME);
     }
 
     /**
@@ -332,7 +354,7 @@ public class ChunkSection {
      *
      * @param global {@code palette} is the current {@link GlobalStates#states()}
      */
-    static int[] blockIdsOf(BlockState[] palette, int size, boolean global) {
+    private static int[] blockIdsOf(BlockState[] palette, int size, boolean global) {
         if (global) return GlobalStates.blockIds();
         int[] ids = new int[palette.length];
         for (int i = 0; i < size; i++) ids[i] = palette[i].block.id;

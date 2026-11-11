@@ -71,15 +71,15 @@ final class ChunkSectionCodec {
         List<BlockState> entries = PALETTE_CODEC.parse(NbtOps.INSTANCE, tag.getList("palette")).promotePartial(onError).getOrThrow();
         int n = entries.size();
         if (n <= 1) {
-            loadUniform(section, n == 0 ? AIR : entries.get(0));
+            section.setUniform(n == 0 ? AIR : entries.get(0));
             return;
         }
         int bits = savedWidth(n);
         long[] longs = tag.getLongArray("data");
         if (longs.length != longsFor(bits))
             throw new IllegalStateException("Invalid length given for storage, got: " + longs.length + " but expected: " + longsFor(bits));
-        load(section, entries::get, n, longs, bits, false);
-        setBlockIds(section);
+        Packed packed = load(entries::get, n, longs, bits, false);
+        section.setBlockStates(packed.palette, packed.palette.length, packed.global, packed.bits, packed.data, packed.nonEmpty);
     }
 
     // ---- packets ----
@@ -89,7 +89,7 @@ final class ChunkSectionCodec {
         if ((header & GLOBAL) != 0) {
             loadGlobal(section, buf, header & ~GLOBAL);
         } else if (header == 0) {
-            loadUniform(section, Block.STATE_IDS.getOrThrow(buf.getInt()));
+            section.setUniform(Block.STATE_IDS.getOrThrow(buf.getInt()));
         } else {
             loadNative(section, buf, header);
         }
@@ -186,14 +186,7 @@ final class ChunkSectionCodec {
             bad |= f;
         }
         if ((bad & BAD) != 0) throw new IllegalStateException("Section data refers past its palette of " + n);
-        section.palette = palette;
-        section.paletteSize = n;
-        section.paletteLookup = null;
-        section.global = global;
-        section.bits = bits;
-        section.data = data;
-        section.nonEmptyBlockCount = (short) nonEmpty;
-        setBlockIds(section);
+        section.setBlockStates(palette, n, global, bits, data, nonEmpty);
     }
 
     /** {@return the flag a cell of {@code state} adds to the count: {@link #SOLID} unless it's air} */
@@ -220,11 +213,18 @@ final class ChunkSectionCodec {
 
     // ---- loading ----
 
+    /** block states packed for {@link ChunkSection#setBlockStates} */
+    private record Packed(BlockState[] palette, boolean global, int bits, byte[] data, int nonEmpty) {}
+
     /**
-     * Replaces the section's block states with saved or sent ones, keeping each state once, at the exact width or
-     * global if that's smaller, and recounts. One pass over the cells reads them straight from {@code longs} and packs
-     * them into {@link ChunkSection#data}, as {@code PalettedContainer} counts its storage in one pass after adopting
-     * it.
+     * Packs saved block states for a section, keeping each state once, at the exact width or global if that's
+     * smaller, and counts them. One pass over the cells reads them straight from {@code longs} and packs them as
+     * {@link ChunkSection#data} holds them, as {@code PalettedContainer} counts its storage in one pass after
+     * adopting it.
+     *
+     * <p>The caller hands the result to the section, and the steps before the pass are better left as they are: the
+     * code C2 makes of the pass depends on what else is in this method. Filling in the section's block IDs from here,
+     * or simplifying those steps, made chunks load a fifth to a half slower.
      *
      * @param source the states the packed indices refer to; indices outside {@code [0, size)} and indices it has no
      *               state for load as air
@@ -234,7 +234,7 @@ final class ChunkSectionCodec {
      *               used costs a palette slot until the section is written and compacted again. Data with indices past
      *               the source is loaded again as sparse, for their air
      */
-    private static void load(ChunkSection section, IntFunction<@Nullable BlockState> source, int size, long[] longs, int width, boolean sparse) {
+    private static Packed load(IntFunction<@Nullable BlockState> source, int size, long[] longs, int width, boolean sparse) {
         int perLong = 64 / width, mask = (1 << width) - 1;
         // per source index (size standing for the out-of-range ones): USED while it's only known to be used, then
         // its new index and the SOLID flag the count is summed from
@@ -325,31 +325,8 @@ final class ChunkSectionCodec {
                 }
             }
         }
-        if (outOfRange && !sparse) {
-            load(section, source, size, longs, width, true);
-            return;
-        }
-        section.palette = palette;
-        section.paletteSize = palette.length;
-        section.paletteLookup = null;
-        section.global = toGlobal;
-        section.bits = bits;
-        section.data = data;
-        section.nonEmptyBlockCount = (short) nonEmpty;
-    }
-
-    /**
-     * Fills in the block IDs of the palette {@link #load} set. Kept out of {@link #load}: the extra call there made
-     * C2 compile its cell pass slower (chunk loads +17..30%).
-     */
-    private static void setBlockIds(ChunkSection section) {
-        section.blockIds = ChunkSection.blockIdsOf(section.palette, section.paletteSize, section.global);
-    }
-
-    /** replaces the section's block states with {@code state} in every cell, and recounts */
-    private static void loadUniform(ChunkSection section, BlockState state) {
-        section.setLayout(new BlockState[] {state}, 1, false, 0, ChunkSection.CELLS.get());
-        section.nonEmptyBlockCount = (short) (state.isAir() ? 0 : VOLUME);
+        if (outOfRange && !sparse) return load(source, size, longs, width, true);
+        return new Packed(palette, toGlobal, bits, data, nonEmpty);
     }
 
     // ---- PackedIntegerArray-style longs ----
