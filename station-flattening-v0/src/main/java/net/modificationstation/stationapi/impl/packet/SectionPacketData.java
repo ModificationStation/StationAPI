@@ -81,8 +81,9 @@ final class SectionPacketData {
             }
             // with the output full, the stream's end may not have been read yet: anything past it is too much data
             if (length == rawSize && !inflater.finished() && inflater.inflate(new byte[1]) != 0) length++;
-            if (length != rawSize || !inflater.finished())
-                throw new IOException("Section data doesn't inflate to the " + rawSize + " bytes it claims");
+            // and bytes after the stream's end are as wrong as bytes before it
+            if (length != rawSize || !inflater.finished() || inflater.getRemaining() != 0)
+                throw new IOException("Section data doesn't inflate to the " + rawSize + " bytes it claims: got " + length + ", stream " + (inflater.finished() ? "ended" : "unfinished") + ", " + inflater.getRemaining() + " compressed bytes left over");
             return out;
         } catch (DataFormatException e) {
             throw new IOException("Bad compressed data format", e);

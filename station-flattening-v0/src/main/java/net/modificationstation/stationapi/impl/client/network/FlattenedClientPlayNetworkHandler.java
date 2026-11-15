@@ -45,6 +45,7 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionsData);
             for (int i = 0; i < world.countVerticalSections(); i++)
                 flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(i) << 4, true).readDataPacket(buf);
+            requireFullyRead(buf);
         }
         chunk.populateHeightMapOnly();
         world.setBlocksDirty(fromX, world.getBottomY(), fromZ, fromX + 16, world.getTopY(), fromZ + 16);
@@ -99,8 +100,15 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionData);
             flatteningChunk.getOrCreateSection(fromY, true).readDataPacket(buf);
+            requireFullyRead(buf);
         }
         chunk.populateHeightMapOnly();
         world.setBlocksDirty(fromX, fromY, fromZ, fromX + 16, fromY + 16, fromZ + 16);
+    }
+
+    /** section data parsing short of its end means the two sides disagree on its layout */
+    private static void requireFullyRead(ByteBuffer buf) {
+        if (buf.hasRemaining())
+            throw new IllegalStateException("Section data has " + buf.remaining() + " unread bytes of " + buf.capacity());
     }
 }
