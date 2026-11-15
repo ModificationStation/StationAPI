@@ -12,6 +12,7 @@ import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.world.FlattenedWorldManager;
 
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -57,7 +58,8 @@ public class FlattenedWorldChunkLoader implements ChunkStorage {
     public void saveChunk(World world, Chunk oldChunk) {
         if (!(oldChunk instanceof FlattenedChunk chunk)) throw new IllegalStateException(getClass().getSimpleName() + " can't save chunk of type \"" + oldChunk.getClass().getName() + "\"!");
         world.checkSessionLock();
-        DataOutputStream dataOutputStream = RegionIo.getChunkOutputStream(dimFolder, chunk.x, chunk.z);
+        // vanilla's region stream is unbuffered, and our NBT is many small writes, each a JNI deflate call otherwise
+        DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(RegionIo.getChunkOutputStream(dimFolder, chunk.x, chunk.z)));
         NbtCompound compoundTag = new NbtCompound();
         NbtCompound compoundTag2 = new NbtCompound();
         compoundTag.put("Level", (NbtElement) compoundTag2);

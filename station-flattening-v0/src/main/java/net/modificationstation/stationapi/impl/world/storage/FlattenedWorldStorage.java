@@ -184,7 +184,7 @@ public class FlattenedWorldStorage extends RegionWorldStorageSource {
                         throw new RuntimeException(e);
                     }
                     NbtCompound updatedChunkTag = convertFunction.apply(TypeReferences.CHUNK, chunkTag);
-                    try (DataOutputStream outStream = region.getChunkOutputStream(x, z)) {
+                    try (DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(region.getChunkOutputStream(x, z)))) {
                         NbtIo.write(updatedChunkTag, outStream);
                     } catch (IOException e) {
                         throw new RuntimeException(e);

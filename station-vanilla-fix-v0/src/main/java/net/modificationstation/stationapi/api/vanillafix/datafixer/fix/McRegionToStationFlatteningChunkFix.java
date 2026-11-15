@@ -19,6 +19,7 @@ import net.modificationstation.stationapi.api.vanillafix.util.MetaDependentIdCon
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -193,9 +194,16 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
 
         public Dynamic<?> transform() {
             Dynamic<?> self = this.section;
+            // Cells without a block keep index 0, air. If there are none, leave air out, so the palette only holds
+            // states in use, like the ones StationAPI saves: sections loaded from them aren't compacted again
+            List<Dynamic<?>> entries = paletteData;
+            if (Arrays.stream(states).noneMatch(state -> state == 0)) {
+                entries = paletteData.subList(1, paletteData.size());
+                for (int i = 0; i < states.length; i++) states[i]--;
+            }
             // Convert previously prepared values
-            Dynamic<?> palette = self.createList(paletteData.stream().map(dynamic -> dynamic.convert(self.getOps())));
-            PackedIntegerArray array = new PackedIntegerArray(Math.max(4, MathHelper.ceilLog2(paletteData.size())), states.length);
+            Dynamic<?> palette = self.createList(entries.stream().map(dynamic -> dynamic.convert(self.getOps())));
+            PackedIntegerArray array = new PackedIntegerArray(Math.max(4, MathHelper.ceilLog2(entries.size())), states.length);
             for (int i = 0; i < states.length; i++) array.set(i, states[i]);
             Dynamic<?> data = self.createLongList(Arrays.stream(array.getData()));
             return self

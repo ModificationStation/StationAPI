@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.flattening;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.minecraft.world.World;
@@ -19,8 +20,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = OverworldChunkGenerator.class, priority = 4000)
 class OverworldChunkGeneratorMixin {
@@ -60,16 +59,17 @@ class OverworldChunkGeneratorMixin {
         return new FlattenedChunk(world, xPos, zPos);
     }
 
-    @Inject(
+    @WrapOperation(
             method = "getChunk",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/chunk/Chunk;populateHeightMap()V"
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
-    private void stationapi_populateChunk(int j, int par2, CallbackInfoReturnable<Chunk> cir, byte[] tiles, Chunk chunk) {
-        if (chunk instanceof FlattenedChunk stationChunk) stationChunk.fromLegacy(tiles);
+    private void stationapi_populateChunk(Chunk chunk, Operation<Void> original, @Local byte[] tiles) {
+        // the sections, height map and sky light in one go from the generator's array
+        if (chunk instanceof FlattenedChunk stationChunk) stationChunk.fromLegacy(tiles, true);
+        else original.call(chunk);
     }
     
     @ModifyConstant(

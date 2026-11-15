@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.impl.world;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityRegistry;
@@ -10,12 +8,8 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.States;
-import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.impl.world.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
-import net.modificationstation.stationapi.impl.world.chunk.PalettedContainer;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
@@ -23,8 +17,8 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class FlattenedWorldManager {
 
-    private static final Codec<PalettedContainer<BlockState>> CODEC = PalettedContainer.createCodec(Block.STATE_IDS, BlockState.CODEC, PalettedContainer.PaletteProvider.BLOCK_STATE, States.AIR.get());
     public static final String SECTIONS = of(NAMESPACE, "sections").toString();
+    private static final String BLOCK_STATES_KEY = "block_states";
     private static final String METADATA_KEY = "data";
     private static final String SKY_LIGHT_KEY = "sky_light";
     private static final String BLOCK_LIGHT_KEY = "block_light";
@@ -36,6 +30,7 @@ public class FlattenedWorldManager {
         chunkTag.putInt("xPos", chunk.x);
         chunkTag.putInt("zPos", chunk.z);
         chunkTag.putLong("LastUpdate", world.getTime());
+        chunk.compactSections();
         ChunkSection[] sections = chunk.sections;
         // what a section that isn't saved reads as when loaded: an all-air section with other light needs saving
         int missingSkyLight = world.dimension.hasCeiling ? 0 : LightType.SKY.lightValue;
@@ -48,10 +43,16 @@ public class FlattenedWorldManager {
             if (section != null && (!section.isEmpty() || !section.hasUniformLight(missingSkyLight, missingBlockLight))) {
                 NbtCompound sectionTag = new NbtCompound();
                 sectionTag.putByte(HEIGHT_KEY, (byte)sectionY);
-                sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow());
-                sectionTag.put(METADATA_KEY, section.getMetadataArray().toTag());
-                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(LightType.SKY).toTag());
-                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(LightType.BLOCK).toTag());
+                sectionTag.put(BLOCK_STATES_KEY, section.writeBlockStates());
+                byte[] metadata = new byte[2048];
+                section.copyMetadata(metadata);
+                sectionTag.putByteArray(METADATA_KEY, metadata);
+                byte[] skyLight = new byte[2048];
+                section.copyLight(LightType.SKY, skyLight);
+                sectionTag.putByteArray(SKY_LIGHT_KEY, skyLight);
+                byte[] blockLight = new byte[2048];
+                section.copyLight(LightType.BLOCK, blockLight);
+                sectionTag.putByteArray(BLOCK_LIGHT_KEY, blockLight);
                 sectionTags.add(sectionTag);
             }
         }
@@ -90,11 +91,12 @@ public class FlattenedWorldManager {
                 int sectionY = sectionTag.getByte(HEIGHT_KEY);
                 int index = world.sectionCoordToIndex(sectionY);
                 if (index < 0 || index >= sections.length) continue;
-                PalettedContainer<BlockState> blockStates = sectionTag.contains("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompound("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow() : new PalettedContainer<>(Block.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
-                ChunkSection chunkSection = new ChunkSection(sectionY, blockStates);
-                chunkSection.getMetadataArray().copyArray(sectionTag.getByteArray(METADATA_KEY));
-                chunkSection.getLightArray(LightType.SKY).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
-                chunkSection.getLightArray(LightType.BLOCK).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
+                ChunkSection chunkSection = new ChunkSection(sectionY);
+                if (sectionTag.contains(BLOCK_STATES_KEY))
+                    chunkSection.readBlockStates(sectionTag.getCompound(BLOCK_STATES_KEY), errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage));
+                chunkSection.setMetadata(sectionTag.getByteArray(METADATA_KEY));
+                chunkSection.setLight(LightType.SKY, sectionTag.getByteArray(SKY_LIGHT_KEY));
+                chunkSection.setLight(LightType.BLOCK, sectionTag.getByteArray(BLOCK_LIGHT_KEY));
                 sections[index] = chunkSection;
             }
         }
