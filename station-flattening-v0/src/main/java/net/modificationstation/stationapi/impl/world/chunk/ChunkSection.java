@@ -461,6 +461,12 @@ public class ChunkSection {
         (type == LightType.BLOCK ? blockLight : skyLight).setAll(data);
     }
 
+    /** sets every cell of layers {@code from} to {@code to} to full sky light */
+    void fillSkyLightLayers(int from, int to) {
+        for (int y = from; y <= to; y++) skyLight.setLayer(y, LightType.SKY.lightValue);
+        compacted = false;
+    }
+
     public void initSkyLight() {
         skyLight.fill(LightType.SKY.lightValue);
     }

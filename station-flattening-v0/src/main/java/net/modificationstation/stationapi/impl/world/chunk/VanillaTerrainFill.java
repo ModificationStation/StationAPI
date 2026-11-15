@@ -137,17 +137,42 @@ final class VanillaTerrainFill {
         int firstBlock = chunk.firstBlock, lastBlock = chunk.lastBlock;
         // the cells populateHeightMap looks at, from lastBlock - 1 down
         int top = lastBlock - 1 - firstBlock;
-        int minHeight = lastBlock;
+        int minHeight = lastBlock, maxHeight = firstBlock;
         boolean sky = !chunk.world.dimension.hasCeiling;
+        // Vanilla quirk: the height map never looks at the top cell (lastBlock), but the sky light walk does, and an
+        // opaque top cell darkens its column however low the height is. So "above the height" only means "open to
+        // the sky" when the top cell is transparent; checked here for all columns at once.
+        boolean topCellsTransparent = sky;
         for (int column = 0; column < 256; column++) {
-            int x = column >> 4, z = column & 15;
             int base = column << columnBits;
             short height = (short) (firstBlock + topOpaque(tiles, base, top));
-            chunk.setShortHeight(x, z, height);
+            chunk.setShortHeight(column >> 4, column & 15, height);
             if (height < minHeight) minHeight = height;
-            if (sky) skyLight(chunk, tiles, base, x, z, height);
+            if (height > maxHeight) maxHeight = height;
+            if (topCellsTransparent && Block.BLOCKS_LIGHT_OPACITY[tiles[base + (lastBlock - firstBlock)] & 0xFF] != 0) topCellsTransparent = false;
         }
         chunk.minHeightmapValue = minHeight;
+        if (sky) {
+            int start = lastBlock;
+            // with an opaque top cell anywhere (never seen in vanilla terrain), every column walks from the top as
+            // vanilla does
+            if (topCellsTransparent) {
+                // every cell above the highest column is open to the sky in every column, so it has the full light:
+                // whole layers at once, without expanding them, and the columns start below them
+                int from = Math.max(maxHeight, firstBlock + 1);
+                for (int y = lastBlock; y >= from; ) {
+                    int bottom = Math.max(from, y & ~15);
+                    ChunkSection section = chunk.getSection(y);
+                    if (section != null) section.fillSkyLightLayers(bottom & 15, y & 15);
+                    y = bottom - 1;
+                }
+                start = from - 1;
+            }
+            for (int column = 0; column < 256; column++) {
+                int x = column >> 4, z = column & 15;
+                skyLight(chunk, tiles, column << columnBits, x, z, chunk.getHeight(x, z), start, topCellsTransparent);
+            }
+        }
         // the sky light just written fills whole layers of open air with 15
         for (ChunkSection section : chunk.sections) if (section != null) section.compactLight();
         chunk.lightGaps();
@@ -174,19 +199,26 @@ final class VanillaTerrainFill {
     }
 
     /**
-     * populateHeightMap's sky light walk down one column, from the top until the light runs out. The cells from the
-     * top down to {@code height} are written 15 without reading them.
+     * populateHeightMap's sky light walk down one column, from {@code y} until the light runs out. The cells from
+     * {@code y} down to {@code height} are written 15 without reading them, a section at a time.
+     *
+     * @param y the first cell to write: the top one, or the one below the layers populateHeightMap already filled
+     * @param topCellTransparent whether the column's top cell is already known to be transparent: true when
+     *                           populateHeightMap filled the layers above {@code y}, and then {@code y} isn't the top
+     *                           cell, so it mustn't be checked here
      */
-    private static void skyLight(FlattenedChunk chunk, byte[] tiles, int base, int x, int z, int height) {
+    private static void skyLight(FlattenedChunk chunk, byte[] tiles, int base, int x, int z, int height, int y, boolean topCellTransparent) {
         int firstBlock = chunk.firstBlock;
         int light = 15;
-        int y = chunk.lastBlock;
         // topOpaque passed every cell from lastBlock - 1 down to the height, so they have opacity 0 and keep the full
         // light; only the top cell, which it doesn't look at, has to be checked
-        if (Block.BLOCKS_LIGHT_OPACITY[tiles[base + (y - firstBlock)] & 0xFF] == 0) {
-            for (int low = Math.max(height, firstBlock + 1); y >= low; y--) {
+        if (topCellTransparent || Block.BLOCKS_LIGHT_OPACITY[tiles[base + (y - firstBlock)] & 0xFF] == 0) {
+            int low = Math.max(height, firstBlock + 1);
+            while (y >= low) {
+                int bottom = Math.max(low, y & ~15);
                 ChunkSection section = chunk.getSection(y);
-                if (section != null) section.setLight(LightType.SKY, x, y & 15, z, 15);
+                if (section != null) for (int cy = y; cy >= bottom; cy--) section.setLight(LightType.SKY, x, cy & 15, z, 15);
+                y = bottom - 1;
             }
             if (y <= firstBlock) return;
         }

@@ -78,6 +78,14 @@ final class LayeredNibbles {
         return stored == 0 && nibbles == (value & 15) * 0x1111_1111_1111_1111L;
     }
 
+    /** sets every cell of layer {@code y} to {@code value}, without storing the layer if it isn't already */
+    void setLayer(int y, int value) {
+        value &= 15;
+        int nibble = nibble(y);
+        if ((stored & (1 << y)) == 0) nibbles = withNibble(nibbles, y, value);
+        else Arrays.fill(layers, nibble << 7, (nibble + 1) << 7, (byte) (value * 0x11));
+    }
+
     /** sets every cell to {@code value} */
     void fill(int value) {
         nibbles = (value & 15) * 0x1111_1111_1111_1111L;
