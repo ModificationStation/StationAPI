@@ -14,10 +14,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.INT_LE;
-import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.VOLUME;
-import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.alloc;
-import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.widthFor;
+import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.*;
 
 /**
  * One 16-block-high section of a chunk: its block states, metadata and light.
@@ -403,6 +400,22 @@ public class ChunkSection {
 
     public int getPacketSize() {
         return ChunkSectionCodec.getPacketSize(this);
+    }
+
+    /**
+     * {@return the section's blocks in a box, bounds inclusive, encoded for the section packets} See
+     * {@link SectionBox}.
+     */
+    public byte[] writeBox(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        return SectionBox.write(this, minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    /**
+     * Writes a box that {@link #writeBox} encoded with the same bounds into the section. {@code buf} must hold just
+     * that box.
+     */
+    public void readBox(int minX, int minY, int minZ, int maxX, int maxY, int maxZ, ByteBuffer buf) {
+        SectionBox.read(this, minX, minY, minZ, maxX, maxY, maxZ, buf);
     }
 
     // ---- metadata ----

@@ -95,15 +95,12 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         int fromX = packet.chunkX << 4;
         int fromY = world.sectionIndexToCoord(packet.sectionIndex) << 4;
         int fromZ = packet.chunkZ << 4;
-        world.clearBlockResets(fromX, fromY, fromZ, fromX + 15, fromY + 15, fromZ + 15);
+        world.clearBlockResets(fromX + packet.minX, fromY + packet.minY, fromZ + packet.minZ, fromX + packet.maxX, fromY + packet.maxY, fromZ + packet.maxZ);
         Chunk chunk = world.getChunk(packet.chunkX, packet.chunkZ);
-        if (chunk instanceof FlattenedChunk flatteningChunk) {
-            ByteBuffer buf = ByteBuffer.wrap(packet.sectionData);
-            flatteningChunk.getOrCreateSection(fromY, true).readDataPacket(buf);
-            requireFullyRead(buf);
-        }
+        if (chunk instanceof FlattenedChunk flatteningChunk)
+            packet.applyTo(flatteningChunk.getOrCreateSection(fromY, true));
         chunk.populateHeightMapOnly();
-        world.setBlocksDirty(fromX, fromY, fromZ, fromX + 16, fromY + 16, fromZ + 16);
+        world.setBlocksDirty(fromX + packet.minX, fromY + packet.minY, fromZ + packet.minZ, fromX + packet.maxX + 1, fromY + packet.maxY + 1, fromZ + packet.maxZ + 1);
     }
 
     /** section data parsing short of its end means the two sides disagree on its layout */

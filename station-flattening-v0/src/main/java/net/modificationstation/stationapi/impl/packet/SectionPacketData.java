@@ -14,10 +14,15 @@ import java.util.zip.Inflater;
 /** The section data the chunk and section packets send: written, then deflated, and inflated on arrival. */
 final class SectionPacketData {
     /**
-     * Level 4 deflates ~2.3x faster than the default (6) for ~4% more bytes on section data; past 4 deflate switches
-     * to lazy matching, which costs much more than it saves here.
+     * For whole chunks. Level 4 deflates section data ~2.3x faster than the default (6) for ~4% more bytes. Above 4,
+     * deflate switches to lazy matching, which costs much more than it saves here.
      */
-    private static final int COMPRESSION_LEVEL = 4;
+    static final int CHUNK_LEVEL = 4;
+    /**
+     * For block update boxes. They're built on the server's tick, racing the connection's writer thread that sends
+     * them, so speed matters more than size: level 1 deflates them ~25% faster than 4 for ~12% more bytes.
+     */
+    static final int BOX_LEVEL = 1;
 
     /** the deflated data, {@link #length} bytes of it */
     final byte[] compressed;
@@ -45,10 +50,14 @@ final class SectionPacketData {
             }
             section.toPacket(buf);
         }
-        int rawSize = buf.position();
-        Deflater deflater = new Deflater(COMPRESSION_LEVEL);
+        return deflate(buf.array(), buf.position(), CHUNK_LEVEL);
+    }
+
+    /** deflates the first {@code rawSize} bytes of {@code raw} */
+    static SectionPacketData deflate(byte[] raw, int rawSize, int level) {
+        Deflater deflater = new Deflater(level);
         try {
-            deflater.setInput(buf.array(), 0, rawSize);
+            deflater.setInput(raw, 0, rawSize);
             deflater.finish();
             // small sections deflate to more than they take, so don't bound the output by the input
             byte[] out = new byte[rawSize + 64];

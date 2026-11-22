@@ -169,6 +169,66 @@ final class LayeredNibbles {
 
     // ---- packets ----
 
+    /**
+     * Copies out a box of cells in the layout a layer uses: per layer, per {@code x}, the bytes holding {@code z} from
+     * {@code minZ} to {@code maxZ}. Uniform layers are filled with their value. Stored ones are copied, all of the
+     * box's rows at once when it spans every {@code z}.
+     *
+     * @return the position after them
+     */
+    int copyBox(int minX, int minY, int minZ, int maxX, int maxY, int maxZ, byte[] out, int pos) {
+        int from = minZ >> 1;
+        int rowBytes = (maxZ >> 1) - from + 1;
+        int nx = maxX - minX + 1;
+        int layerBytes = nx * rowBytes;
+        for (int y = minY; y <= maxY; y++, pos += layerBytes) {
+            int nibble = nibble(y);
+            if ((stored & (1 << y)) == 0) {
+                Arrays.fill(out, pos, pos + layerBytes, (byte) (nibble * 0x11));
+            } else if (rowBytes == 8) {
+                System.arraycopy(layers, nibble << 7 | minX << 3, out, pos, layerBytes);
+            } else {
+                for (int x = 0; x < nx; x++) System.arraycopy(layers, nibble << 7 | (minX + x) << 3 | from, out, pos + x * rowBytes, rowBytes);
+            }
+        }
+        return pos;
+    }
+
+    /**
+     * Sets the cells inside a box from what {@link #copyBox} wrote. When the box covers whole layers, each layer is
+     * replaced at once.
+     *
+     * @return the position after them
+     */
+    int setBox(int minX, int minY, int minZ, int maxX, int maxY, int maxZ, byte[] in, int pos) {
+        int from = minZ >> 1;
+        int rowBytes = (maxZ >> 1) - from + 1;
+        int nx = maxX - minX + 1;
+        boolean wholeLayers = nx == 16 && minZ == 0 && maxZ == 15;
+        for (int y = minY; y <= maxY; y++, pos += nx * rowBytes) {
+            if (wholeLayers) {
+                setLayer(y, in, pos);
+                continue;
+            }
+            for (int x = minX; x <= maxX; x++) {
+                int row = pos + (x - minX) * rowBytes - from;
+                for (int z = minZ; z <= maxZ; z++) set(x, y, z, in[row + (z >> 1)] >> ((z & 1) << 2));
+            }
+        }
+        return pos;
+    }
+
+    /** replaces layer {@code y} with the 128 bytes at {@code from}, a single value if they all hold one */
+    private void setLayer(int y, byte[] in, int from) {
+        int value = uniformValue(in, from, 8);
+        if (value >= 0) {
+            setLayer(y, value);
+            return;
+        }
+        int slot = (stored & (1 << y)) == 0 ? materialize(y, 0) : nibble(y);
+        System.arraycopy(in, from, layers, slot << 7, LAYER_BYTES);
+    }
+
     /** {@return the bytes {@link #toPacket} writes} */
     int packetSize() {
         return 8 + 2 + Integer.bitCount(stored) * LAYER_BYTES;
