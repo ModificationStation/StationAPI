@@ -11,13 +11,13 @@ import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.
 
 /**
  * Turns a vanilla generator's array of block IDs into a chunk's sections, and its height map and sky light, in place
- * of a {@code setBlockState} per cell and a {@code populateHeightMap} reading the sections back.
+ * of a {@code setBlockState} per block and a {@code populateHeightMap} reading the sections back.
  *
- * <p>The array is column-major: cell {@code (x, y, z)} at {@code (x << 4 | z) << columnBits | (y - bottomY)}, each
+ * <p>The array is column-major: block {@code (x, y, z)} at {@code (x << 4 | z) << columnBits | (y - bottomY)}, each
  * column {@code 2^columnBits} bytes, as StationAPI's generator mixins size it. A section is filled in one sweep in its
- * own cell order, a row of 16 cells along {@code x} at a time: at 4 bits a row is exactly one long. Fresh sections stay
+ * own block order, a row of 16 blocks along {@code x} at a time: at 4 bits a row is exactly one long. Fresh sections stay
  * at 4 bits, the width decoration widens them to anyway, so it adds up to 16 states without a relayout; saving
- * compacts them. Air is palette index 0, so the empty cells are the zero nibbles, counted 16 at a time.
+ * compacts them. Air is palette index 0, so the empty blocks are the zero nibbles, counted 16 at a time.
  */
 final class VanillaTerrainFill {
     private static final int BITS = 4;
@@ -45,7 +45,7 @@ final class VanillaTerrainFill {
         if (heightMap) populateHeightMap(chunk, tiles, columnBits);
     }
 
-    /** {@return whether every cell of the section starting {@code y0} into each column is 0, air} */
+    /** {@return whether every block of the section starting {@code y0} into each column is 0, air} */
     private static boolean isAir(byte[] tiles, int columnBits, int y0) {
         for (int column = 0; column < 256; column++) {
             int base = column << columnBits | y0;
@@ -65,7 +65,7 @@ final class VanillaTerrainFill {
         int xShift = columnBits + 4;
         int air = 0;
         for (int row = 0; row < 256; row++) {
-            // row y << 4 | z: cell x of it is at x << xShift in the array
+            // row y << 4 | z: block x of it is at x << xShift in the array
             int base = (row & 15) << columnBits | y0 + (row >> 4);
             long word = 0;
             for (int x = 0; x < 16; x++) {
@@ -105,7 +105,7 @@ final class VanillaTerrainFill {
         section.compacted = false;
     }
 
-    /** a section with more states than 4 bits hold: written a cell at a time, widening as it goes */
+    /** a section with more states than 4 bits hold: written a block at a time, widening as it goes */
     private static void fillSectionByCells(ChunkSection section, byte[] tiles, int columnBits, int y0) {
         for (int column = 0; column < 256; column++) {
             int base = column << columnBits | y0;
@@ -135,29 +135,29 @@ final class VanillaTerrainFill {
 
     private static void populateHeightMap(FlattenedChunk chunk, byte[] tiles, int columnBits) {
         int firstBlock = chunk.firstBlock, lastBlock = chunk.lastBlock;
-        // the cells populateHeightMap looks at, from lastBlock - 1 down
+        // the blocks populateHeightMap looks at, from lastBlock - 1 down
         int top = lastBlock - 1 - firstBlock;
         int minHeight = lastBlock, maxHeight = firstBlock;
         boolean sky = !chunk.world.dimension.hasCeiling;
-        // Vanilla quirk: the height map never looks at the top cell (lastBlock), but the sky light walk does, and an
-        // opaque top cell darkens its column however low the height is. So "above the height" only means "open to
-        // the sky" when the top cell is transparent; checked here for all columns at once.
-        boolean topCellsTransparent = sky;
+        // Vanilla quirk: the height map never looks at the top block (lastBlock), but the sky light walk does, and an
+        // opaque top block darkens its column however low the height is. So "above the height" only means "open to
+        // the sky" when the top block is transparent; checked here for all columns at once.
+        boolean topBlocksTransparent = sky;
         for (int column = 0; column < 256; column++) {
             int base = column << columnBits;
             short height = (short) (firstBlock + topOpaque(tiles, base, top));
             chunk.setShortHeight(column >> 4, column & 15, height);
             if (height < minHeight) minHeight = height;
             if (height > maxHeight) maxHeight = height;
-            if (topCellsTransparent && Block.BLOCKS_LIGHT_OPACITY[tiles[base + (lastBlock - firstBlock)] & 0xFF] != 0) topCellsTransparent = false;
+            if (topBlocksTransparent && Block.BLOCKS_LIGHT_OPACITY[tiles[base + (lastBlock - firstBlock)] & 0xFF] != 0) topBlocksTransparent = false;
         }
         chunk.minHeightmapValue = minHeight;
         if (sky) {
             int start = lastBlock;
-            // with an opaque top cell anywhere (never seen in vanilla terrain), every column walks from the top as
+            // with an opaque top block anywhere (never seen in vanilla terrain), every column walks from the top as
             // vanilla does
-            if (topCellsTransparent) {
-                // every cell above the highest column is open to the sky in every column, so it has the full light:
+            if (topBlocksTransparent) {
+                // every block above the highest column is open to the sky in every column, so it has the full light:
                 // whole layers at once, without expanding them, and the columns start below them
                 int from = Math.max(maxHeight, firstBlock + 1);
                 for (int y = lastBlock; y >= from; ) {
@@ -170,7 +170,7 @@ final class VanillaTerrainFill {
             }
             for (int column = 0; column < 256; column++) {
                 int x = column >> 4, z = column & 15;
-                skyLight(chunk, tiles, column << columnBits, x, z, chunk.getHeight(x, z), start, topCellsTransparent);
+                skyLight(chunk, tiles, column << columnBits, x, z, chunk.getHeight(x, z), start, topBlocksTransparent);
             }
         }
         // the sky light just written fills whole layers of open air with 15
@@ -180,18 +180,18 @@ final class VanillaTerrainFill {
     }
 
     /**
-     * {@return one above the highest opaque cell at or below {@code top} in the column, or 0}
-     * Reads 8 cells at a time from the top, skipping all-air words.
+     * {@return one above the highest opaque block at or below {@code top} in the column, or 0}
+     * Reads 8 blocks at a time from the top, skipping all-air words.
      */
     private static int topOpaque(byte[] tiles, int base, int top) {
         int k = top >> 3;
-        // drop the cells above top from the first word
+        // drop the blocks above top from the first word
         long word = (long) LONG_LE.get(tiles, base + (k << 3)) & -1L >>> ((7 - (top & 7)) << 3);
         while (true) {
             while (word != 0) {
-                int cell = 7 - (Long.numberOfLeadingZeros(word) >>> 3);
-                if (Block.BLOCKS_LIGHT_OPACITY[(int) (word >>> (cell << 3)) & 0xFF] != 0) return (k << 3) + cell + 1;
-                word &= ~(0xFFL << (cell << 3));
+                int b = 7 - (Long.numberOfLeadingZeros(word) >>> 3);
+                if (Block.BLOCKS_LIGHT_OPACITY[(int) (word >>> (b << 3)) & 0xFF] != 0) return (k << 3) + b + 1;
+                word &= ~(0xFFL << (b << 3));
             }
             if (--k < 0) return 0;
             word = (long) LONG_LE.get(tiles, base + (k << 3));
@@ -199,20 +199,20 @@ final class VanillaTerrainFill {
     }
 
     /**
-     * populateHeightMap's sky light walk down one column, from {@code y} until the light runs out. The cells from
+     * populateHeightMap's sky light walk down one column, from {@code y} until the light runs out. The blocks from
      * {@code y} down to {@code height} are written 15 without reading them, a section at a time.
      *
-     * @param y the first cell to write: the top one, or the one below the layers populateHeightMap already filled
-     * @param topCellTransparent whether the column's top cell is already known to be transparent: true when
+     * @param y the first block to write: the top one, or the one below the layers populateHeightMap already filled
+     * @param topBlockTransparent whether the column's top block is already known to be transparent: true when
      *                           populateHeightMap filled the layers above {@code y}, and then {@code y} isn't the top
-     *                           cell, so it mustn't be checked here
+     *                           block, so it mustn't be checked here
      */
-    private static void skyLight(FlattenedChunk chunk, byte[] tiles, int base, int x, int z, int height, int y, boolean topCellTransparent) {
+    private static void skyLight(FlattenedChunk chunk, byte[] tiles, int base, int x, int z, int height, int y, boolean topBlockTransparent) {
         int firstBlock = chunk.firstBlock;
         int light = 15;
-        // topOpaque passed every cell from lastBlock - 1 down to the height, so they have opacity 0 and keep the full
-        // light; only the top cell, which it doesn't look at, has to be checked
-        if (topCellTransparent || Block.BLOCKS_LIGHT_OPACITY[tiles[base + (y - firstBlock)] & 0xFF] == 0) {
+        // topOpaque passed every block from lastBlock - 1 down to the height, so they have opacity 0 and keep the full
+        // light; only the top block, which it doesn't look at, has to be checked
+        if (topBlockTransparent || Block.BLOCKS_LIGHT_OPACITY[tiles[base + (y - firstBlock)] & 0xFF] == 0) {
             int low = Math.max(height, firstBlock + 1);
             while (y >= low) {
                 int bottom = Math.max(low, y & ~15);

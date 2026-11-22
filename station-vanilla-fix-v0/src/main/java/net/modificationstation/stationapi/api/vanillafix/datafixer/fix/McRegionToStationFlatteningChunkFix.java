@@ -194,7 +194,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
 
         public Dynamic<?> transform() {
             Dynamic<?> self = this.section;
-            // Cells without a block keep index 0, air. If there are none, leave air out, so the palette only holds
+            // Where no block was set, the index stays 0, air. If there are none, leave air out, so the palette only holds
             // states in use, like the ones StationAPI saves: sections loaded from them aren't compacted again
             List<Dynamic<?>> entries = paletteData;
             if (Arrays.stream(states).noneMatch(state -> state == 0)) {

@@ -7,19 +7,19 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 
 /**
- * A 4-bit value for each of a section's 4096 cells, stored per 16x16 layer: a layer whose cells all hold the same
+ * A 4-bit value for each of a section's 4096 blocks, stored per 16x16 layer: a layer whose blocks all hold the same
  * value keeps just that value, and only the others take 128 bytes.
  *
  * <p>{@link #nibbles} holds 4 bits per layer: a uniform layer's value, or a stored layer's slot in {@link #layers}.
  * {@link #stored} marks the stored layers. Slots are numbered in the order layers were materialized, so a new one
  * just goes at the end; {@link #compact()} turns stored layers that became uniform back into a value.
  *
- * <p>Within a layer, cells are {@code x << 4 | z}, two per byte with even {@code z} in the low nibble. That's the
+ * <p>Within a layer, blocks are {@code x << 4 | z}, two per byte with even {@code z} in the low nibble. That's the
  * flat format's order, {@code x << 8 | y << 4 | z}, within each layer, so {@link #copyTo} and {@link #setAll} move
  * a layer as 16 aligned 8-byte words, one per {@code x}.
  */
 final class LayeredNibbles {
-    /** one 8-byte run: the 16 cells of an {@code x} row within a layer */
+    /** one 8-byte run: the 16 blocks of an {@code x} row within a layer */
     private static final VarHandle WORD = MethodHandles.byteArrayViewVarHandle(long[].class, ByteOrder.LITTLE_ENDIAN);
     /** times a byte, repeats it in every byte of a word */
     private static final long BYTES_OF = 0x0101_0101_0101_0101L;
@@ -36,7 +36,7 @@ final class LayeredNibbles {
     private byte[] layers = NO_LAYERS;
 
     /**
-     * {@return the value of the cell}
+     * {@return the value of the block}
      * Kept small: the light engine inlines it into callers that are already large, and every byte of it there can
      * cost another call its inlining.
      */
@@ -71,14 +71,14 @@ final class LayeredNibbles {
     }
 
     /**
-     * {@return whether every cell holds {@code value}}
-     * Exact after {@link #compact()}; before it, a stored layer whose cells became uniform still counts as different.
+     * {@return whether every block holds {@code value}}
+     * Exact after {@link #compact()}; before it, a stored layer whose blocks became uniform still counts as different.
      */
     boolean isUniform(int value) {
         return stored == 0 && nibbles == (value & 15) * 0x1111_1111_1111_1111L;
     }
 
-    /** sets every cell of layer {@code y} to {@code value}, without storing the layer if it isn't already */
+    /** sets every block of layer {@code y} to {@code value}, without storing the layer if it isn't already */
     void setLayer(int y, int value) {
         value &= 15;
         int nibble = nibble(y);
@@ -86,7 +86,7 @@ final class LayeredNibbles {
         else Arrays.fill(layers, nibble << 7, (nibble + 1) << 7, (byte) (value * 0x11));
     }
 
-    /** sets every cell to {@code value} */
+    /** sets every block to {@code value} */
     void fill(int value) {
         nibbles = (value & 15) * 0x1111_1111_1111_1111L;
         stored = 0;
@@ -94,7 +94,7 @@ final class LayeredNibbles {
     }
 
     /**
-     * Stores layer {@code y} in full, every cell holding {@code value}, in the next free slot.
+     * Stores layer {@code y} in full, every block holding {@code value}, in the next free slot.
      *
      * @return the slot
      */
@@ -108,18 +108,18 @@ final class LayeredNibbles {
         return slot;
     }
 
-    /** turns stored layers whose cells all hold one value back into that value, and renumbers the rest */
+    /** turns stored layers whose blocks all hold one value back into that value, and renumbers the rest */
     void compact() {
         if (stored != 0) pack(layers, false);
     }
 
-    /** replaces every cell from the flat format, as {@link #copyTo} writes it */
+    /** replaces every block from the flat format, as {@link #copyTo} writes it */
     void setAll(byte[] data) {
         pack(data, true);
     }
 
     /**
-     * Rebuilds the layers from {@code source}: the ones whose cells all hold one value become that value, the rest
+     * Rebuilds the layers from {@code source}: the ones whose blocks all hold one value become that value, the rest
      * are stored, in a single allocation of their exact size.
      *
      * @param flat whether {@code source} is in the flat format; if not, it's {@link #layers}, and only the stored
@@ -152,7 +152,7 @@ final class LayeredNibbles {
     }
 
     /**
-     * {@return the value every cell of a layer holds, or -1 if they differ}
+     * {@return the value every block of a layer holds, or -1 if they differ}
      *
      * @param from the layer's first word, its {@code x == 0} row
      * @param stride bytes from one row's word to the next: 8 within {@link #layers}, 128 in the flat format
@@ -170,7 +170,7 @@ final class LayeredNibbles {
     // ---- packets ----
 
     /**
-     * Copies out a box of cells in the layout a layer uses: per layer, per {@code x}, the bytes holding {@code z} from
+     * Copies out a box of blocks in the layout a layer uses: per layer, per {@code x}, the bytes holding {@code z} from
      * {@code minZ} to {@code maxZ}. Uniform layers are filled with their value. Stored ones are copied, all of the
      * box's rows at once when it spans every {@code z}.
      *
@@ -195,7 +195,7 @@ final class LayeredNibbles {
     }
 
     /**
-     * Sets the cells inside a box from what {@link #copyBox} wrote. When the box covers whole layers, each layer is
+     * Sets the blocks inside a box from what {@link #copyBox} wrote. When the box covers whole layers, each layer is
      * replaced at once.
      *
      * @return the position after them
@@ -241,7 +241,7 @@ final class LayeredNibbles {
         buf.put(layers, 0, Integer.bitCount(stored) * LAYER_BYTES);
     }
 
-    /** replaces every cell with what {@link #toPacket} wrote */
+    /** replaces every block with what {@link #toPacket} wrote */
     void fromPacket(ByteBuffer buf) {
         long nibbles = buf.getLong();
         int stored = buf.getShort() & 0xFFFF;
@@ -260,8 +260,8 @@ final class LayeredNibbles {
     }
 
     /**
-     * Writes every cell in the flat format: {@link #BYTES} bytes, cell {@code x << 8 | y << 4 | z}, even cells in the
-     * low nibble.
+     * Writes every block in the flat format: {@link #BYTES} bytes, block {@code x << 8 | y << 4 | z}, two per byte
+     * with the even one in the low nibble.
      */
     void copyTo(byte[] out) {
         for (int y = 0; y < 16; y++) {

@@ -19,7 +19,7 @@ import static net.modificationstation.stationapi.impl.world.chunk.PackedIndices.
 /**
  * One 16-block-high section of a chunk: its block states, metadata and light.
  *
- * <p>Block states are a palette and a packed array of palette indices, one per cell, see {@link PackedIndices}.
+ * <p>Block states are a palette and a packed array of palette indices, one per block, see {@link PackedIndices}.
  * Writes widen the array straight to 4 bits, then a bit at a time, and leave replaced states in the palette;
  * {@link #compact()} narrows both to what's in use.
  *
@@ -41,7 +41,7 @@ public class ChunkSection {
     /** past this many entries, palette lookups go through a map */
     static final int MAP_AT = 16;
     /**
-     * The widest local index. Palette entries are distinct and a section has 4096 cells, so a full palette at this
+     * The widest local index. Palette entries are distinct and a section has 4096 blocks, so a full palette at this
      * width has at least half its entries unused: compacting it always frees room, and it takes 4096 more new states
      * to fill it again. A 12-bit palette could be full of states in use.
      */
@@ -51,8 +51,8 @@ public class ChunkSection {
      * width is past this never goes global, see {@link #globalBytes()}.
      */
     static final int WINDOW_BITS = 32 - 7;
-    /** scratch for passes over every cell, per thread so sections worked on by different threads don't share it */
-    static final ThreadLocal<int[]> CELLS = ThreadLocal.withInitial(() -> new int[VOLUME]);
+    /** scratch for passes over every block, per thread so sections worked on by different threads don't share it */
+    static final ThreadLocal<int[]> INDICES = ThreadLocal.withInitial(() -> new int[VOLUME]);
     static final BlockState AIR = States.AIR.get();
     /**
      * An all-air section with full sky light, for code that reads a section where {@link FlattenedChunk#sections} has
@@ -62,9 +62,9 @@ public class ChunkSection {
 
     private final short yOffset;
     private short nonEmptyBlockCount;
-    /** the width of each cell's palette index */
+    /** the width of each block's palette index */
     int bits;
-    /** palette indices at {@link #bits} each, cell {@code y << 8 | z << 4 | x}, see {@link PackedIndices} */
+    /** palette indices at {@link #bits} each, block {@code y << 8 | z << 4 | x}, see {@link PackedIndices} */
     byte[] data = alloc(0);
     BlockState[] palette = {AIR};
     /**
@@ -108,7 +108,7 @@ public class ChunkSection {
         return palette[(window >>> (bit & 7)) & ((1 << bits) - 1)];
     }
 
-    /** {@return the block ID of the state at the cell}, {@link #getBlockState}'s read through {@link #blockIds} */
+    /** {@return the block ID of the block's state}, {@link #getBlockState}'s read through {@link #blockIds} */
     public int getBlockId(int x, int y, int z) {
         int bits = this.bits;
         int bit = (y << 8 | z << 4 | x) * bits;
@@ -120,8 +120,8 @@ public class ChunkSection {
      * @return the previous state
      */
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
-        int cell = y << 8 | z << 4 | x;
-        BlockState previous = palette[paletteIndexAt(cell)];
+        int i = y << 8 | z << 4 | x;
+        BlockState previous = palette[paletteIndexAt(i)];
         if (previous == state) {
             return previous;
         }
@@ -129,7 +129,7 @@ public class ChunkSection {
         if (index < 0) {
             index = addState(state);
         }
-        setPaletteIndexAt(cell, index);
+        setPaletteIndexAt(i, index);
         // after the write: addState may have compacted
         compacted = false;
 
@@ -219,18 +219,18 @@ public class ChunkSection {
 
     /** rewrites the indices at a new width */
     private void relayout(int newBits) {
-        int[] indices = CELLS.get();
-        for (int cell = 0; cell < VOLUME; cell++) {
-            indices[cell] = paletteIndexAt(cell);
+        int[] indices = INDICES.get();
+        for (int i = 0; i < VOLUME; i++) {
+            indices[i] = paletteIndexAt(i);
         }
         setLayout(palette, paletteSize, false, newBits, indices);
     }
 
     /** re-encodes a local section as a global one */
     private void toGlobal() {
-        int[] indices = CELLS.get();
-        for (int cell = 0; cell < VOLUME; cell++) {
-            indices[cell] = GlobalStates.indexOf(palette[paletteIndexAt(cell)]);
+        int[] indices = INDICES.get();
+        for (int i = 0; i < VOLUME; i++) {
+            indices[i] = GlobalStates.indexOf(palette[paletteIndexAt(i)]);
         }
         BlockState[] states = GlobalStates.states();
         setLayout(states, states.length, true, GlobalStates.bits(), indices);
@@ -271,7 +271,7 @@ public class ChunkSection {
         compactLight();
         // one state at width 0, like the sections that only exist for light: nothing to narrow
         if (bits == 0) return;
-        int[] indices = CELLS.get();
+        int[] indices = INDICES.get();
         BlockState[] used = usedStates(indices);
         int n = used.length;
         int exactBits = widthFor(n);
@@ -291,28 +291,28 @@ public class ChunkSection {
     }
 
     /**
-     * {@return the states some cell uses, each once, in order of first use}
+     * {@return the states some block uses, each once, in order of first use}
      *
-     * @param indices filled with every cell's index into the returned array
+     * @param indices filled with every block's index into the returned array
      */
     BlockState[] usedStates(int[] indices) {
         int[] remap = new int[paletteSize];
         Arrays.fill(remap, -1);
         BlockState[] used = new BlockState[Math.min(paletteSize, VOLUME)];
         int n = 0;
-        for (int cell = 0; cell < VOLUME; cell++) {
-            int index = paletteIndexAt(cell);
+        for (int i = 0; i < VOLUME; i++) {
+            int index = paletteIndexAt(i);
             if (remap[index] < 0) {
                 remap[index] = n;
                 used[n++] = palette[index];
             }
-            indices[cell] = remap[index];
+            indices[i] = remap[index];
         }
         return Arrays.copyOf(used, n);
     }
 
     /**
-     * Lays the same cells out again: {@code indices} as every cell's index at {@code bits}, into a palette that
+     * Lays the same blocks out again: {@code indices} as every block's index at {@code bits}, into a palette that
      * holds the states they had, so the count stays.
      */
     private void setLayout(BlockState[] palette, int paletteSize, boolean global, int bits, int[] indices) {
@@ -325,8 +325,8 @@ public class ChunkSection {
      * Replaces the block states with a layout packed elsewhere. Every change of layout ends up here. A new palette
      * drops the lookup map, which is rebuilt when it's next needed.
      *
-     * @param data every cell's index at {@code bits}, in an array from {@link PackedIndices#alloc}
-     * @param nonEmpty how many cells aren't air
+     * @param data every block's index at {@code bits}, in an array from {@link PackedIndices#alloc}
+     * @param nonEmpty how many blocks aren't air
      */
     void setBlockStates(BlockState[] palette, int paletteSize, boolean global, int bits, byte[] data, int nonEmpty) {
         if (palette != this.palette) {
@@ -341,7 +341,7 @@ public class ChunkSection {
         this.nonEmptyBlockCount = (short) nonEmpty;
     }
 
-    /** replaces the block states with {@code state} in every cell */
+    /** replaces the block states with {@code state} in every block */
     void setUniform(BlockState state) {
         setBlockStates(new BlockState[] {state}, 1, false, 0, alloc(0), state.isAir() ? 0 : VOLUME);
     }
@@ -358,12 +358,12 @@ public class ChunkSection {
         return ids;
     }
 
-    private int paletteIndexAt(int cell) {
-        return PackedIndices.get(data, bits, cell);
+    private int paletteIndexAt(int i) {
+        return PackedIndices.get(data, bits, i);
     }
 
-    private void setPaletteIndexAt(int cell, int index) {
-        PackedIndices.set(data, bits, cell, index);
+    private void setPaletteIndexAt(int i, int index) {
+        PackedIndices.set(data, bits, i, index);
     }
 
     // ---- saved and sent formats, see ChunkSectionCodec ----
@@ -474,7 +474,7 @@ public class ChunkSection {
         (type == LightType.BLOCK ? blockLight : skyLight).setAll(data);
     }
 
-    /** sets every cell of layers {@code from} to {@code to} to full sky light */
+    /** sets every block of layers {@code from} to {@code to} to full sky light */
     void fillSkyLightLayers(int from, int to) {
         for (int y = from; y <= to; y++) skyLight.setLayer(y, LightType.SKY.lightValue);
         compacted = false;
@@ -485,7 +485,7 @@ public class ChunkSection {
     }
 
     /**
-     * {@return whether every cell has this sky light and block light}
+     * {@return whether every block has this sky light and block light}
      * Exact after {@link #compact()}.
      */
     public boolean hasUniformLight(int skyLight, int blockLight) {

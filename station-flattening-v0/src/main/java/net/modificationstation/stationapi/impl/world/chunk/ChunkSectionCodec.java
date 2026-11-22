@@ -55,10 +55,10 @@ final class ChunkSectionCodec {
     static NbtCompound writeBlockStates(ChunkSection section) {
         NbtCompound tag = new NbtCompound();
         if (section.global) {
-            int[] cells = ChunkSection.CELLS.get();
-            BlockState[] used = section.usedStates(cells);
+            int[] indices = ChunkSection.INDICES.get();
+            BlockState[] used = section.usedStates(indices);
             tag.put("palette", PALETTE_CODEC.encodeStart(NbtOps.INSTANCE, Arrays.asList(used)).getOrThrow());
-            if (used.length > 1) tag.put("data", packCells(savedWidth(used.length), cells));
+            if (used.length > 1) tag.put("data", packArray(savedWidth(used.length), indices));
             return tag;
         }
         int n = section.paletteSize;
@@ -169,7 +169,7 @@ final class ChunkSectionCodec {
     }
 
     /**
-     * Copies the packed indices into the section as its layout. One pass over the cells recounts and checks that every
+     * Copies the packed indices into the section as its layout. One pass over the blocks recounts and checks that every
      * index is in the palette.
      *
      * @param flags per index {@code bits} can hold: for the palette's, {@link #SOLID} unless the state is air; for the
@@ -180,8 +180,8 @@ final class ChunkSectionCodec {
         byte[] data = PackedIndices.alloc(bits);
         buf.get(data, 0, nativeBytes(bits));
         int nonEmpty = 0, bad = 0;
-        for (int cell = 0; cell < VOLUME; cell++) {
-            int f = flags[PackedIndices.get(data, bits, cell)];
+        for (int i = 0; i < VOLUME; i++) {
+            int f = flags[PackedIndices.get(data, bits, i)];
             nonEmpty += f >>> 30;
             bad |= f;
         }
@@ -189,7 +189,7 @@ final class ChunkSectionCodec {
         section.setBlockStates(palette, n, global, bits, data, nonEmpty);
     }
 
-    /** {@return the flag a cell of {@code state} adds to the count: {@link #SOLID} unless it's air} */
+    /** {@return the flag a block of {@code state} adds to the count: {@link #SOLID} unless it's air} */
     private static int countFlags(BlockState state) {
         return state.isAir() ? 0 : SOLID;
     }
@@ -218,7 +218,7 @@ final class ChunkSectionCodec {
 
     /**
      * Packs saved block states for a section, keeping each state once, at the exact width or global if that's
-     * smaller, and counts them. One pass over the cells reads them straight from {@code longs} and packs them as
+     * smaller, and counts them. One pass over the blocks reads them straight from {@code longs} and packs them as
      * {@link ChunkSection#data} holds them, as {@code PalettedContainer} counts its storage in one pass after
      * adopting it.
      *
@@ -240,9 +240,9 @@ final class ChunkSectionCodec {
         // its new index and the SOLID flag the count is summed from
         int[] target = new int[size + 1];
         if (sparse) {
-            for (int i = 0, cell = 0; i < longs.length; i++) {
+            for (int i = 0, j = 0; i < longs.length; i++) {
                 long l = longs[i];
-                for (int k = 0; k < perLong && cell < VOLUME; k++, cell++, l >>>= width) {
+                for (int k = 0; k < perLong && j < VOLUME; k++, j++, l >>>= width) {
                     target[Math.min((int) l & mask, size)] = USED;
                 }
             }
@@ -300,15 +300,15 @@ final class ChunkSectionCodec {
             target[v] = index;
         }
 
-        // the count is summed in a register: counting into an array would make each cell wait for the previous
+        // the count is summed in a register: counting into an array would make each block wait for the previous
         // one's store whenever neighbors share a state. The packing is PackedIndices.write's, from the target indices
         byte[] data = PackedIndices.alloc(bits);
         long word = 0;
         int filled = 0, offset = 0, nonEmpty = 0;
         boolean outOfRange = false;
-        for (int i = 0, cell = 0; i < longs.length; i++) {
+        for (int i = 0, j = 0; i < longs.length; i++) {
             long l = longs[i];
-            for (int k = 0; k < perLong && cell < VOLUME; k++, cell++, l >>>= width) {
+            for (int k = 0; k < perLong && j < VOLUME; k++, j++, l >>>= width) {
                 int v = (int) l & mask;
                 outOfRange |= v >= size;
                 int t = target[Math.min(v, size)];
@@ -340,14 +340,14 @@ final class ChunkSectionCodec {
         return (VOLUME + perLong - 1) / perLong;
     }
 
-    /** {@return {@code cells} packed PackedIntegerArray-style at {@code bits}} */
-    private static long[] packCells(int bits, int[] cells) {
+    /** {@return {@code indices} packed PackedIntegerArray-style at {@code bits}} */
+    private static long[] packArray(int bits, int[] indices) {
         long[] longs = new long[longsFor(bits)];
         int perLong = 64 / bits;
-        for (int i = 0, cell = 0; i < longs.length; i++) {
+        for (int i = 0, j = 0; i < longs.length; i++) {
             long l = 0;
-            for (int k = 0, shift = 0; k < perLong && cell < VOLUME; k++, cell++, shift += bits) {
-                l |= (long) cells[cell] << shift;
+            for (int k = 0, shift = 0; k < perLong && j < VOLUME; k++, j++, shift += bits) {
+                l |= (long) indices[j] << shift;
             }
             longs[i] = l;
         }
@@ -355,7 +355,7 @@ final class ChunkSectionCodec {
     }
 
     /**
-     * {@return every cell's palette index packed PackedIntegerArray-style at {@code bits}}
+     * {@return every block's palette index packed PackedIntegerArray-style at {@code bits}}
      * Where that is the section's own layout, the same width dividing 64, the longs are read straight out of it.
      */
     private static long[] packIndices(ChunkSection section, int bits) {
@@ -369,10 +369,10 @@ final class ChunkSectionCodec {
             return longs;
         }
         int perLong = 64 / bits;
-        for (int i = 0, cell = 0; i < longs.length; i++) {
+        for (int i = 0, j = 0; i < longs.length; i++) {
             long l = 0;
-            for (int k = 0, shift = 0; k < perLong && cell < VOLUME; k++, cell++, shift += bits) {
-                l |= (long) PackedIndices.get(data, sectionBits, cell) << shift;
+            for (int k = 0, shift = 0; k < perLong && j < VOLUME; k++, j++, shift += bits) {
+                l |= (long) PackedIndices.get(data, sectionBits, j) << shift;
             }
             longs[i] = l;
         }
