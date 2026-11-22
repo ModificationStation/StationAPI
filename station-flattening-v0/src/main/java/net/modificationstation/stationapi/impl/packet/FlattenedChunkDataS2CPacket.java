@@ -19,10 +19,10 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
     public static final PacketType<FlattenedChunkDataS2CPacket> TYPE = PacketType.builder(true, false, FlattenedChunkDataS2CPacket::new).build();
 
     public int chunkX, chunkZ;
-    private int sectionsSize;
-    /** the sections' size before deflating, on the server */
+    /** {@link #chunkData}'s deflated size, on the server */
+    private int chunkDataSize;
+    /** {@link #chunkData}'s size before deflating */
     private int rawSize;
-    public byte[] sectionsData;
 
     private FlattenedChunkDataS2CPacket() {}
 
@@ -32,8 +32,8 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
         this.chunkZ = chunkZ;
         FlattenedChunk chunk = (FlattenedChunk) world.getChunk(chunkX, chunkZ);
         SectionPacketData data = SectionPacketData.of(chunk.sections);
-        sectionsData = data.compressed;
-        sectionsSize = data.length;
+        chunkData = data.compressed;
+        chunkDataSize = data.length;
         rawSize = data.rawSize;
     }
 
@@ -42,11 +42,11 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
         try {
             chunkX = in.readInt();
             chunkZ = in.readInt();
-            int realSectionsSize = in.readInt();
-            int sectionsSize = in.readInt();
-            byte[] sectionsData = new byte[sectionsSize];
-            in.readFully(sectionsData);
-            this.sectionsData = SectionPacketData.inflate(sectionsData, realSectionsSize);
+            int rawSize = in.readInt();
+            int chunkDataSize = in.readInt();
+            byte[] chunkData = new byte[chunkDataSize];
+            in.readFully(chunkData);
+            this.chunkData = SectionPacketData.inflate(chunkData, rawSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,8 +58,8 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
             out.writeInt(chunkX);
             out.writeInt(chunkZ);
             out.writeInt(rawSize);
-            out.writeInt(sectionsSize);
-            out.write(sectionsData, 0, sectionsSize);
+            out.writeInt(chunkDataSize);
+            out.write(chunkData, 0, chunkDataSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -67,12 +67,12 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
 
     @Override
     public void apply(NetworkHandler handler) {
-        ((StationFlatteningPacketHandler) handler).onMapChunk(this);
+        ((StationFlatteningPacketHandler) handler).handleChunkData(this);
     }
 
     @Override
     public int size() {
-        return 16 + sectionsSize;
+        return 16 + chunkDataSize;
     }
 
     @Override

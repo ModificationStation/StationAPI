@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
@@ -30,12 +29,12 @@ public class FlattenedChunkSectionDataS2CPacket extends Packet implements Manage
     public int chunkX, chunkZ, sectionIndex;
     /** the box in section coordinates, bounds inclusive */
     public int minX, minY, minZ, maxX, maxY, maxZ;
-    /** {@link #boxData}'s deflated size, on the server */
-    private int boxSize;
-    /** {@link #boxData}'s size before deflating */
+    /** {@link #chunkData}'s deflated size, on the server */
+    private int chunkDataSize;
+    /** {@link #chunkData}'s size before deflating */
     private int rawSize;
-    /** deflated on the server, inflated on the client */
-    private byte[] boxData;
+    /** the box, see {@link ChunkSection#writeBox}: deflated on the server, inflated on the client */
+    public byte[] chunkData;
 
     @ApiStatus.Internal
     public FlattenedChunkSectionDataS2CPacket() {
@@ -56,14 +55,9 @@ public class FlattenedChunkSectionDataS2CPacket extends Packet implements Manage
         ChunkSection section = Objects.requireNonNullElse(((FlattenedChunk) world.getChunk(chunkX, chunkZ)).sections[sectionIndex], ChunkSection.EMPTY);
         byte[] box = section.writeBox(minX, minY, minZ, maxX, maxY, maxZ);
         SectionPacketData data = SectionPacketData.deflate(box, box.length, SectionPacketData.BOX_LEVEL);
-        boxData = data.compressed;
-        boxSize = data.length;
+        chunkData = data.compressed;
+        chunkDataSize = data.length;
         rawSize = data.rawSize;
-    }
-
-    /** writes the box into {@code section}: the client's side of what the constructor encodes */
-    public void applyTo(ChunkSection section) {
-        section.readBox(minX, minY, minZ, maxX, maxY, maxZ, ByteBuffer.wrap(boxData));
     }
 
     @Override
@@ -82,10 +76,10 @@ public class FlattenedChunkSectionDataS2CPacket extends Packet implements Manage
             if (minX > maxX || minY > maxY || minZ > maxZ)
                 throw new IOException("Invalid box " + minX + "," + minY + "," + minZ + " to " + maxX + "," + maxY + "," + maxZ);
             int rawSize = in.readInt();
-            int boxSize = in.readInt();
-            byte[] boxData = new byte[boxSize];
-            in.readFully(boxData);
-            this.boxData = SectionPacketData.inflate(boxData, rawSize);
+            int chunkDataSize = in.readInt();
+            byte[] chunkData = new byte[chunkDataSize];
+            in.readFully(chunkData);
+            this.chunkData = SectionPacketData.inflate(chunkData, rawSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -101,21 +95,21 @@ public class FlattenedChunkSectionDataS2CPacket extends Packet implements Manage
             out.write(minY << 4 | maxY);
             out.write(minZ << 4 | maxZ);
             out.writeInt(rawSize);
-            out.writeInt(boxSize);
-            out.write(boxData, 0, boxSize);
+            out.writeInt(chunkDataSize);
+            out.write(chunkData, 0, chunkDataSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void apply(NetworkHandler arg) {
-        ((StationFlatteningPacketHandler) arg).onChunkSection(this);
+    public void apply(NetworkHandler handler) {
+        ((StationFlatteningPacketHandler) handler).handleChunkSectionData(this);
     }
 
     @Override
     public int size() {
-        return 20 + boxSize;
+        return 20 + chunkDataSize;
     }
 
     @Override

@@ -4,12 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.ChunkMap;
 import net.minecraft.world.ServerWorld;
-import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
+import net.modificationstation.stationapi.impl.packet.FlattenedBlockUpdateS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
-import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
+import net.modificationstation.stationapi.impl.packet.FlattenedChunkDeltaUpdateS2CPacket;
 import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
 import net.modificationstation.stationapi.mixin.flattening.server.ServerPlayerViewAccessor;
-import net.modificationstation.stationapi.mixin.flattening.server.class_514Accessor;
+import net.modificationstation.stationapi.mixin.flattening.server.TrackedChunkAccessor;
 
 import java.util.List;
 
@@ -106,7 +106,7 @@ public class FlattenedTrackedChunk extends ChunkMap.TrackedChunk {
             int z = (chunkZ << 4) + (count >> 8 & 15);
             if (!Block.BLOCKS_WITH_ENTITY[world.getBlockId(x, y, z)]) continue;
             System.out.println("Sending!");
-            ((class_514Accessor) this).invokeSendBlockEntityUpdate(world.getBlockEntity(x, y, z));
+            ((TrackedChunkAccessor) this).invokeSendBlockEntityUpdate(world.getBlockEntity(x, y, z));
         }
     }
 
@@ -127,21 +127,21 @@ public class FlattenedTrackedChunk extends ChunkMap.TrackedChunk {
             if (n == 1) {
                 sendBlockChange(world, updates[i]);
             } else {
-                sendPacketToPlayers(new FlattenedMultiBlockChangeS2CPacket(chunkX, chunkZ, world.getSectionIndex(sectionY << 4), positions, n, world));
+                sendPacketToPlayers(new FlattenedChunkDeltaUpdateS2CPacket(chunkX, chunkZ, world.getSectionIndex(sectionY << 4), positions, n, world));
             }
         }
     }
 
     /** @param pos as {@link #updates} holds it */
     private void sendBlockChange(ServerWorld world, int pos) {
-        sendPacketToPlayers(new FlattenedBlockChangeS2CPacket((chunkX << 4) + (pos >> 4 & 15), pos >> 8, (chunkZ << 4) + (pos & 15), world));
+        sendPacketToPlayers(new FlattenedBlockUpdateS2CPacket((chunkX << 4) + (pos >> 4 & 15), pos >> 8, (chunkZ << 4) + (pos & 15), world));
     }
 
     /** @param pos as {@link #updates} holds it */
     private void sendBlockEntity(ServerWorld world, int pos) {
         int x = (chunkX << 4) + (pos >> 4 & 15), y = pos >> 8, z = (chunkZ << 4) + (pos & 15);
         if (Block.BLOCKS_WITH_ENTITY[world.getBlockId(x, y, z)])
-            ((class_514Accessor) this).invokeSendBlockEntityUpdate(world.getBlockEntity(x, y, z));
+            ((TrackedChunkAccessor) this).invokeSendBlockEntityUpdate(world.getBlockEntity(x, y, z));
     }
 
     /**
@@ -167,6 +167,6 @@ public class FlattenedTrackedChunk extends ChunkMap.TrackedChunk {
         int z = (chunkZ << 4) + minZ;
         //noinspection unchecked
         List<BlockEntity> list = world.getBlockEntities(x, minY & ~1, z, x + maxX - minX + 1, (maxY | 1) + 3, z + maxZ - minZ + 1);
-        for (BlockEntity blockEntity : list) ((class_514Accessor) this).invokeSendBlockEntityUpdate(blockEntity);
+        for (BlockEntity blockEntity : list) ((TrackedChunkAccessor) this).invokeSendBlockEntityUpdate(blockEntity);
     }
 }

@@ -15,19 +15,19 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implements ManagedPacket<FlattenedBlockChangeS2CPacket> {
-    public static final PacketType<FlattenedBlockChangeS2CPacket> TYPE = PacketType.builder(true, false, FlattenedBlockChangeS2CPacket::new).build();
+public class FlattenedBlockUpdateS2CPacket extends BlockUpdateS2CPacket implements ManagedPacket<FlattenedBlockUpdateS2CPacket> {
+    public static final PacketType<FlattenedBlockUpdateS2CPacket> TYPE = PacketType.builder(true, false, FlattenedBlockUpdateS2CPacket::new).build();
 
-    public int stateId;
+    public int stateRawId;
 
-    private FlattenedBlockChangeS2CPacket() {}
+    private FlattenedBlockUpdateS2CPacket() {}
 
     @Environment(EnvType.SERVER)
-    public FlattenedBlockChangeS2CPacket(int x, int y, int z, World world) {
+    public FlattenedBlockUpdateS2CPacket(int x, int y, int z, World world) {
         this.x = x;
         this.y = y;
         this.z = z;
-        stateId = Block.STATE_IDS.getRawId(world.getBlockState(x, y, z));
+        stateRawId = Block.STATE_IDS.getRawId(world.getBlockState(x, y, z));
         blockMetadata = (byte) world.getBlockMeta(x, y, z);
     }
 
@@ -37,7 +37,7 @@ public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implemen
             x = in.readInt();
             y = in.readShort();
             z = in.readInt();
-            stateId = in.readInt();
+            stateRawId = in.readInt();
             blockMetadata = in.read();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -50,7 +50,7 @@ public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implemen
             out.writeInt(x);
             out.writeShort(y);
             out.writeInt(z);
-            out.writeInt(stateId);
+            out.writeInt(stateRawId);
             out.write(blockMetadata);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -59,7 +59,7 @@ public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implemen
 
     @Override
     public void apply(NetworkHandler handler) {
-        ((StationFlatteningPacketHandler) handler).onBlockChange(this);
+        ((StationFlatteningPacketHandler) handler).onBlockUpdate(this);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implemen
     }
 
     @Override
-    public @NotNull PacketType<FlattenedBlockChangeS2CPacket> getType() {
+    public @NotNull PacketType<FlattenedBlockUpdateS2CPacket> getType() {
         return TYPE;
     }
 }

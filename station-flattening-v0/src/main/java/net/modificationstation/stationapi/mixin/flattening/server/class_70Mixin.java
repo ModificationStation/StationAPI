@@ -9,7 +9,7 @@ import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
-import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
+import net.modificationstation.stationapi.impl.packet.FlattenedBlockUpdateS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -111,7 +111,7 @@ class class_70Mixin {
             )
     )
     private BlockUpdateS2CPacket stationapi_flatten(int x, int y, int z, World world) {
-        return new FlattenedBlockChangeS2CPacket(x, y, z, world);
+        return new FlattenedBlockUpdateS2CPacket(x, y, z, world);
     }
     
     @ModifyConstant(

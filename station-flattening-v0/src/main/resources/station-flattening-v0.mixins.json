@@ -62,7 +62,7 @@
   },
   "server": [
     "server.ChunkMapMixin",
-    "server.class_514Accessor",
+    "server.TrackedChunkAccessor",
     "server.class_70Mixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerEntityMixin",
