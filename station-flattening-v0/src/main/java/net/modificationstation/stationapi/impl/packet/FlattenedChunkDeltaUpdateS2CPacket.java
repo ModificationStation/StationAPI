@@ -17,21 +17,21 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacket implements ManagedPacket<FlattenedMultiBlockChangeS2CPacket> {
-    public static final PacketType<FlattenedMultiBlockChangeS2CPacket> TYPE = PacketType.builder(true, false, FlattenedMultiBlockChangeS2CPacket::new).build();
+public class FlattenedChunkDeltaUpdateS2CPacket extends ChunkDeltaUpdateS2CPacket implements ManagedPacket<FlattenedChunkDeltaUpdateS2CPacket> {
+    public static final PacketType<FlattenedChunkDeltaUpdateS2CPacket> TYPE = PacketType.builder(true, false, FlattenedChunkDeltaUpdateS2CPacket::new).build();
 
     public int sectionIndex;
-    public int[] stateArray;
+    public int[] stateRawIds;
 
-    private FlattenedMultiBlockChangeS2CPacket() {}
+    private FlattenedChunkDeltaUpdateS2CPacket() {}
 
-    public FlattenedMultiBlockChangeS2CPacket(int chunkX, int chunkZ, int sectionIndex, short[] positions, int arraySize, World world) {
+    public FlattenedChunkDeltaUpdateS2CPacket(int chunkX, int chunkZ, int sectionIndex, short[] positions, int arraySize, World world) {
         this.x = chunkX;
         this.z = chunkZ;
         this.sectionIndex = sectionIndex;
         this.size = arraySize;
         this.positions = new short[arraySize];
-        stateArray = new int[arraySize];
+        stateRawIds = new int[arraySize];
         blockMetadata = new byte[arraySize];
         ChunkSection section = Objects.requireNonNullElse(((FlattenedChunk) world.getChunk(chunkX, chunkZ)).sections[sectionIndex], ChunkSection.EMPTY);
         for (int i = 0; i < arraySize; i++) {
@@ -40,7 +40,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacke
             int localX = ChunkSectionPos.unpackLocalX(position);
             int localY = ChunkSectionPos.unpackLocalY(position);
             int localZ = ChunkSectionPos.unpackLocalZ(position);
-            stateArray[i] = Block.STATE_IDS.getRawId(section.getBlockState(localX, localY, localZ));
+            stateRawIds[i] = Block.STATE_IDS.getRawId(section.getBlockState(localX, localY, localZ));
             blockMetadata[i] = (byte) section.getMeta(localX, localY, localZ);
         }
     }
@@ -53,10 +53,10 @@ public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacke
             sectionIndex = in.read();
             size = in.read();
             positions = new short[size];
-            stateArray = new int[size];
+            stateRawIds = new int[size];
             blockMetadata = new byte[size];
             for (int i = 0; i < size; i++) positions[i] = in.readShort();
-            for (int i = 0; i < size; i++) stateArray[i] = in.readInt();
+            for (int i = 0; i < size; i++) stateRawIds[i] = in.readInt();
             in.readFully(blockMetadata);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -71,7 +71,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacke
             out.write(sectionIndex);
             out.write(size);
             for (short position : positions) out.writeShort(position);
-            for (int stateId : stateArray) out.writeInt(stateId);
+            for (int stateRawId : stateRawIds) out.writeInt(stateRawId);
             out.write(blockMetadata);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -80,7 +80,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacke
 
     @Override
     public void apply(NetworkHandler handler) {
-        ((StationFlatteningPacketHandler) handler).onMultiBlockChange(this);
+        ((StationFlatteningPacketHandler) handler).onChunkDeltaUpdate(this);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacke
     }
 
     @Override
-    public @NotNull PacketType<FlattenedMultiBlockChangeS2CPacket> getType() {
+    public @NotNull PacketType<FlattenedChunkDeltaUpdateS2CPacket> getType() {
         return TYPE;
     }
 }

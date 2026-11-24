@@ -14,43 +14,50 @@ import org.jetbrains.annotations.NotNull;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Objects;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
+/**
+ * The blocks in a box of one section.
+ * <p>
+ * When 10 or more blocks in a chunk change in one tick, vanilla resends a box around all of them with a chunk data
+ * packet. We send that box per section instead: one of these for each section the box spans (see
+ * {@code FlattenedTrackedChunk}). The payload is {@link ChunkSection#writeBox}.
+ */
 public class FlattenedChunkSectionDataS2CPacket extends Packet implements ManagedPacket<FlattenedChunkSectionDataS2CPacket> {
     public static final PacketType<FlattenedChunkSectionDataS2CPacket> TYPE = PacketType.builder(true, false, FlattenedChunkSectionDataS2CPacket::new).build();
 
     public int chunkX, chunkZ, sectionIndex;
-    private int sectionSize;
-    public byte[] sectionData;
+    /** the box in section coordinates, bounds inclusive */
+    public int minX, minY, minZ, maxX, maxY, maxZ;
+    /** {@link #chunkData}'s deflated size, on the server */
+    private int chunkDataSize;
+    /** {@link #chunkData}'s size before deflating */
+    private int rawSize;
+    /** the box, see {@link ChunkSection#writeBox}: deflated on the server, inflated on the client */
+    public byte[] chunkData;
 
     @ApiStatus.Internal
     public FlattenedChunkSectionDataS2CPacket() {
         worldPacket = true;
     }
 
-    public FlattenedChunkSectionDataS2CPacket(World world, int chunkX, int chunkZ, int sectionIndex) {
+    public FlattenedChunkSectionDataS2CPacket(World world, int chunkX, int chunkZ, int sectionIndex, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         worldPacket = true;
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.sectionIndex = sectionIndex;
-        FlattenedChunk chunk = (FlattenedChunk) world.getChunk(chunkX, chunkZ);
-        ChunkSection section = Objects.requireNonNullElse(chunk.sections[sectionIndex], ChunkSection.EMPTY);
-        byte[] sectionData = new byte[section.getPacketSize()];
-        ByteBuffer buf = ByteBuffer.wrap(sectionData);
-        section.toPacket(buf);
-        Deflater deflater = new Deflater(Deflater.DEFAULT_COMPRESSION);
-        try {
-            deflater.setInput(sectionData);
-            deflater.finish();
-            this.sectionData = new byte[sectionData.length];
-            sectionSize = deflater.deflate(this.sectionData);
-        } finally {
-            deflater.end();
-        }
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
+        ChunkSection section = Objects.requireNonNullElse(((FlattenedChunk) world.getChunk(chunkX, chunkZ)).sections[sectionIndex], ChunkSection.EMPTY);
+        byte[] box = section.writeBox(minX, minY, minZ, maxX, maxY, maxZ);
+        SectionPacketData data = SectionPacketData.deflate(box, box.length, SectionPacketData.BOX_LEVEL);
+        chunkData = data.compressed;
+        chunkDataSize = data.length;
+        rawSize = data.rawSize;
     }
 
     @Override
@@ -59,20 +66,20 @@ public class FlattenedChunkSectionDataS2CPacket extends Packet implements Manage
             chunkX = in.readInt();
             chunkZ = in.readInt();
             sectionIndex = in.read();
-            int realSectionSize = in.readInt();
-            int sectionSize = in.readInt();
-            byte[] sectionData = new byte[sectionSize];
-            in.readFully(sectionData);
-            this.sectionData = new byte[realSectionSize];
-            Inflater inflater = new Inflater();
-            inflater.setInput(sectionData);
-            try {
-                inflater.inflate(this.sectionData);
-            } catch (DataFormatException dataFormatException) {
-                throw new IOException("Bad compressed data format");
-            } finally {
-                inflater.end();
-            }
+            int x = in.read(), y = in.read(), z = in.read();
+            minX = x >> 4;
+            maxX = x & 15;
+            minY = y >> 4;
+            maxY = y & 15;
+            minZ = z >> 4;
+            maxZ = z & 15;
+            if (minX > maxX || minY > maxY || minZ > maxZ)
+                throw new IOException("Invalid box " + minX + "," + minY + "," + minZ + " to " + maxX + "," + maxY + "," + maxZ);
+            int rawSize = in.readInt();
+            int chunkDataSize = in.readInt();
+            byte[] chunkData = new byte[chunkDataSize];
+            in.readFully(chunkData);
+            this.chunkData = SectionPacketData.inflate(chunkData, rawSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -84,22 +91,25 @@ public class FlattenedChunkSectionDataS2CPacket extends Packet implements Manage
             out.writeInt(chunkX);
             out.writeInt(chunkZ);
             out.write(sectionIndex);
-            out.writeInt(sectionData.length);
-            out.writeInt(sectionSize);
-            out.write(sectionData, 0, sectionSize);
+            out.write(minX << 4 | maxX);
+            out.write(minY << 4 | maxY);
+            out.write(minZ << 4 | maxZ);
+            out.writeInt(rawSize);
+            out.writeInt(chunkDataSize);
+            out.write(chunkData, 0, chunkDataSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void apply(NetworkHandler arg) {
-        ((StationFlatteningPacketHandler) arg).onChunkSection(this);
+    public void apply(NetworkHandler handler) {
+        ((StationFlatteningPacketHandler) handler).handleChunkSectionData(this);
     }
 
     @Override
     public int size() {
-        return 17 + sectionSize;
+        return 20 + chunkDataSize;
     }
 
     @Override

@@ -61,8 +61,8 @@
     "defaultRequire": 1
   },
   "server": [
-    "server.class_514Accessor",
-    "server.class_514Mixin",
+    "server.ChunkMapMixin",
+    "server.TrackedChunkAccessor",
     "server.class_70Mixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerEntityMixin",

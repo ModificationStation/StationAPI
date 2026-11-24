@@ -1,16 +1,13 @@
 package net.modificationstation.stationapi.api.util.collection;
 
-import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
-import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntegerArray;
-import net.modificationstation.stationapi.impl.world.chunk.Palette;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.IntConsumer;
 
 public class PackedIntegerArray
-implements PaletteStorage, CompactingPackedIntegerArray {
+implements PaletteStorage {
     /**
      * Magic constants for faster integer division by a constant.
      * 
@@ -184,44 +181,6 @@ implements PaletteStorage, CompactingPackedIntegerArray {
             for (m = 0; m < k; ++m) {
                 is[j + m] = (int)(l & this.maxValue);
                 l >>= this.elementBits;
-            }
-        }
-    }
-
-    @Override
-    public <T> void compact(Palette<T> srcPalette, Palette<T> dstPalette, short[] out) {
-        if (this.size >= Short.MAX_VALUE) {
-            throw new IllegalStateException("Array too large");
-        }
-
-        if (this.size != out.length) {
-            throw new IllegalStateException("Array size mismatch");
-        }
-
-        short[] mappings = new short[(int) (this.maxValue + 1)];
-
-        int idx = 0;
-
-        for (long word : this.data) {
-            long bits = word;
-
-            for (int elementIdx = 0; elementIdx < this.elementsPerLong; ++elementIdx) {
-                int value = (int) (bits & this.maxValue);
-                int remappedId = mappings[value];
-
-                if (remappedId == 0) {
-                    remappedId = dstPalette.index(srcPalette.get(value)) + 1;
-                    mappings[value] = (short) remappedId;
-                }
-
-                out[idx] = (short) (remappedId - 1);
-                bits >>= this.elementBits;
-
-                ++idx;
-
-                if (idx >= this.size) {
-                    return;
-                }
             }
         }
     }
