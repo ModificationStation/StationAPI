@@ -26,26 +26,22 @@ import java.util.List;
  * The box covers the same blocks as vanilla's chunk data packet. Blocks changed without an update, like the ones tree
  * features place, reach clients only when they happen to be inside such a box.
  * <p>
- * {@code ChunkMapMixin} creates this instead of vanilla's tracked chunk, so vanilla's own update fields go unused.
+ * {@code ChunkMapMixin} creates this instead of vanilla's tracked chunk. The chunk position, the update count and
+ * the box are vanilla's fields; vanilla's {@code removePlayer} reads the count. The box's {@code x} and {@code z} are
+ * local to the chunk, its {@code y} in world coordinates. Vanilla's own position array goes unused: it packs {@code y}
+ * into 8 bits, which doesn't fit taller worlds.
  */
 public class FlattenedTrackedChunk extends ChunkMap.TrackedChunk {
     private static final int MAX_UPDATES = 10;
 
     private final ChunkMap chunkMap;
-    /** vanilla's fields for these are private */
-    private final int chunkX, chunkZ;
 
     /** the first 10 distinct positions, packed as {@code y << 8 | x << 4 | z} with {@code y} in world coordinates */
     private final int[] updates = new int[MAX_UPDATES];
-    private int updatesCount;
-    /** the box around all the updates: {@code x} and {@code z} local to the chunk, {@code y} in world coordinates */
-    private int minX, maxX, minY, maxY, minZ, maxZ;
 
     public FlattenedTrackedChunk(ChunkMap chunkMap, int chunkX, int chunkZ) {
         chunkMap.super(chunkX, chunkZ);
         this.chunkMap = chunkMap;
-        this.chunkX = chunkX;
-        this.chunkZ = chunkZ;
     }
 
     /**
@@ -55,7 +51,7 @@ public class FlattenedTrackedChunk extends ChunkMap.TrackedChunk {
      */
     @Override
     public void updatePlayerChunks(int x, int y, int z) {
-        if (updatesCount == 0) {
+        if (dirtyBlockCount == 0) {
             ((ServerPlayerViewAccessor) chunkMap).getChunksToUpdate().add(this);
             minX = maxX = x;
             minY = maxY = y;
@@ -67,26 +63,26 @@ public class FlattenedTrackedChunk extends ChunkMap.TrackedChunk {
         if (maxY < y) maxY = y;
         if (minZ > z) minZ = z;
         if (maxZ < z) maxZ = z;
-        if (updatesCount < MAX_UPDATES) {
+        if (dirtyBlockCount < MAX_UPDATES) {
             int pos = y << 8 | x << 4 | z;
-            for (int i = 0; i < updatesCount; i++) if (updates[i] == pos) return;
-            updates[updatesCount++] = pos;
+            for (int i = 0; i < dirtyBlockCount; i++) if (updates[i] == pos) return;
+            updates[dirtyBlockCount++] = pos;
         }
     }
 
     @Override
     public void updateChunk() {
-        if (updatesCount == 0) return;
+        if (dirtyBlockCount == 0) return;
         ServerWorld world = chunkMap.getWorld();
-        if (updatesCount == 1) {
+        if (dirtyBlockCount == 1) {
             sendBlockChange(world, updates[0]);
             sendBlockEntity(world, updates[0]);
-        } else if (updatesCount == MAX_UPDATES) {
+        } else if (dirtyBlockCount == MAX_UPDATES) {
             sendBox(world);
         } else {
             sendUpdates(world);
         }
-        updatesCount = 0;
+        dirtyBlockCount = 0;
     }
 
     /**
@@ -98,7 +94,7 @@ public class FlattenedTrackedChunk extends ChunkMap.TrackedChunk {
      */
     private void sendUpdates(ServerWorld world) {
         int[] updates = this.updates;
-        int count = updatesCount;
+        int count = dirtyBlockCount;
         sendGroups(world, updates, count);
         for (int i = 0; i < count; i++) {
             int x = (chunkX << 4) + (count >> 12 & 15);

@@ -1,4 +1,13 @@
 accessWidener	v2	named
 
 transitive-accessible	class	net/minecraft/server/ChunkMap$TrackedChunk
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	chunkX	I
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	chunkZ	I
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	dirtyBlockCount	I
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	minX	I
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	minY	I
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	minZ	I
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	maxX	I
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	maxY	I
+accessible	field	net/minecraft/server/ChunkMap$TrackedChunk	maxZ	I
 transitive-accessible	class	net/minecraft/world/ClientWorld$BlockReset
